@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chaekim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/25 03:22:29 by chaekim           #+#    #+#             */
+/*   Updated: 2022/01/25 04:03:20 by chaekim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
 void	child_process(int fd[], char **envp, int flag, t_fdlist *flist)
@@ -43,8 +55,8 @@ int	ft_fork(int fd[], int flag, t_fdlist *flist, char **envp)
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_fdlist	flist;
-	int		fd[2];
-	int		pid[2];
+	int			fd[2];
+	int			pid[2];
 
 	if (argc != 5)
 	{

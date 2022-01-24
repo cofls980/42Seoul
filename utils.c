@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chaekim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/01/25 03:29:25 by chaekim           #+#    #+#             */
+/*   Updated: 2022/01/25 03:31:09 by chaekim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
 void	init_flist(char **argv, char **envp, t_fdlist *flist)
@@ -10,7 +22,7 @@ void	init_flist(char **argv, char **envp, t_fdlist *flist)
 
 void	free_path(char **en_paths)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (en_paths)
@@ -26,7 +38,7 @@ void	free_path(char **en_paths)
 	}
 }
 
-void    free_all(t_fdlist *flist)
+void	free_all(t_fdlist *flist)
 {
 	free(flist->path1);
 	free(flist->path2);
@@ -38,10 +50,8 @@ void    free_all(t_fdlist *flist)
 
 void	ft_error(char *mssg, t_fdlist *flist)
 {
-    if (flist != 0)
-    {
-        free_all(flist);
-    } 
+	if (flist != 0)
+		free_all(flist);
 	perror(mssg);
 	exit(1);
 }
