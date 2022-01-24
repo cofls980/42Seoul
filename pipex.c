@@ -1,21 +1,23 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: chaekim <chaekim@student.42seoul.kr>       +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/20 01:05:59 by chaekim           #+#    #+#             */
-/*   Updated: 2022/01/21 18:01:12 by chaekim          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "pipex.h"
 
-void	ft_error()
+void	ft_error(char *mssg)
 {
-	perror("Error");
+	perror(mssg);
 	exit(1);
+}
+
+void	print(char *str)
+{
+	int		i;
+	char	ch;
+
+	i = 0;
+	while (*(str + i))
+	{
+		ch = *(str + i);
+		write(1, &ch, 1);
+		i++;
+	}
 }
 
 char	*find_path_in_envp(char **envp)
@@ -35,17 +37,17 @@ char	*find_path_in_envp(char **envp)
 char	*find_path(char *command, char **envp)
 {
 	char	**en_paths;
-	char	*en_path;
 	char	*path1;
 	char	*path2;
 	int	i;
 
-	en_path = find_path_in_envp(envp);
 	if (!envp && !command)
 		return (0);
-	en_paths = ft_split(en_path + 5, ':');
 	i = 0;
-	//printf("en: %s\n", en_path);
+	while (ft_strncmp(envp[i], "PATH=", 5) != 0)
+		i++;
+	en_paths = ft_split(envp[i] + 5, ':');
+	i = 0;
 	while (en_paths[i])
 	{
 		path1 = ft_strjoin(en_paths[i], "/");
@@ -55,94 +57,61 @@ char	*find_path(char *command, char **envp)
 			return (path2);
 		i++;
 	}
-	//return (command);
 	return (0);
+}
+
+void	fork_execve(t_fdlist flist, char *argv, char **envp)
+{
+	pid_t	pid;
+	char	*path;
+	char	**comm;
+
+	comm = ft_split(argv, ' ');
+	path = find_path(comm[0], envp);
+	pid = fork();
+	if (pid < 0)
+		ft_error("pid error");
+	else if (pid == 0)
+	{
+		close(flist.closefd);
+		if (dup2(flist.stdinfd, STDIN_FILENO) == -1)
+			ft_error("dup2 error");
+		if (dup2(flist.stdoutfd, STDOUT_FILENO) == -1)
+			ft_error("dup2 error");
+		close(flist.stdinfd);
+		close(flist.stdoutfd);
+		if (execve(path, comm, envp) == -1)
+			ft_error("first execve error");
+	}
+	if (waitpid(pid, NULL, WNOHANG) == -1)
+		ft_error("first waitpid error");
 }
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	char	*path;
-	char	**command;
+	t_fdlist flist;
 	int		fd_open_file;
 	int		fd_output;
-	pid_t	pid;
 	int		fd[2];
 
 	if (argc != 5)
-		ft_error();
+	{
+		print("Error: need more parameters\n");
+		return (1);
+	}
+	fd_open_file = open(argv[1], O_RDONLY);
+	fd_output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);//0644?
+	if (fd_open_file == -1 || fd_output == -1)
+		ft_error("file open error");
 	if (pipe(fd) == -1)
-		ft_error();
-	pid = fork();
-	if (pid == 0)
-	{
-		command = ft_split(argv[2], ' ');
-		path = find_path(command[0], envp);
-		printf("parent_path: %s\n", path);
-		/*if (!path)
-		{
-			perror("path");
-			exit(1);
-		}*/
-		fd_open_file = open(argv[1], O_RDONLY);
-		if (fd_open_file == -1)
-			ft_error();
-		close(fd[0]);
-		if (dup2(fd_open_file, STDIN_FILENO) == -1)
-		{
-			close(fd_open_file);
-			perror("dup2");
-			exit(1);
-		}
-		close(fd_open_file);
-		if (dup2(fd[1], STDOUT_FILENO) == -1)
-		{
-			close(fd[1]);
-			perror("dup2");
-			exit(1);
-		}
-		close(fd[1]);
-		if (execve(path, command, envp) == -1)
-			ft_error();
-		//if (waitpid(pid, NULL, WNOHANG) == -1)
-			//ft_error();
-	}
-	else if (pid > 0)
-	{
-		if (waitpid(pid, NULL, WNOHANG) == -1)
-                        ft_error();
-		command = ft_split(argv[3], ' ');
-		path = find_path(command[0], envp);
-		/*if (!path)
-		{
-			perror("command");
-			exit(1);
-		}*/
-		fd_output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);//0644?
-		if (fd_output == -1)
-			ft_error();
-		close(fd[1]);
-		if (dup2(fd_output, STDOUT_FILENO) == -1)
-		{
-			close(fd_output);
-			perror("dup2");
-			exit(1);
-		}
-		close(fd_output);
-		if (dup2(fd[0], STDIN_FILENO) == -1)
-		{
-			close(fd[0]);
-			perror("dup2");
-			exit(1);
-		}
-		close(fd[0]);
-		if (execve(path, command, envp) == -1)
-			ft_error();
-		//if (waitpid(pid, NULL, WNOHANG) == -1)
-			//ft_error();
-	}
-	else
-	{
-		ft_error();
-	}
+		ft_error("pipe error");
+	flist.closefd = fd[0];
+	flist.stdinfd = fd_open_file;
+	flist.stdoutfd = fd[1];
+	fork_execve(flist, argv[2], envp);
+	flist.closefd = fd[1];
+	flist.stdinfd = fd[0];
+	flist.stdoutfd = fd_output;
+	fork_execve(flist, argv[3], envp);
 	return (0);
 }
