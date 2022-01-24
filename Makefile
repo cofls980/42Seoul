@@ -1,18 +1,6 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: chaekim <chaekim@student.42seoul.kr>       +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/06/10 16:42:49 by chaekim           #+#    #+#              #
-#    Updated: 2021/06/10 16:42:51 by chaekim          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME = pipex
-LIBFT = Libft/libft.a
-SRC_FILES = pipex.c
+#LIBFT = Libft/libft.a
+SRC_FILES = pipex.c find_path.c utils.c ft_split.c
 BONUS_FILES = pipex_bonus.c
 OBJ_FILES = $(SRC_FILES:.c=.o)
 OBJ_BONUS = $(BONUS_FILES:.c=.o)
@@ -25,19 +13,20 @@ all: $(NAME)
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME): $(OBJ_FILES) $(LIBFT)
-	$(CC) $(CFLAGS) -o $@ $^ $(LIBFT)
+$(NAME): $(OBJ_FILES) #$(LIBFT)
+	$(CC) $(CFLAGS) -o $@ $^ 
+#$(LIBFT)
 
-$(LIBFT):
-	make -C Libft
+#$(LIBFT):
+#	make -C Libft
 
 clean:
 	$(RM) $(OBJ_FILES) $(OBJ_BONUS)
-	make clean -C Libft
+#make clean -C Libft
 
 fclean: clean
 	$(RM) $(NAME)
-	make fclean -C Libft
+#make fclean -C Libft
 
 re: fclean all
 

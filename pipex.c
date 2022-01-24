@@ -1,117 +1,69 @@
 #include "pipex.h"
 
-void	ft_error(char *mssg)
+void	child_process(int fd[], char **envp, int flag, t_fdlist *flist)
 {
-	perror(mssg);
-	exit(1);
-}
-
-void	print(char *str)
-{
-	int		i;
-	char	ch;
-
-	i = 0;
-	while (*(str + i))
+	if (flag == 1)
 	{
-		ch = *(str + i);
-		write(1, &ch, 1);
-		i++;
+		close(fd[0]);
+		if (dup2(flist->infilefd, STDIN_FILENO) == -1)
+			ft_error("dup2 error", 0);
+		if (dup2(fd[1], STDOUT_FILENO) == -1)
+			ft_error("dup2 error", 0);
+		close(flist->infilefd);
+		close(fd[1]);
+		if (execve(flist->path1, flist->command1, envp) == -1)
+			ft_error("first execve error", 0);
+	}
+	else if (flag == 2)
+	{
+		close(fd[1]);
+		if (dup2(fd[0], STDIN_FILENO) == -1)
+			ft_error("dup2 error", 0);
+		if (dup2(flist->outfilefd, STDOUT_FILENO) == -1)
+			ft_error("dup2 error", 0);
+		close(fd[0]);
+		close(flist->outfilefd);
+		if (execve(flist->path2, flist->command2, envp) == -1)
+			ft_error("second execve error", 0);
 	}
 }
 
-char	*find_path_in_envp(char **envp)
+int	ft_fork(int fd[], int flag, t_fdlist *flist, char **envp)
 {
-	int	i;
+	int	pid;
 
-	i = 0;
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
-			return (envp[i]);
-		i++;
-	}
-	return (0);
-}
-
-char	*find_path(char *command, char **envp)
-{
-	char	**en_paths;
-	char	*path1;
-	char	*path2;
-	int	i;
-
-	if (!envp && !command)
-		return (0);
-	i = 0;
-	while (ft_strncmp(envp[i], "PATH=", 5) != 0)
-		i++;
-	en_paths = ft_split(envp[i] + 5, ':');
-	i = 0;
-	while (en_paths[i])
-	{
-		path1 = ft_strjoin(en_paths[i], "/");
-		path2 = ft_strjoin(path1, command);
-		free(path1);
-		if (access(path2, F_OK) == 0)
-			return (path2);
-		i++;
-	}
-	return (0);
-}
-
-void	fork_execve(t_fdlist flist, char *argv, char **envp)
-{
-	pid_t	pid;
-	char	*path;
-	char	**comm;
-
-	comm = ft_split(argv, ' ');
-	path = find_path(comm[0], envp);
 	pid = fork();
 	if (pid < 0)
-		ft_error("pid error");
+		ft_error("pipe error", flist);
 	else if (pid == 0)
-	{
-		close(flist.closefd);
-		if (dup2(flist.stdinfd, STDIN_FILENO) == -1)
-			ft_error("dup2 error");
-		if (dup2(flist.stdoutfd, STDOUT_FILENO) == -1)
-			ft_error("dup2 error");
-		close(flist.stdinfd);
-		close(flist.stdoutfd);
-		if (execve(path, comm, envp) == -1)
-			ft_error("first execve error");
-	}
-	if (waitpid(pid, NULL, WNOHANG) == -1)
-		ft_error("first waitpid error");
+		child_process(fd, envp, flag, flist);
+	return (pid);
 }
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	t_fdlist flist;
-	int		fd_open_file;
-	int		fd_output;
+	t_fdlist	flist;
 	int		fd[2];
+	int		pid[2];
 
 	if (argc != 5)
 	{
 		print("Error: need more parameters\n");
 		return (1);
 	}
-	fd_open_file = open(argv[1], O_RDONLY);
-	fd_output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);//0644?
-	if (fd_open_file == -1 || fd_output == -1)
-		ft_error("file open error");
+	init_flist(argv, envp, &flist);
+	flist.infilefd = open(argv[1], O_RDONLY);
+	if (flist.infilefd == -1)
+		ft_error("file open error", &flist);
+	flist.outfilefd = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (flist.outfilefd == -1)
+		ft_error("file open error", &flist);
 	if (pipe(fd) == -1)
-		ft_error("pipe error");
-	flist.closefd = fd[0];
-	flist.stdinfd = fd_open_file;
-	flist.stdoutfd = fd[1];
-	fork_execve(flist, argv[2], envp);
-	flist.closefd = fd[1];
-	flist.stdinfd = fd[0];
-	flist.stdoutfd = fd_output;
-	fork_execve(flist, argv[3], envp);
+		ft_error("pipe error", &flist);
+	pid[0] = ft_fork(fd, 1, &flist, envp);
+	pid[1] = ft_fork(fd, 2, &flist, envp);
+	waitpid(pid[1], NULL, 0);
+	waitpid(pid[0], NULL, 0);
+	free_all(&flist);
 	return (0);
 }
