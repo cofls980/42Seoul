@@ -1,7 +1,7 @@
 # Pipex
 Pipex project from 42Seoul
 
-##Execution
+## Execution
 > ./pipex file1 cmd1 cmd2  file2
 > 
 > < file1 cmd1 | cmd2 > file2
