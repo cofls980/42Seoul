@@ -1,6 +1,6 @@
 #include "push_swap.h"
 
-int		ft_wordcount(char const *s, char c)
+int	ft_wordcount(char const *s, char c)
 {
 	int	i;
 	int	count;
@@ -53,6 +53,18 @@ void	ft_cpy(char *str, char const *s, int start, int end)
 	str[i] = '\0';
 }
 
+void	str_free(char **str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		free(str[i]);
+	}
+	free(str);
+}
+
 char	**ft_split(char const *s, char c)
 {
 	char	**str;
@@ -60,7 +72,8 @@ char	**ft_split(char const *s, char c)
 	int		start;
 	int		end;
 
-	if (!(str = (char**)malloc(sizeof(char*) * (ft_wordcount(s, c) + 1))))
+	str = (char **)malloc(sizeof(char *) * (ft_wordcount(s, c) + 1));
+	if (!str)
 		return (0);
 	i = 0;
 	start = 0;
@@ -68,11 +81,10 @@ char	**ft_split(char const *s, char c)
 	while (i < ft_wordcount(s, c))
 	{
 		ft_findword(s, c, &start, &end);
-		if (!(str[i] = (char*)malloc(sizeof(char) * (end - start + 1))))
+		str[i] = (char *)malloc(sizeof(char) * (end - start + 1));
+		if (!str[i])
 		{
-			while (i--)
-				free(str[i]);
-			free(str);
+			str_free(str);
 			return (0);
 		}
 		ft_cpy(str[i++], s, start, end);
