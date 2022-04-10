@@ -1,16 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: chaekim <marvin@42.fr>                     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/25 03:22:41 by chaekim           #+#    #+#             */
-/*   Updated: 2022/01/25 03:28:07 by chaekim          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "pipex.h"
+#include "../includes/pipex_bonus.h"
 
 int	ft_wordcount(char const *s, char c)
 {
@@ -65,16 +53,6 @@ void	ft_cpy(char *str, char const *s, int start, int end)
 	str[i] = '\0';
 }
 
-void	free_str(char **str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		free(str[i]);
-	free(str);
-}
-
 char	**ft_split(char const *s, char c)
 {
 	char	**str;
@@ -94,6 +72,7 @@ char	**ft_split(char const *s, char c)
 		str[i] = (char *)malloc(sizeof(char) * (end - start + 1));
 		if (!str[i])
 		{
+			free_str(str);
 			return (0);
 		}
 		ft_cpy(str[i++], s, start, end);
