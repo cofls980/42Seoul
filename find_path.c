@@ -18,7 +18,7 @@ int	ft_strncmp(const char *s1, const char *s2, int n)
 
 int	is_access(char *path, char **en_paths)
 {
-	if (access(path, F_OK) == 0)
+	if (open(path, O_RDONLY) != -1)
 	{
 		free_str(en_paths);
 		return (0);

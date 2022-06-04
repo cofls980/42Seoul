@@ -1,69 +1,115 @@
 #include "./includes/minishell.h"
-/*
-	1. pipe를 기준으로 문자열 분리
-	2. 1에서 분리된 각 문자열을 따옴표를 고려한 공백을 기준으로 분리
-	3. 2번에서 문자열 분리할 때 환경변수도 같이 파싱
-	===== 추가 =====
-	1. 리다이레션 파싱 추가
-	2. $?
-	3. 파이프 사용했을 때 처리
-		- 입력 문자열 끝이 파이프 기호로 끝난 경우 에러
-	', ", | $ < > << >> 제외한 특수문자는 단순 문자로 인식
-	4. $뒤에 오는 문자 처리
-		- $ 뒤에 바로 숫자가 오면 $[한자리 숫자] 로 해석 ===> http://www.itmoa.co.kr/gzboard.php?code=techqna&mode=gz_read&Page=5&no=222
-		- $ 바로 뒤에는 _나 문자가 와야함(숫자는 첫번째만 아니면 된다.)
-		- 특수문자를 만나는 동시에 해석 종료 ===> ex) $% 입력이 들어오면 그냥 $% 출력
-		- $ 뒤에 아무것도 없으면 그냥 $ 출력
-*/
-void	parsing(char *str, t_info *info)
+
+void	free_pid(t_info *info)
 {
 	int	i;
-	int	start;
-	char	**bundle;
+
+	i = 0;
+	while (i < info->have_pipe + 1)
+	{
+		if (info->pids[i] == -2)
+		{
+			printf("%d in\n", i);
+			i++;
+			continue ;
+		}
+		waitpid(info->pids[i++], NULL, 0);
+		//printf("finished - %d\n", i - 1);
+	}
+	free(info->pids);
+}
+
+void	parsing(char **bundle, t_info *info)
+{
+	int		i;
 	char	**small;
 
-	bundle = split_pipe(str); //pipe를 기준으로 문자열 나눔
-	if (!bundle)
-		return;
-	i = 0;
-	while (bundle[i])
+	i = -1;
+	while (bundle[++i])
 	{
+		info->redirect_in = -1;
+		info->redirect_out = -1;
+		if (!solve_redirect(bundle[i], info))
+			break ;
 		small = split_words(bundle[i]); // 하나의 단어로 분리
-		interpret_quotes(small, info); // 따옴표와 $기호 해석
-		check_command(small, info); // 파싱된 문자열 실행
+		if (!small)
+			break ;//만약에 파이프가 있는 경우이면 continue;가 나을 것 같지 않은가
+		if (interpret_quotes(small, info))
+			info->error = 5;
+		info->pids[i] = command(small, info);
+		info->pipe_count--;
+		info->redirect = 0;
 		free_str(small);
-		i++;
 	}
+}
+
+void	minishell(char *str, t_info *info)
+{
+	char	**bundle;
+
+	info->error = 0;
+	bundle = split_pipe(str, info); //pipe를 기준으로 문자열 나눔
+	if (!bundle)
+		return ;
+	info->pids = (pid_t *)malloc(sizeof(pid_t) * (info->pipe_count + 1));
+	if (!(info->pids))
+	{
+		printf("minishell: malloc error\n");
+		return ;
+	}
+	info->have_pipe = info->pipe_count;
+	parsing(bundle, info);
+	dup2(info->output_file, STDOUT_FILENO);
+	free_pid(info);
 	free_str(bundle);
+	info->have_pipe = 0;
+	info->pipe_count = 0;
+	info->input_file = 0;
+	info->output_file = 1;
+	info->redirect = 0;
+	info->redirect_in = -1;
+	info->redirect_out = -1;
+	info->here_doc = 0;
+	if (info->error == 5)
+		error_message(0, 5);
+	info->error = -1;
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	char			*input;
-	char			**command;
 	t_info			info;
 	struct termios	term;
 
+	if (argc == 1 && ft_strcmp(argv[0], "./minishell"))
+	{
+		printf("hh\n");
+	}
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, signal_handler);
 	tcgetattr(STDIN_FILENO, &term);
-	term.c_lflag &= ~ECHOCTL;
+	//term.c_lflag &= ~ECHOCTL;
 	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 	init(&info, envp);
 	while (1)
 	{
 		input = readline("\033[0;31mminishell> \033[0;37m");
-		if (input)
-		{
-			add_history(input);
-			parsing(input, &info); //입력받은 문자열에 대해 파싱 시작
-			free(input);//반드시 free
-		}
-		else
+		if (!input)//ctrl^D
 		{
 			printf("\n");
 			break ;
 		}
+		else if (input[0] == '\0')//minishell>뒤에 아무것도 입력하지않고 엔터만 누른 경우
+		{
+			free(input);
+		}
+		else
+		{
+			add_history(input);
+			minishell(input, &info); //입력받은 문자열에 대해 파싱 시작
+			free(input);//반드시 free
+		}
 	}
-	return (0);	
+	//free everything
+	return (0);
 }

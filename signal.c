@@ -2,8 +2,8 @@
 
 void	signal_handler(int signal)
 {
-	char c;
-	struct termios	term;
+	//char c;
+	//struct termios	term;
 
 	//signal(signal, SIG_IGN);
 	if (signal == SIGINT)
@@ -28,33 +28,4 @@ void	signal_handler(int signal)
 		tcsetattr(STDIN_FILENO, TCSANOW, &term);*/
 		return ;
 	}
-}
-
-void	execute(char **command, char **envp)
-{
-	char	*path;
-
-	path = find_path(command[0], envp);
-	if (execve(path, command, envp) == -1)
-	{
-		printf("execve fail\n");
-		exit(EXIT_FAILURE);
-	}
-}
-
-void	running_execute(char **command, t_info *info)//단순 실행
-{
-	pid_t pid;
-
-	pid = fork();
-	if (pid < 0)
-	{
-		printf("error\n");
-		exit(EXIT_FAILURE);
-	}
-	else if (pid == 0)
-	{
-		execute(command, info->envp);
-	}
-	waitpid(pid, NULL, 0);
 }

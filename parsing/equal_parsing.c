@@ -1,4 +1,4 @@
-#include "./includes/minishell.h"
+#include "../includes/minishell.h"
 
 int	find_equal(char *str)
 {
@@ -22,6 +22,7 @@ char	*envp_parsing(char *str, int start, int len)
 	res = (char *)malloc(sizeof(char) * (len + 1));
 	if (!res)
 	{
+		error_message(0, 0);
 		return(0);
 	}
 	i = 0;
@@ -30,7 +31,7 @@ char	*envp_parsing(char *str, int start, int len)
 		res[i] = str[i + start];
 		i++;
 	}
-	res[i] = 0;
+	res[i] = '\0';
 	return (res);
 }
 
@@ -48,48 +49,26 @@ int	check_key(char *str, int equal_idx) //key에 공백이 있는지 없는지 �
 	return (0);
 }
 
-/*int	check_value(char *str, int equal_idx)
-{
-	int	i;
-
-	i = equal_idx + 1;
-	while (str[i])
-	{
-		if (str[i] == ' ')
-			return (1);
-		i++;
-	}
-	return (0);
-}*/
-
-int	is_check(char *str, int equal_idx)
-{
-	if (check_key(str, equal_idx))
-		return (1);
-	/*if (check_value(str, equal_idx))
-		return (1);*/
-	return (0);
-}
-
-char	**split_equal(char *str)
+char	**split_equal(char *str)// key, value 분리
 {
 	char	**res;
 	int equal_idx;
-	int		i;
 
 	res = (char **)malloc(sizeof(char *) * 3);
 	if (!res)
+	{
+		error_message(0, 0);
 		return (0);
+	}
+	init_str(res, 3);
 	equal_idx = find_equal(str); //= 인덱스 번호
-	if (equal_idx == -1)
-		return (0);
-	if (is_check(str, equal_idx))
+	if (check_key(str, equal_idx))
 	{
 		printf("minishell: export: %s: not a valid identifier\n", str);
 		return (0);
 	}
 	res[0] = envp_parsing(str, 0, equal_idx); //key malloc
-	res[1] = envp_parsing(str, equal_idx + 1, ft_strlen(str + equal_idx + 1)); //value malloc
-	res[2] = 0;
+	if (equal_idx != -1)
+		res[1] = envp_parsing(str, equal_idx + 1, ft_strlen(str + equal_idx + 1)); //value malloc
 	return (res);
 }

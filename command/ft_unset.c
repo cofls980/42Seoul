@@ -1,4 +1,4 @@
-#include "./includes/minishell.h"
+#include "../includes/minishell.h"
 /*
 	변수명에 _를 제외한 특수 문자가 들어가면 에러 처리
 	그리고 처음에 숫자가 오면 안된다.
@@ -26,7 +26,11 @@ void	ft_unset(char **cmd, t_info *info)
 
 	if (cmd[1] && cmd[1][0] == '-') // 옵션이 있는지 없는지 확인
 	{
-		printf("minishell: unset: -%c: do not need options\n", cmd[1][1]);
+		cmd[1][2] = 0;
+		ft_write(info, "minishell: unset: ");
+		ft_write(info, cmd[1]);
+		ft_write(info, ": do not need options\n");
+		//printf("minishell: unset: -%c: do not need options\n", cmd[1][1]);
 		return ;
 	}
 	i = 1;
@@ -34,7 +38,10 @@ void	ft_unset(char **cmd, t_info *info)
 	{
 		if (is_valid(cmd[i]))
 		{
-			printf("minishell: unset: %s: not a valid identifier\n", cmd[i]);
+			ft_write(info, "minishell: unset: ");
+			ft_write(info, cmd[i]);
+			ft_write(info, ": not a valid identifier\n");
+			//printf("minishell: unset: %s: not a valid identifier\n", cmd[i]);
 		}
 		else
 		{
