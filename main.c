@@ -9,7 +9,7 @@ void	free_pid(t_info *info)
 	{
 		if (info->pids[i] == -2)
 		{
-			printf("%d in\n", i);
+			//printf("%d in\n", i);
 			i++;
 			continue ;
 		}
@@ -91,6 +91,7 @@ int	main(int argc, char **argv, char **envp)
 	//term.c_lflag &= ~ECHOCTL;
 	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 	init(&info, envp);
+	g_exit_num = 0;
 	while (1)
 	{
 		input = readline("\033[0;31mminishell> \033[0;37m");

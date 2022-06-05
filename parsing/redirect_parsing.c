@@ -24,15 +24,20 @@ int	redirection(char *name, t_info *info) // < 1, > 2, << 3, >> 4
 		fd = here_doc(name, info);
 	else if (info->redirect == 4)
 		fd = open(name, O_WRONLY | O_CREAT | O_APPEND, 0777);
+	else
+		fd = -2;
 	if (fd == -1)// open할 때도 없는 파일이면 오픈 못함 error mssg
 	{
 		error_message(0, 2);//error mssg
 		return (0);
 	}
-	if (info->redirect % 2 == 1)
-		info->redirect_in = fd;
-	else
-		info->redirect_out = fd;
+	if (fd != -2)
+	{
+		if (info->redirect % 2 == 1)
+			info->redirect_in = fd;
+		else
+			info->redirect_out = fd;
+	}
 	return (1);
 }
 

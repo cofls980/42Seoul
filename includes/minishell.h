@@ -11,8 +11,11 @@
 #include <signal.h>
 #include <termios.h>
 # include <dirent.h>
+# include <errno.h>
 //tcgetattr, tcsetattr
 //int tcsetattr(int fildes, int optional_actions, struct termios *termios_p);
+
+int	g_exit_num;
 
 typedef struct s_list // 환경 변수를 위한 리트스 구조체
 {
@@ -61,7 +64,7 @@ void	delete_item(t_list *item);
 void	list_insert(t_list **list, t_list *item);
 void	list_remove(t_list **list, char *key);
 int		is_empty(t_list **list);
-void	ft_env(t_info *info);
+int		ft_env(char **command, t_info *info);
 void	ft_export(char **command, t_info *info);
 char	**split_equal(char *str);
 char	**split_words(char *str);
@@ -91,5 +94,9 @@ void	error_message(char **strs, int flag);
 void	fill_word(char *str, char *res, int start, int end);
 void	set_redirection(t_info *info);
 void	ft_write(t_info *info, char *str);
+int		ft_cd(char **command, t_info *info);
+void	ft_print_error(int fd, char *cmd, char *arg, char *msg);
+void	ft_error(int exit_status);
+int		ft_exit(char **command);
 
 #endif

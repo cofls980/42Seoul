@@ -11,7 +11,11 @@ int	builtin_command(char **command, t_info *info) // 명령어 추가
 	else if (ft_strcmp(command[0], "echo") == 0)
 		ft_echo(command, info);
 	else if (ft_strcmp(command[0], "env") == 0)
-		ft_env(info);//대충 만들었음
+		ft_env(command, info);
+	else if (ft_strcmp(command[0], "cd") == 0)
+		ft_cd(command, info);
+	else if (ft_strcmp(command[0], "exit") == 0)
+		ft_exit(command);
 	else
 		return (0);
 	return (1);
@@ -70,7 +74,9 @@ pid_t	command(char **command, t_info *info)
 	else
 	{
 		if (!builtin_command(command, info))
-			execute(command, info->envp);
+			pid = last_execute(command, info);
+		else
+			pid = -2;
 	}
 	return (pid);
 }
