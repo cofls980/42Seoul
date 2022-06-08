@@ -60,12 +60,12 @@ static int	is_in_range(char *str)
 	return (1);
 }
 
-static int	exit_non_numeric(char *str)
+static int	exit_non_numeric(char *str, t_info *info) //exit|exit kjdhfk --> exit $?
 {
-	printf("exit\n");
-	ft_print_error(2, "exit", str,\
+	ft_print(info, "exit\n");
+	ft_print_error("exit", str,\
 	"numeric argument required");
-	ft_error(255);
+	//ft_error(255);
 	return (255);
 }
 
@@ -93,20 +93,22 @@ static long long	stoll(char *str)
 	return (num);
 }
 
-int	ft_exit(char **command)
+int	ft_exit(char **command, t_info *info)
 {
 	g_exit_num = EXIT_FAILURE;
 	if (command)
 	{
-		if (command[2] == NULL)
+		if (command[2] == 0)
 		{
 			if (!is_digit(command[1]) || !is_in_range(command[1]))
-				return (exit_non_numeric(command[1]));
+				return (exit_non_numeric(command[1], info));
 			g_exit_num = (unsigned char)stoll(command[1]);
-			printf("exit\n");
-			ft_error(g_exit_num);
+			ft_print(info, "exit\n");
+			if (command[1][0] == '\0')
+				ft_print(info, "minishell: exit: : numeric argument required\n");
+			ft_error(g_exit_num);//이 부분 살리기
 		}
-		ft_print_error(2, "exit", 0, "too many arguments");
+		ft_print_error("exit", 0, "too many arguments");
 	}
 	return (1);
 }

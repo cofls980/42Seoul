@@ -1,12 +1,12 @@
 NAME = minishell
-SRC = main.c ft_split.c find_path.c utils.c list.c signal.c init.c ft_utils.c\
-	command/ft_echo.c command/ft_env.c command/ft_export.c\
-	command/ft_pwd.c command/command.c command/ft_unset.c command/execute.c\
-	command/ft_cd.c command/ft_exit.c command/ft_utils.c\
+SRC = main.c ft_split.c find_path.c utils.c list.c ft_signal.c init.c\
+	ft_utils.c list_insert.c ft_strutils.c\
+	check_syntax.c command/ft_echo.c command/ft_env.c command/ft_export.c\
+	command/ft_pwd.c command/command.c command/ft_unset.c\
+	command/ft_cd.c command/ft_exit.c command/command_utils.c\
 	parsing/pipes_parsing.c parsing/words_parsing.c parsing/equal_parsing.c\
-	parsing/quote_var_parsing.c parsing/word_change.c parsing/redirect_parsing.c\
-	parsing/word_len.c parsing/here_doc.c parsing/parsing_utils.c
-#parsing/get_next_line.c
+	parsing/interpret_word.c parsing/get_interpret_word.c parsing/redirect_parsing.c\
+	parsing/get_word_len.c parsing/here_doc.c parsing/parsing_utils.c
 OBJ = $(SRC:%.c=%.o)
 
 CC = gcc
@@ -18,9 +18,10 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -L $(shell brew --prefix readline)/lib/ -lreadline
+# -L $(shell brew --prefix readline)/lib/
 %.o: %.c
 	$(CC) $(CFLAGS) -I$(HEADER) -c -o $@ $< -I$(shell brew --prefix readline)/include/
-# -I lib/libft/include/ 
+# -I lib/libft/include/  -I$(shell brew --prefix readline)/include/
 clean:
 	$(RM) $(OBJ)
 

@@ -52,7 +52,7 @@ int	have_newline(char **backup, char **line, int i)
 	if (len == 0)
 	{
 		free(*backup);
-		*backup = NULL;
+		*backup = 0;
 		return (1);
 	}
 	copy = ft_strdup(*backup + i + 1);
@@ -72,7 +72,7 @@ int	until_end(char **backup, char **line)
 		else
 		{
 			*line = *backup;
-			*backup = NULL;
+			*backup = 0;
 			return (0);
 		}
 	}

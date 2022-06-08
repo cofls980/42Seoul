@@ -45,65 +45,78 @@ int	have_equal(char *str) // 유효한 =가 있는지
 	return (0);
 }
 
-void	export_print(int i, t_list *tmp, t_info *info)
-{
-	if (i == 1)// export 입력이 들어올 경우
+void	print_declare(t_info *info, char *key, char *value)
+{//값에 큰따옴표가 있는 경우 맥에서 해결
+	ft_print(info, "declare -x ");
+	ft_print(info, key);
+	if (value)
 	{
-		while (tmp)
+		ft_print(info, "=\"");
+		ft_print(info, value);
+		ft_print(info, "\"");
+	}
+	ft_print(info, "\n");
+}
+
+void	export_print(int i, t_info *info)
+{
+	t_list	*export_list;
+	t_list	*user_list;
+
+	export_list = info->export_list;
+	user_list = info->user_list;
+	if (i == 1)
+	{
+		while (export_list)
 		{
-			ft_write(info, "declare -x ");
-			if (tmp->print)//printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);//값에 큰따옴표가 있는 경우 맥에서 해결
-			{
-				ft_write(info, tmp->key);
-				ft_write(info, "=\"");
-				ft_write(info, tmp->value);
-				ft_write(info, "\"\n");
-			}
-			else
-			{//printf("declare -x %s\n", tmp->key);
-				ft_write(info, tmp->key);
-				ft_write(info, "\n");
-			}
-			tmp = tmp->next;
+			print_declare(info, export_list->key, export_list->value);
+			export_list = export_list->next;
+		}
+		while (user_list)
+		{
+			print_declare(info, user_list->key, user_list->value);
+			user_list = user_list->next;
 		}
 	}
 }
 
-void	ft_export(char **command, t_info *info) //export ""
+int	ft_export(char **command, t_info *info)
 {
-	t_list	*tmp;
 	char	**envp_item;
 	int		i;
+	int		flag;
+	int		status;
 
-	if (command[1] && command[1][0] == '-') //옵션이 들어올 경우
+	if (command[1] && command[1][0] == '-')
 	{
 		command[1][2] = 0;
-		ft_write(info, "minishell: export: ");
-		ft_write(info, command[1]);
-		ft_write(info, ": do not need options\n");
-		//printf("minishell: export: -%c: do not need options\n", command[1][1]);
-		return ;
+		ft_print_error(command[0], command[1], "invalid option");
+		return (1);
 	}
-	tmp = info->list;
 	i = 0;
+	status = 0;
 	while (command[++i])
 	{
-		envp_item = split_equal(command[i]);
-		if (!is_key_valid(envp_item[0]))
+		flag = 0;
+		envp_item = split_equal(command[i], &flag);
+		if (envp_item && !is_key_valid(envp_item[0]))
 		{
 			if (have_equal(command[i]))
-				list_insert(&(tmp), new_item(ft_strdup(envp_item[0]), ft_strdup(envp_item[1]), 1));
+			{
+				list_insert(&(info->env_list), new_item(ft_strdup(envp_item[0]), ft_strdup(envp_item[1])));
+				list_insert_for_export(&(info->user_list), new_item(ft_strdup(envp_item[0]), ft_strdup(envp_item[1])));
+			}
 			else
-				list_insert(&(tmp), new_item(ft_strdup(envp_item[0]), 0, 0));
+				list_insert_for_export(&(info->user_list), new_item(ft_strdup(envp_item[0]), 0));
 		}
 		else
 		{
-			ft_write(info, "minishell: export: ");
-			ft_write(info, command[i]);
-			ft_write(info, ": not a valid identifier\n");
-			//printf("minishell: export: %s: not a valid identifier\n", command[i]);
+			status = 1;
+			if (flag == 0)
+				ft_print_error(command[0], command[i], "not a valid identifier");
 		}
 		free_str(envp_item);
 	}
-	export_print(i, tmp, info);
+	export_print(i, info);
+	return (status);
 }

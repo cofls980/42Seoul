@@ -8,6 +8,8 @@ int	is_valid(char *str) // 환경 변수명으로 사용될 문자열이 올바�
 {
 	int	i;
 
+	if (str[0] == '\0')
+		return (1);
 	if ('0' <= str[0] && str[0] <= '9')
 		return (1);
 	i = 0;
@@ -20,34 +22,33 @@ int	is_valid(char *str) // 환경 변수명으로 사용될 문자열이 올바�
 	return (0);
 }
 
-void	ft_unset(char **cmd, t_info *info)
+int	ft_unset(char **cmd, t_info *info)
 {
 	int i;
+	int	status;
 
 	if (cmd[1] && cmd[1][0] == '-') // 옵션이 있는지 없는지 확인
 	{
 		cmd[1][2] = 0;
-		ft_write(info, "minishell: unset: ");
-		ft_write(info, cmd[1]);
-		ft_write(info, ": do not need options\n");
-		//printf("minishell: unset: -%c: do not need options\n", cmd[1][1]);
-		return ;
+		ft_print_error(cmd[0], cmd[1], "invalid option");
+		return (2);//check
 	}
 	i = 1;
+	status = 0;
 	while (cmd[i])
 	{
 		if (is_valid(cmd[i]))
 		{
-			ft_write(info, "minishell: unset: ");
-			ft_write(info, cmd[i]);
-			ft_write(info, ": not a valid identifier\n");
-			//printf("minishell: unset: %s: not a valid identifier\n", cmd[i]);
+			ft_print_error(cmd[0], cmd[i], "not a valid identifier");
+			status = 1;
 		}
 		else
 		{
-			//find and remove
-			list_remove(&(info->list), cmd[i]);
+			list_remove(&(info->env_list), cmd[i]);
+			list_remove(&(info->export_list), cmd[i]);
+			list_remove(&(info->user_list), cmd[i]);
 		}
 		i++;
 	}
+	return (status);
 }

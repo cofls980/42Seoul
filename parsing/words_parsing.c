@@ -14,14 +14,13 @@ int	count_word(char *str)
 	quote = 0;
 	while (str[i])
 	{
-		if (str[i] != ' ' && !word)
+		check_quote(str[i], &quote);
+		if (!is_space(str[i]) && !word)
 		{
 			cnt++;
-			//printf("c: %c\n", str[i]);
 			word = 1;
 		}
-		check_quote(str[i], &quote);
-		if (str[i] == ' ' && word && !quote)
+		if (is_space(str[i]) && word && !quote)
 			word = 0;
 		i++;
 	}
@@ -40,53 +39,47 @@ int	find_word(char *str, int *start)
 	quote = 0;
 	while (str[i])
 	{
-		if (str[i] != ' ' && !word)
-		{
-			//printf("f_c: %c\n", str[i]);
-			word = 1;
-		}
 		check_quote(str[i], &quote);
-		if (str[i] == ' ' && word && !quote)
+		if (!is_space(str[i]) && !word)
+			word = 1;
+		if (is_space(str[i]) && word && !quote)
 			break ;
 		i++;
 	}
 	return (i);
 }
 
-char	**split_words(char *str)
+char	**split_words(char *bundle)
 {
-	int		cnt;
-	int		start;
-	int		end;
+	t_word	w_info;
 	int		i;
 	char	**res;
 
-	cnt = count_word(str); // 단어 개수
-	//printf("cnt: %d\n", cnt);
-	res = (char **)malloc(sizeof(char *) * (cnt + 1));
+	w_info.len = count_word(bundle);
+	if (w_info.len == 0)
+		return (0);
+	res = (char **)malloc(sizeof(char *) * (w_info.len + 1));
 	if (!res)
 	{
-		error_message(0, 0);
+		ft_print_error(0, 0, strerror(errno));
 		return (0);
 	}
-	init_str(res, cnt + 1);
+	init_str(res, w_info.len + 1);
 	i = 0;
-	start = 0;
-	while (i < cnt)
+	w_info.start = 0;
+	while (i < w_info.len)
 	{
-		end = find_word(str, &start);
-		res[i] = (char *)malloc(sizeof(char) * (end - start + 1));
+		w_info.end = find_word(bundle, &(w_info.start));
+		res[i] = (char *)malloc(sizeof(char) * (w_info.end - w_info.start + 1));
 		if (!res[i])
 		{
-			error_message(res, 0);
+			ft_print_error(0, 0, strerror(errno));
+			free_str(res);
 			return (0);
 		}
-		fill_word(str, res[i], start, end);
-		start = end;
+		fill_word(bundle, res[i], w_info.start, w_info.end);
+		w_info.start = w_info.end;
 		i++;
 	}
-	/*i = 0;
-	while (res[i])
-		printf("str: %s\n", res[i++]);*/
 	return (res);
 }

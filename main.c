@@ -3,114 +3,124 @@
 void	free_pid(t_info *info)
 {
 	int	i;
+	int	status;
 
 	i = 0;
-	while (i < info->have_pipe + 1)
+	while (i < info->have_pipe)
 	{
 		if (info->pids[i] == -2)
 		{
-			//printf("%d in\n", i);
 			i++;
 			continue ;
 		}
-		waitpid(info->pids[i++], NULL, 0);
-		//printf("finished - %d\n", i - 1);
+		waitpid(info->pids[i++], 0, 0);
+	}
+	//마지막 명령어만 status 가져오기
+	if (info->pids[i] != -2)
+	{
+		waitpid(info->pids[i], &status, 0);
+		g_exit_num = (status & 0xff00) >> 8;
 	}
 	free(info->pids);
 }
 
-void	parsing(char **bundle, t_info *info)
+void	parsing(char **bundles, t_info *info)
 {
 	int		i;
-	char	**small;
+	char	**parts;
 
+	info->have_pipe = info->pipe_num;
 	i = -1;
-	while (bundle[++i])
+	while (bundles[++i])
 	{
-		info->redirect_in = -1;
-		info->redirect_out = -1;
-		if (!solve_redirect(bundle[i], info))
-			break ;
-		small = split_words(bundle[i]); // 하나의 단어로 분리
-		if (!small)
-			break ;//만약에 파이프가 있는 경우이면 continue;가 나을 것 같지 않은가
-		if (interpret_quotes(small, info))
-			info->error = 5;
-		info->pids[i] = command(small, info);
-		info->pipe_count--;
-		info->redirect = 0;
-		free_str(small);
+		info->r_in_fd = -1;
+		info->r_out_fd = -1;
+		info->r_kind = 0;
+		parts = 0;
+		if (solve_redirect(bundles[i], info) != -2)
+		{
+			parts = split_words(bundles[i]);
+			if (parts && interpret_word(parts, info))
+				info->pids[i] = command(parts, info);
+			else
+				g_exit_num = 1;
+		}
+		else
+			g_exit_num = 1;
+		info->pipe_num--;
+		free_str(parts);
 	}
 }
 
-void	minishell(char *str, t_info *info)
+void	minishell(char *input, t_info *info)
 {
-	char	**bundle;
-
-	info->error = 0;
-	bundle = split_pipe(str, info); //pipe를 기준으로 문자열 나눔
-	if (!bundle)
+	if (check_syntax(input, info))
+	{
+		ft_print_error(0, 0, "syntax error near unexpected token");
+		g_exit_num = 2;//check
 		return ;
-	info->pids = (pid_t *)malloc(sizeof(pid_t) * (info->pipe_count + 1));
+	}
+	info->bundles = pipe_parsing(input, info);
+	if (!(info->bundles))
+	{
+		g_exit_num = 1;
+		return ;
+	}
+	info->pids = (pid_t *)malloc(sizeof(pid_t) * (info->pipe_num + 1));
 	if (!(info->pids))
 	{
-		printf("minishell: malloc error\n");
+		ft_print_error(0, 0, strerror(errno));
+		free_str(info->bundles);
+		g_exit_num = 1;
 		return ;
 	}
-	info->have_pipe = info->pipe_count;
-	parsing(bundle, info);
-	dup2(info->output_file, STDOUT_FILENO);
+	parsing(info->bundles, info);
 	free_pid(info);
-	free_str(bundle);
-	info->have_pipe = 0;
-	info->pipe_count = 0;
-	info->input_file = 0;
-	info->output_file = 1;
-	info->redirect = 0;
-	info->redirect_in = -1;
-	info->redirect_out = -1;
-	info->here_doc = 0;
-	if (info->error == 5)
-		error_message(0, 5);
-	info->error = -1;
+	free_str(info->bundles);
 }
 
-int	main(int argc, char **argv, char **envp)
+void	ft_readline(t_info *info)
 {
-	char			*input;
-	t_info			info;
-	struct termios	term;
+	char	*input;
 
-	if (argc == 1 && ft_strcmp(argv[0], "./minishell"))
-	{
-		printf("hh\n");
-	}
-	signal(SIGINT, signal_handler);
-	signal(SIGQUIT, signal_handler);
-	tcgetattr(STDIN_FILENO, &term);
-	//term.c_lflag &= ~ECHOCTL;
-	tcsetattr(STDIN_FILENO, TCSANOW, &term);
-	init(&info, envp);
-	g_exit_num = 0;
+	init_ctrl();
 	while (1)
 	{
-		input = readline("\033[0;31mminishell> \033[0;37m");
-		if (!input)//ctrl^D
+		init_reset(info);
+		input = readline("\033[0;31mminishell$ \033[0;37m");
+		if (!input)
 		{
 			printf("\n");
 			break ;
 		}
-		else if (input[0] == '\0')//minishell>뒤에 아무것도 입력하지않고 엔터만 누른 경우
+		else if (input[0] == '\0')
 		{
 			free(input);
 		}
 		else
 		{
 			add_history(input);
-			minishell(input, &info); //입력받은 문자열에 대해 파싱 시작
-			free(input);//반드시 free
+			minishell(input, info);
+			free(input);
 		}
 	}
-	//free everything
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_info	info;
+
+	if (argc == 1 && argv[0])
+	{
+		if (!init_env(&info, envp))
+			return (0);
+		init(&info);
+		ft_readline(&info);
+		free_all(&info);
+	}
+	else
+	{
+		ft_print_error(0, 0, "too many parameters\n");
+	}
 	return (0);
 }

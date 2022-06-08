@@ -1,21 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_dollar_q.c                                      :+:      :+:    :+:   */
+/*   ft_signal.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyjeong <hyjeong@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/05 14:09:22 by hyjeong           #+#    #+#             */
-/*   Updated: 2022/06/05 14:09:58 by hyjeong          ###   ########.fr       */
+/*   Created: 2022/06/05 02:52:33 by hyunjoo           #+#    #+#             */
+/*   Updated: 2022/06/05 14:37:18 by hyjeong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "./includes/minishell.h"
 
-int	ft_dollar_q(void)
+void	ft_signal(int signum)
 {
-	int ret;
+	if (signum == SIGINT)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}//sigquit이면 무시
+	return ;
+}
 
-	ret = g_exit_num;//사실 이게 끝이면 다른것 필요없이 바로 return 가능
-	return (ret);
+void	ft_here_doc_sig(int signum)
+{
+	if (signum == SIGINT)
+	{
+		exit(0);
+	}
 }

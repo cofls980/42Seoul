@@ -1,45 +1,56 @@
 #include "../includes/minishell.h"
 
-int here_doc(char *limit, t_info *info)
+int	func(char *limit, char *input, int fd)
+{
+	if (ft_strcmp(limit, input) == 0)
+	{
+		free(input);
+		return (0);
+	}
+	if (input[0] != '\0')
+	{
+		write(fd, input, ft_strlen(input));
+		write(fd, "\n", 1);
+	}
+	free(input);
+	return (1);
+}
+
+int	here_doc(char *limit) //ctrl^C누를 떄 끝나야하는뎅.... ctrl^D 누르면 끝나넹...?
 {
 	char	*input;
 	int		fd[2];
+	pid_t	pid;
 
 	if (pipe(fd) == -1)
+		return (-1);
+	pid = fork();
+	if (pid < 0)
 	{
-		error_message(0, 4);
+		close(fd[0]);
+		close(fd[1]);
 		return (-1);
 	}
-	info->here_doc = 1;
-	while (1)
+	else if (pid == 0)
 	{
-		input = readline("> ");
-		if (!input)
+		close(fd[0]);
+		while (1)
 		{
-			printf("minishell: warning: here-document at line 299 delimited by end-of-file\n");
-			break ;
-		}
-		else if (input[0] == '\0')
-		{
-			if (ft_strcmp(limit, input) == 0)
+			signal(SIGINT, ft_here_doc_sig);
+			input = readline("> ");
+			if (!input) //고민
 			{
-				free(input);
+				printf("minishell: warning: here-document at line 299 delimited by end-of-file\n");//error_mssg
 				break ;
 			}
-			free(input);
-		}
-		else
-		{
-			if (ft_strcmp(limit, input) == 0)
+			else
 			{
-				free(input);
-				break ;
+				if (!func(limit, input, fd[1]))
+					break ;
 			}
-			write(fd[1], input, ft_strlen(input));
-			write(fd[1], "\n", 1);
-			free(input);
 		}
 	}
 	close(fd[1]);
+	waitpid(pid, 0, 0);
 	return (fd[0]);
 }

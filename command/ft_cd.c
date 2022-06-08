@@ -22,7 +22,8 @@ char	*concat_path(char *curr_path, char *rel_path)
 	ft_strlen(rel_path) + 1));
 	if (new_path == 0)
 	{
-		ft_error(0);
+		ft_print_error(0, 0, strerror(errno));
+		//ft_error(0);
 		return (0);
 	}
 	i = -1;
@@ -40,7 +41,7 @@ static int	handle_absolute(char *command, char *path)
 {
 	if (chdir(path) == -1)
 	{
-		ft_print_error(2, "cd", command, \
+		ft_print_error("cd", command, \
 	strerror(errno));
 		return (1);
 	}
@@ -54,10 +55,10 @@ static int	handle_relative(char *command)
 	char	*new_path;
 	int		ret;
 
-	curr_path = getcwd(NULL, 0);
+	curr_path = getcwd(0, 0);
 	if (!curr_path)
 	{
-		ft_print_error(2, "cd", 0, strerror(errno));
+		ft_print_error("cd", 0, strerror(errno));
 		return (1);
 	}
 	new_path = concat_path(curr_path, command);
@@ -79,7 +80,7 @@ static int	handle_home(char **command, t_list *curr_lexer)
 
 	if (list_find(&curr_lexer, "HOME") == 0) //HOME이라는 이름의 환경 변수가 없을 때
 		return (0);
-	if (command[1][0] == 0)//cmd 뒤에 들어온 것이 없음
+	if (!command[1] || command[1][0] == 0)//cmd 뒤에 들어온 것이 없음
 		home_path = concat_path(list_find(&curr_lexer, "HOME"), "");//env받아오는 함수 무엇인지 찾고 변경
 	else
 		home_path = concat_path(list_find(&curr_lexer, "HOME"), \
@@ -89,12 +90,12 @@ static int	handle_home(char **command, t_list *curr_lexer)
 	return (ret);
 }
 
-int	ft_cd(char **command, t_info *info)
+int	ft_cd(char **command, t_info *info) // return exit status 설정
 {
 	t_list	*tmp;
 	//int i; 필요한가에 대한 고민
 
-	tmp = info->list;
+	tmp = info->env_list;
 	//OLDPWD 세팅
 	if (command[1] == 0 || (command[1][0] == '~' && ((command[1][1] == '\0') || (command[1][1] == '/')))) //cd, cd ~, cd ~/
 		return (handle_home(command, tmp->next));
@@ -103,4 +104,3 @@ int	ft_cd(char **command, t_info *info)
 	else
 		return (handle_relative(command[1]));
 }
-//cd ~/Desktop

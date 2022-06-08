@@ -1,24 +1,5 @@
 #include "./includes/minishell.h"
 
-void	ft_write(t_info *info, char *str)
-{
-	int		i;
-	int		fd;
-	char	c;
-	
-	i = 0;
-	while (str[i])
-	{
-		if (info->redirect_out != -1)
-			fd = info->redirect_out;
-		else
-			fd = info->output_file;
-		c = str[i];
-		write(fd, &c, 1);
-		i++;
-	}
-}
-
 void	free_str(char **strs)
 {
 	int	i;
@@ -47,21 +28,31 @@ void	init_str(char **strs, int len)
 	}
 }
 
-void	error_message(char **strs, int flag) //리턴 -1하기
+void	free_list(t_list **list)
 {
-	if (flag == 0)
-		printf("minishell: malloc error\n");
-	else if (flag == 1)
-		printf("minishell: syntax error\n");
-	else if (flag == 2)
-		printf("minishell: No such file or directory\n");
-	else if (flag == 3)
-		printf("minishell: Is a directory\n");
-	else if (flag == 4)
-		printf("minishell: pipe error\n");
-	else if (flag == 5)
-		printf("Command '' not found\n");
-	else if (flag == 6)
-		printf("minishell: command not found\n");
-	free_str(strs);
+	t_list	*item;
+
+	if (*list)
+	{
+		while (*list)
+		{
+			item = *list;
+			*list = (*list)->next;
+			delete_item(item);
+		}
+		free(*list);
+	}
+}
+
+void	free_all(t_info *info)
+{
+	if (info->home)
+		free(info->home);
+	if (info->pwd)
+		free(info->pwd);
+	free_list(&(info->env_list));
+	free_list(&(info->export_list));
+	free_list(&(info->user_list));
+	/*if (!info->env_list && !info->export_list && !info->user_list)
+		printf("!!\n");*/
 }

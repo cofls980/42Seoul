@@ -5,7 +5,7 @@
 */
 #include "../includes/minishell.h"
 
-void	ft_pwd(char **cmd, t_info *info)
+int	ft_pwd(char **cmd, t_info *info)
 {
 	int	i;
 
@@ -15,14 +15,11 @@ void	ft_pwd(char **cmd, t_info *info)
 		if (cmd[1][i] == '-')
 		{
 			cmd[1][i + 2] = 0;
-			ft_write(info, "minishell: pwd: ");
-			ft_write(info, cmd[1]);
-			ft_write(info, ": do not need options\n");
-			//printf("minishell: pwd: %c%c: do not need options\n", cmd[1][i], cmd[1][i + 1]); //dup2(1, STDOUT);
-			return;
+			ft_print_error(cmd[0], cmd[1], "invalid option");
+			return (2); //check
 		}
 	}
-	ft_write(info, list_find(&(info->list), "PWD"));
-	ft_write(info, "\n");
-	//printf("%s\n", list_find(&(info->list), "PWD"));//PWD찾기
+	ft_print(info, info->pwd); // unset PWD -> pwd 테스트
+	ft_print(info, "\n");
+	return (0);
 }
