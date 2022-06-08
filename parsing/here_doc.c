@@ -20,11 +20,25 @@ int	here_doc(char *limit) //ctrl^C누를 떄 끝나야하는뎅.... ctrl^D 누�
 {
 	char	*input;
 	int		fd[2];
-	pid_t	pid;
+	//pid_t	pid;
 
 	if (pipe(fd) == -1)
 		return (-1);
-	pid = fork();
+	while (1)
+	{
+		input = readline("> ");
+		if (!input) //고민
+		{
+			//printf("minishell: warning: here-document at line 299 delimited by end-of-file\n");//error_mssg
+			break ;
+		}
+		else
+		{
+			if (!func(limit, input, fd[1]))
+				break ;
+		}
+	}
+	/*pid = fork();
 	if (pid < 0)
 	{
 		close(fd[0]);
@@ -36,7 +50,7 @@ int	here_doc(char *limit) //ctrl^C누를 떄 끝나야하는뎅.... ctrl^D 누�
 		close(fd[0]);
 		while (1)
 		{
-			signal(SIGINT, ft_here_doc_sig);
+			//signal(SIGINT, ft_here_doc_sig);
 			input = readline("> ");
 			if (!input) //고민
 			{
@@ -49,8 +63,8 @@ int	here_doc(char *limit) //ctrl^C누를 떄 끝나야하는뎅.... ctrl^D 누�
 					break ;
 			}
 		}
-	}
+	}*/
 	close(fd[1]);
-	waitpid(pid, 0, 0);
+	//waitpid(pid, 0, 0);
 	return (fd[0]);
 }
