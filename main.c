@@ -41,7 +41,14 @@ void	parsing(char **bundles, t_info *info)
 		{
 			parts = split_words(bundles[i]);
 			if (parts && interpret_word(parts, info))
+			{
 				info->pids[i] = command(parts, info);
+				/*if (info->pipe_error) // 좀 더 생각
+				{
+					free_str(parts);
+					break ;
+				}*/
+			}
 			else
 				g_exit_num = 1;
 		}
@@ -57,7 +64,7 @@ void	minishell(char *input, t_info *info)
 	if (check_syntax(input, info))
 	{
 		ft_print_error(0, 0, "syntax error near unexpected token");
-		g_exit_num = 2;//check
+		g_exit_num = 258;//check
 		return ;
 	}
 	info->bundles = pipe_parsing(input, info);
@@ -90,7 +97,7 @@ void	ft_readline(t_info *info)
 		input = readline("\033[0;31mminishell$ \033[0;37m");
 		if (!input)
 		{
-			printf("\n");
+			printf("exit\n");
 			break ;
 		}
 		else if (input[0] == '\0')
@@ -103,6 +110,8 @@ void	ft_readline(t_info *info)
 			minishell(input, info);
 			free(input);
 		}
+		if (info->exit == 1)
+			break ;
 	}
 }
 
@@ -113,7 +122,10 @@ int	main(int argc, char **argv, char **envp)
 	if (argc == 1 && argv[0])
 	{
 		if (!init_env(&info, envp))
+		{
+			free_list(&(info.env_list));
 			return (0);
+		}
 		init(&info);
 		ft_readline(&info);
 		free_all(&info);
@@ -122,5 +134,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		ft_print_error(0, 0, "too many parameters\n");
 	}
+	//leaks
+	system("leaks minishell > leaks_result; cat leaks_result | grep leaked; rm -rf leaks_result");
 	return (0);
 }

@@ -45,8 +45,6 @@ int	ft_unset(char **cmd, t_info *info)
 		else
 		{
 			list_remove(&(info->env_list), cmd[i]);
-			list_remove(&(info->export_list), cmd[i]);
-			list_remove(&(info->user_list), cmd[i]);
 		}
 		i++;
 	}

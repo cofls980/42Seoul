@@ -98,6 +98,12 @@ int	ft_exit(char **command, t_info *info)
 	g_exit_num = EXIT_FAILURE;
 	if (command)
 	{
+		if (command[1] == 0)
+		{
+			ft_print(info, "exit\n");
+			info->exit = 1;
+			return (0);
+		}
 		if (command[2] == 0)
 		{
 			if (!is_digit(command[1]) || !is_in_range(command[1]))

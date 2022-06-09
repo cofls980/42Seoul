@@ -12,6 +12,7 @@ int	builtin_command(char **command, t_info *info) // 명령어 추가
 {
 	int	status;
 
+	status = 0;
 	set_output_fd(info);
 	if (ft_strcmp(command[0], "pwd") == 0)
 		status = ft_pwd(command, info);

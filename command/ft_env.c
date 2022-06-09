@@ -24,10 +24,13 @@ int	ft_env(char **command, t_info *info)
 	}
 	while (tmp)
 	{
-		ft_print(info, tmp->key);
-		ft_print(info, "=");
-		ft_print(info, tmp->value);
-		ft_print(info, "\n");
+		if (tmp->print)
+		{
+			ft_print(info, tmp->key);
+			ft_print(info, "=");
+			ft_print(info, tmp->value);
+			ft_print(info, "\n");
+		}
 		tmp = tmp->next;
 	}
 	return (0);

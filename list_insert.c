@@ -36,15 +36,13 @@ void	list_insert_for_export(t_list **list, t_list *item)
 	tmp = (*list);
 	if (tmp)
 	{
+		if (ft_strcmp(tmp->key, item->key) )
 		while (tmp)
 		{
-			if (ft_strcmp(tmp->key, item->key) == 0)
+			if (tmp == *list && ft_strcmp(tmp->key, item->key) > 0)
 			{
-				if (item->value)
-				{
-					tmp->value = ft_strdup(item->value);
-					delete_item(item);
-				}
+				item->next = tmp;
+				(*list) = item; 
 				break ;
 			}
 			else if (ft_strcmp(tmp->key, item->key) < 0 && (!tmp->next || ft_strcmp(tmp->next->key, item->key) > 0))

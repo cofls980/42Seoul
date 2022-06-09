@@ -28,6 +28,9 @@ void	ft_here_doc_sig(int signum)
 {
 	if (signum == SIGINT)
 	{
-		exit(0);
+		exit(1);
 	}
 }
+
+void	ft_here_doc_sig_parent()
+{}

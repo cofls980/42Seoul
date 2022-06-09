@@ -9,7 +9,14 @@ int	redirection(char *name, t_info *info)
 	else if (info->r_kind == OUTPUT_R)
 		fd = open(name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (info->r_kind == HERE_DOC_R)
+	{
 		fd = here_doc(name);
+		if (g_exit_num == 1)
+		{
+			close(fd);
+			return (0);
+		}	
+	}
 	else if (info->r_kind == APPEND_R)
 		fd = open(name, O_WRONLY | O_CREAT | O_APPEND, 0777);
 	else

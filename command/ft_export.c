@@ -60,23 +60,26 @@ void	print_declare(t_info *info, char *key, char *value)
 
 void	export_print(int i, t_info *info)
 {
-	t_list	*export_list;
-	t_list	*user_list;
+	t_list	*list;
+	t_list	*set;
 
-	export_list = info->export_list;
-	user_list = info->user_list;
+	list = info->env_list;
+	set = NULL;
 	if (i == 1)
 	{
-		while (export_list)
+		while (list)
 		{
-			print_declare(info, export_list->key, export_list->value);
-			export_list = export_list->next;
+			if (ft_strcmp(list->key, "_") != 0)
+				list_insert_for_export(&(set), new_item(ft_strdup(list->key), ft_strdup(list->value), 1)); //알파벳 순으로 insert 되도록
+			list = list->next;
 		}
-		while (user_list)
+		list = set;
+		while (list)
 		{
-			print_declare(info, user_list->key, user_list->value);
-			user_list = user_list->next;
+			print_declare(info, list->key, list->value);
+			list = list->next;
 		}
+		free_list(&set);
 	}
 }
 
@@ -103,11 +106,14 @@ int	ft_export(char **command, t_info *info)
 		{
 			if (have_equal(command[i]))
 			{
-				list_insert(&(info->env_list), new_item(ft_strdup(envp_item[0]), ft_strdup(envp_item[1])));
-				list_insert_for_export(&(info->user_list), new_item(ft_strdup(envp_item[0]), ft_strdup(envp_item[1])));
+				list_insert(&(info->env_list), new_item(ft_strdup(envp_item[0]), ft_strdup(envp_item[1]), 1));
+				//list_insert_for_export(&(info->user_list), new_item(ft_strdup(envp_item[0]), ft_strdup(envp_item[1])));
 			}
 			else
-				list_insert_for_export(&(info->user_list), new_item(ft_strdup(envp_item[0]), 0));
+			{
+				list_insert(&(info->env_list), new_item(ft_strdup(envp_item[0]), 0, 0));
+				//list_insert_for_export(&(info->user_list), new_item(ft_strdup(envp_item[0]), 0));
+			}
 		}
 		else
 		{

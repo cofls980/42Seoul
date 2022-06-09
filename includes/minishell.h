@@ -26,6 +26,7 @@ typedef struct s_list // 환경 변수를 위한 리트스 구조체
 {
 	char			*key;
 	char			*value;
+	int				print;
 	struct s_list	*next;
 }	t_list;
 
@@ -56,10 +57,9 @@ typedef struct s_info
 	int		r_out_fd;
 	int		output_fd;//초기0, 1의 숫자 또는 pipe할 때 사용하는 fd값 저장
 	int		input_fd;
+	int		exit;
 	pid_t	*pids;
 	t_list	*env_list;
-	t_list	*export_list;
-	t_list	*user_list;
 }	t_info;
 
 void	init(t_info *info);
@@ -107,7 +107,7 @@ int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strdup(const char *src);
 int		ft_strlen(const char *str);
 
-t_list	*new_item(char *key, char *value);
+t_list	*new_item(char *key, char *value, int print);
 void	delete_item(t_list *item);
 void	list_insert(t_list **list, t_list *item);
 char	*list_find(t_list **list, char *key);
@@ -119,6 +119,7 @@ void	ft_error(int exit_status);
 void	free_str(char **en_paths);
 void	init_str(char **strs, int len);
 void	free_all(t_info *info);
+void	free_list(t_list **list);
 
 char	*find_path(char *command, char **envp);
 

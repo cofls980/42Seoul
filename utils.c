@@ -51,8 +51,4 @@ void	free_all(t_info *info)
 	if (info->pwd)
 		free(info->pwd);
 	free_list(&(info->env_list));
-	free_list(&(info->export_list));
-	free_list(&(info->user_list));
-	/*if (!info->env_list && !info->export_list && !info->user_list)
-		printf("!!\n");*/
 }

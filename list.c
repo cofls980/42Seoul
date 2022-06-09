@@ -1,12 +1,13 @@
 #include "./includes/minishell.h"
 
-t_list	*new_item(char *key, char *value)
+t_list	*new_item(char *key, char *value, int print)
 {
 	t_list	*res;
 
 	res = malloc(sizeof(t_list));
 	res->key = key;
 	res->value = value;
+	res->print = print;
 	res->next = 0;
 	return (res);
 }
