@@ -118,11 +118,16 @@ int	ft_export(char **command, t_info *info)
 		else
 		{
 			status = 1;
-			if (flag == 0)
-				ft_print_error(command[0], command[i], "not a valid identifier");
+			if (flag == 1)
+			{
+				status = -1000;
+				break ;
+			}
+			ft_print_error(command[0], command[i], "not a valid identifier");
 		}
 		free_str(envp_item);
 	}
-	export_print(i, info);
+	if (status != -1000)
+		export_print(i, info);
 	return (status);
 }

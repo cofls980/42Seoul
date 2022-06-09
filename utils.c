@@ -46,9 +46,15 @@ void	free_list(t_list **list)
 
 void	free_all(t_info *info)
 {
-	if (info->home)
-		free(info->home);
-	if (info->pwd)
-		free(info->pwd);
+	if (info->bundles)
+		free(info->bundles);
+	if (info->pids)
+		free(info->pids);
 	free_list(&(info->env_list));
+}
+
+void	free_exit(t_info *info)
+{
+	free_all(info);
+	exit(1);
 }

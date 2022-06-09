@@ -24,7 +24,7 @@ int	ft_env(char **command, t_info *info)
 	}
 	while (tmp)
 	{
-		if (tmp->print)
+		if (tmp->print == 1)
 		{
 			ft_print(info, tmp->key);
 			ft_print(info, "=");

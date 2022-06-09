@@ -33,4 +33,7 @@ void	ft_here_doc_sig(int signum)
 }
 
 void	ft_here_doc_sig_parent()
-{}
+{
+	printf("\n");
+	return ;
+}

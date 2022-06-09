@@ -17,6 +17,8 @@ int	init_env(t_info *info, char **envp)
 	int		flag;
 	char	**envp_item;
 
+	g_exit_num = 0;
+	info->bundles = 0;
 	info->env_list = 0; // env를 위한 리스트
 	i = 0;
 	while (envp[i])
@@ -32,23 +34,18 @@ int	init_env(t_info *info, char **envp)
 	return (1);
 }
 
-void	init(t_info *info)
-{
-	info->home = ft_strdup(list_find(&(info->env_list), "HOME"));
-	info->pwd = ft_strdup(list_find(&(info->env_list), "PWD"));
-	g_exit_num = 0;
-	info->bundles = 0;
-}
-
 void	init_reset(t_info *info)
 {
+	info->bundles = 0;
+	info->pids = 0;
 	info->pipe_num = 0;
 	info->have_pipe = 0;
+	info->input_fd = 0;
+	info->output_fd = 1;
 	if (info->input_fd != 0)
 		close(info->input_fd);
 	info->input_fd = 0;
 	if (info->output_fd != 1)
 		close(info->output_fd);
-	info->output_fd = 1;
 	info->exit = 0;
 }

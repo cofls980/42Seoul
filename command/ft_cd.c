@@ -23,7 +23,6 @@ char	*concat_path(char *curr_path, char *rel_path)
 	if (new_path == 0)
 	{
 		ft_print_error(0, 0, strerror(errno));
-		//ft_error(0);
 		return (0);
 	}
 	i = -1;
@@ -45,7 +44,6 @@ static int	handle_absolute(char *command, char *path)
 	strerror(errno));
 		return (1);
 	}
-	//ft_pwd(PWD);pwd로 위치 불러오기
 	return (0);
 }
 
@@ -73,18 +71,19 @@ static int	handle_relative(char *command)
 	return (ret);
 }
 
-static int	handle_home(char **command, t_list *curr_lexer)
+static int	handle_home(char **command, t_list *tmp)
 {
 	char	*home_path;
 	int		ret;
 
-	if (list_find(&curr_lexer, "HOME") == 0) //HOME이라는 이름의 환경 변수가 없을 때
+	if (list_find(&tmp, "HOME") == 0) //HOME이라는 이름의 환경 변수가 없을 때
 		return (0);
-	if (!command[1] || command[1][0] == 0)//cmd 뒤에 들어온 것이 없음
-		home_path = concat_path(list_find(&curr_lexer, "HOME"), "");//env받아오는 함수 무엇인지 찾고 변경
+	if (command[1][0] == 0 || (command[1][0] == '~' && command[1][1] == 0) \
+	|| (command[1][0] == '~' && command[1][1] == '/' && command[1][2] == 0))//cmd 뒤에 들어온 것이 없음
+		home_path = concat_path(list_find(&tmp, "HOME"), "");
 	else
-		home_path = concat_path(list_find(&curr_lexer, "HOME"), \
-		&command[1][1]);
+		home_path = concat_path(list_find(&tmp, "HOME"), \
+		&command[1][3]);//cd ~/... 뒤에 ...을 넣어줘야함
 	ret = handle_absolute(command[1], home_path);
 	free(home_path);
 	return (ret);
@@ -93,14 +92,15 @@ static int	handle_home(char **command, t_list *curr_lexer)
 int	ft_cd(char **command, t_info *info) // return exit status 설정
 {
 	t_list	*tmp;
-	//int i; 필요한가에 대한 고민
+	char *path;
 
 	tmp = info->env_list;
-	//OLDPWD 세팅
+	path = getcwd(NULL, 0);
 	if (command[1] == 0 || (command[1][0] == '~' && ((command[1][1] == '\0') || (command[1][1] == '/')))) //cd, cd ~, cd ~/
 		return (handle_home(command, tmp->next));
 	if(command[1][0] == '/')
 		return (handle_absolute(command[1], command[1]));
 	else
 		return (handle_relative(command[1]));
+	ft_oldpwd(tmp, path);
 }

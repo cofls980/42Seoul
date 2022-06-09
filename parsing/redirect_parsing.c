@@ -10,10 +10,11 @@ int	redirection(char *name, t_info *info)
 		fd = open(name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	else if (info->r_kind == HERE_DOC_R)
 	{
-		fd = here_doc(name);
+		fd = here_doc(name, info);
 		if (g_exit_num == 1)
 		{
 			close(fd);
+			info->here_doc = 1;
 			return (0);
 		}	
 	}
@@ -72,7 +73,7 @@ int	parsing_redirect(char *bundle, int start, t_info *info)
 	if (!name)
 	{
 		ft_print_error(0, 0, strerror(errno));
-		return (-1);
+		free_exit(info);
 	}
 	name[w_info.len] = '\0';
 	w_info.end = end;

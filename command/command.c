@@ -3,16 +3,25 @@
 void	execute(char **command, t_info *info)
 {
 	char	*path;
+	int		status;
 
 	path = find_path(command[0], info->envp);
 	if (execve(path, command, info->envp) == -1)
 	{
-		ft_print_error(command[0], 0, strerror(errno));
+		if (ft_strcmp(path, command[0]) == 0)
+		{
+			ft_print_error(command[0], 0, "command not found");
+			status = 127;
+		}
+		else
+		{
+			ft_print_error(command[0], 0, strerror(errno));
+			status = 1;
+		}
 		free(path);
 		free_all(info);
-		free_str(info->bundles);
 		//에러 num 종류에 따라 다른 숫자로 exit();
-		exit(127);
+		exit(status);
 	}
 }
 
@@ -27,7 +36,6 @@ void	execute_command(char **command, t_info *info)
 		if (info->output_fd != 1)
 			close(info->output_fd);
 		free_all(info);
-		free_str(info->bundles);
 		exit(status);
 	}
 	else
@@ -48,7 +56,11 @@ pid_t	last_command(char **command, t_info *info)//단순 실행
 
 	pid = fork();
 	if (pid < 0)
+	{
 		ft_print_error(0, 0, strerror(errno));
+		free_all(info);
+		exit(1);
+	}
 	else if (pid == 0)
 		execute_command(command, info);
 	return (pid);
@@ -62,7 +74,7 @@ pid_t	commands(char **command, t_info *info)
 	if (pipe(fd) == -1)
 	{
 		ft_print_error(0, 0, strerror(errno));
-		return (-2);
+		free_exit(info);
 	}
 	pid = fork();
 	if (pid < 0)
@@ -70,7 +82,7 @@ pid_t	commands(char **command, t_info *info)
 		close(fd[0]);
 		close(fd[1]);
 		ft_print_error(0, 0, strerror(errno));
-		return (-2);
+		free_exit(info);
 	}
 	else if (pid == 0)
 	{
@@ -103,6 +115,11 @@ pid_t	command(char **command, t_info *info)
 		}
 		else
 			pid = last_command(command, info);
+	}
+	if (pid == -1000)
+	{
+		init_reset(info);
+		free_exit(info);
 	}
 	return (pid);
 }

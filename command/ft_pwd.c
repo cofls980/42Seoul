@@ -7,7 +7,8 @@
 
 int	ft_pwd(char **cmd, t_info *info)
 {
-	int	i;
+	int		i;
+	char	*path;
 
 	if (cmd[1])
 	{
@@ -16,10 +17,17 @@ int	ft_pwd(char **cmd, t_info *info)
 		{
 			cmd[1][i + 2] = 0;
 			ft_print_error(cmd[0], cmd[1], "invalid option");
-			return (2); //check
+			return (1);
 		}
 	}
-	ft_print(info, info->pwd); // unset PWD -> pwd 테스트
+	path = getcwd(NULL, 0);
+	if (!path)
+	{
+		ft_print_error(cmd[0],cmd[1],strerror(errno));
+		return (1);
+	}
+	ft_print(info, path);
 	ft_print(info, "\n");
+	free(path);
 	return (0);
 }

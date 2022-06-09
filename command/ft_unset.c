@@ -31,7 +31,7 @@ int	ft_unset(char **cmd, t_info *info)
 	{
 		cmd[1][2] = 0;
 		ft_print_error(cmd[0], cmd[1], "invalid option");
-		return (2);//check
+		return (1);
 	}
 	i = 1;
 	status = 0;

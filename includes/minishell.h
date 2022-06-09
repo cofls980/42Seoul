@@ -19,6 +19,7 @@
 # define OUTPUT_R 2
 # define HERE_DOC_R 3
 # define APPEND_R 4
+# define MAXSIZE 1024
 
 int	g_exit_num;
 
@@ -46,34 +47,34 @@ typedef struct s_word
 
 typedef struct s_info
 {
-	char	*home;
-	char	*pwd;
 	char	**envp;
 	char	**bundles;
 	int		pipe_num;
-	int		have_pipe;//?
-	int		r_kind; //리디렉션 종류
-	int		r_in_fd;//리디렉션 결과로 나오는 fd값 저장
+	int		have_pipe;
+	int		r_kind;
+	int		r_in_fd;
 	int		r_out_fd;
-	int		output_fd;//초기0, 1의 숫자 또는 pipe할 때 사용하는 fd값 저장
+	int		output_fd;
 	int		input_fd;
 	int		exit;
+	int		here_doc;
 	pid_t	*pids;
 	t_list	*env_list;
 }	t_info;
 
-void	init(t_info *info);
 void	init_ctrl();
 void	ft_signal(int signum);
 void	ft_here_doc_sig(int signum);
+void	ft_here_doc_sig_parent();
 int		init_env(t_info *info, char **envp);
 void	init_reset(t_info *info);
+void	free_exit(t_info *info);
 
 int		check_syntax(char *input, t_info *info);
 char	**pipe_parsing(char *input, t_info *info);
 int		solve_redirect(char *bundle, t_info *info);
-int		here_doc(char *limit);
-char	**split_words(char *bundle);
+int		here_doc(char *limit, t_info *info);
+char	**split_words(char *bundle, t_info *info);
 int		interpret_word(char **parts, t_info *info);
 char	**split_equal(char *str, int *flag);
 
@@ -122,5 +123,6 @@ void	free_all(t_info *info);
 void	free_list(t_list **list);
 
 char	*find_path(char *command, char **envp);
+void	ft_oldpwd(t_list *env, char *path);
 
 #endif

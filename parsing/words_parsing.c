@@ -49,7 +49,7 @@ int	find_word(char *str, int *start)
 	return (i);
 }
 
-char	**split_words(char *bundle)
+char	**split_words(char *bundle, t_info *info)
 {
 	t_word	w_info;
 	int		i;
@@ -62,7 +62,7 @@ char	**split_words(char *bundle)
 	if (!res)
 	{
 		ft_print_error(0, 0, strerror(errno));
-		return (0);
+		free_exit(info);
 	}
 	init_str(res, w_info.len + 1);
 	i = 0;
@@ -75,7 +75,7 @@ char	**split_words(char *bundle)
 		{
 			ft_print_error(0, 0, strerror(errno));
 			free_str(res);
-			return (0);
+			free_exit(info);
 		}
 		fill_word(bundle, res[i], w_info.start, w_info.end);
 		w_info.start = w_info.end;

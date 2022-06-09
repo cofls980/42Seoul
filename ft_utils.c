@@ -43,3 +43,23 @@ void	ft_error(int exit_status)
 	//free_env();
 	exit(exit_status);
 }
+
+void	ft_oldpwd(t_list *env, char *path)
+{
+	char	*tmp;
+	char	*new_path;
+	t_list	*new1;
+	t_list	*new2;
+
+	new1 = env;
+	new_path = getcwd(NULL, 0);
+	tmp = malloc(sizeof(char) * MAXSIZE);
+	if (list_find(&new1, "OLDPWD"))
+	{
+		list_insert(&(env), new_item(ft_strdup("OLDPWD"), ft_strdup(path), 1));
+	}
+	if (list_find(&new2,"PWD"))
+	{
+		list_insert(&(env), new_item(ft_strdup("PWD"), ft_strdup(new_path), 1));
+	}
+}
