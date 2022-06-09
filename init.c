@@ -1,6 +1,6 @@
 #include "./includes/minishell.h"
 
-void	init_ctrl()
+void	init_ctrl(void)
 {
 	struct termios	term;
 
@@ -23,7 +23,7 @@ int	init_env(t_info *info, char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		envp_item = split_equal(envp[i], &flag);
+		envp_item = parsing_equal(envp[i], &flag);
 		if (!envp_item)
 			return (0);
 		list_insert(&(info->env_list), new_item(ft_strdup(envp_item[0]), ft_strdup(envp_item[1]), 1));

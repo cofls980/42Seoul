@@ -20,7 +20,7 @@ void	ft_signal(int signum)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
-	}//sigquit이면 무시
+	}
 	return ;
 }
 
@@ -32,8 +32,11 @@ void	ft_here_doc_sig(int signum)
 	}
 }
 
-void	ft_here_doc_sig_parent()
+void	ft_here_doc_sig_parent(int signum)
 {
-	printf("\n");
-	return ;
+	if (signum == SIGINT)
+	{
+		printf("\n");
+		return ;
+	}
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_word_len.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/10 05:30:52 by chaekim           #+#    #+#             */
+/*   Updated: 2022/06/10 05:30:52 by chaekim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 int	is_valid_character(char c)
@@ -5,12 +17,12 @@ int	is_valid_character(char c)
 	return (('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || c == '_');
 }
 
-int	get_env_len(char *str, int *start, t_info *info)//$도 같이 들어옴
+int	get_env_len(char *str, int *start, t_info *info)
 {
 	int		i;
 	char	c;
 	char	*value;
-	
+
 	(*start)++;
 	i = *start;
 	while (is_valid_character(str[i]) || ('0' <= str[i] && str[i] <= '9'))
@@ -23,7 +35,7 @@ int	get_env_len(char *str, int *start, t_info *info)//$도 같이 들어옴
 	return (ft_strlen(value));
 }
 
-int	get_exit_status_len()
+int	get_exit_status_len(void)
 {
 	int	len;
 	int	status;
@@ -37,6 +49,26 @@ int	get_exit_status_len()
 		status /= 10;
 		len++;
 	}
+	return (len);
+}
+
+int	get_after_dollar(char *bundle, t_info *info, int quote, int *idx)
+{
+	int	len;
+
+	len = 0;
+	if (!quote && bundle[*idx + 1] && is_quote(bundle[*idx + 1]))
+		len += 0;
+	else if (bundle[*idx + 1] && bundle[*idx + 1] == '?')
+	{
+		len += get_exit_status_len();
+		(*idx)++;
+	}
+	else if (!bundle[*idx + 1] || is_space(bundle[*idx + 1]) || \
+	!is_valid_character(bundle[*idx + 1]))
+		len += 1;
+	else
+		len += get_env_len(bundle, idx, info);
 	return (len);
 }
 
@@ -54,20 +86,10 @@ int	get_word_len(char *bundle, t_info *info, int idx, int *end)
 			len++;
 		else if (bundle[idx] == '$' && ((quote && quote == '\"') || !quote))
 		{
-			if (!quote && bundle[idx + 1] && is_quote(bundle[idx + 1]))
-				len += 0;
-			else if (bundle[idx + 1] && bundle[idx + 1] == '?')
-			{
-				len += get_exit_status_len();
-				idx++;
-			}
-			else if (!bundle[idx + 1] || is_space(bundle[idx + 1]) || !is_valid_character(bundle[idx + 1]))
-				len += 1;
-			else
-				len += get_env_len(bundle, &idx, info);
+			len += get_after_dollar(bundle, info, quote, &idx);
 		}
 		else if (!quote && (is_space(bundle[idx]) || is_redirect(bundle[idx])))
-			break;
+			break ;
 		else if (!is_quote(bundle[idx]))
 			len++;
 		idx++;

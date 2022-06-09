@@ -60,13 +60,13 @@ static int	is_in_range(char *str)
 	return (1);
 }
 
-static int	exit_non_numeric(char *str, t_info *info) //exit|exit kjdhfk --> exit $?
+static int	exit_non_numeric(char *str, t_info *info) //exit|exit aa --> exit $?
 {
 	ft_print(info, "exit\n");
 	ft_print_error("exit", str,\
 	"numeric argument required");
 	g_exit_num = 255;
-	ft_error(255);
+	ft_error(255, info);
 	return (255);
 }
 
@@ -100,7 +100,7 @@ int	ft_exit(char **command, t_info *info)
 	if (command[1] == NULL && info->have_pipe == 0)//exit
 	{
 		ft_print(info, "exit\n");
-		exit(0);
+		ft_error(0, info);
 	}
 	else if (command[2] == NULL)//exit num
 	{
@@ -110,10 +110,10 @@ int	ft_exit(char **command, t_info *info)
 		if (info->have_pipe == 0)
 		{
 			ft_print(info, "exit\n");
-			ft_error(g_exit_num);
+			ft_error(g_exit_num, info);
 		}
 	}
 	else//exit some some
 		ft_print_error("exit", command[1], "too many arguments");
-	return (1);
+	return (g_exit_num); //맞는지 확인
 }

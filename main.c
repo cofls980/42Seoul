@@ -46,7 +46,7 @@ void	parsing(char **bundles, t_info *info)
 		info->pids[i] = -2;
 		if (solve_redirect(bundles[i], info) != -2)
 		{
-			parts = split_words(bundles[i], info);
+			parts = parsing_words(bundles[i], info);
 			if (parts && interpret_word(parts, info))
 				info->pids[i] = command(parts, info);
 			else

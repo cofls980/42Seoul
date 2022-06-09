@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   words_parsing.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/10 05:31:27 by chaekim           #+#    #+#             */
+/*   Updated: 2022/06/10 05:31:27 by chaekim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
-// 따옴표를 고려하여 공백을 기준으로 분리된 단어 개수
 int	count_word(char *str)
 {
 	int	i;
@@ -49,15 +60,10 @@ int	find_word(char *str, int *start)
 	return (i);
 }
 
-char	**split_words(char *bundle, t_info *info)
+char	**split_words(char *bundle, t_info *info, t_word w_info, int i)
 {
-	t_word	w_info;
-	int		i;
 	char	**res;
 
-	w_info.len = count_word(bundle);
-	if (w_info.len == 0)
-		return (0);
 	res = (char **)malloc(sizeof(char *) * (w_info.len + 1));
 	if (!res)
 	{
@@ -65,8 +71,6 @@ char	**split_words(char *bundle, t_info *info)
 		free_exit(info);
 	}
 	init_str(res, w_info.len + 1);
-	i = 0;
-	w_info.start = 0;
 	while (i < w_info.len)
 	{
 		w_info.end = find_word(bundle, &(w_info.start));
@@ -82,4 +86,17 @@ char	**split_words(char *bundle, t_info *info)
 		i++;
 	}
 	return (res);
+}
+
+char	**parsing_words(char *bundle, t_info *info)
+{
+	t_word	w_info;
+	int		i;
+
+	w_info.len = count_word(bundle);
+	if (w_info.len == 0)
+		return (0);
+	i = 0;
+	w_info.start = 0;
+	return (split_words(bundle, info, w_info, i));
 }

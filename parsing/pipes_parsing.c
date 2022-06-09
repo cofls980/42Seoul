@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipes_parsing.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/10 05:31:16 by chaekim           #+#    #+#             */
+/*   Updated: 2022/06/10 05:31:16 by chaekim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 int	find_string(char *input, int start)
 {
 	int	i;
-	int quote;
+	int	quote;
 
 	i = start;
 	quote = 0;

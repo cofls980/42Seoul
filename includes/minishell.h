@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/10 07:33:57 by chaekim           #+#    #+#             */
+/*   Updated: 2022/06/10 07:33:57 by chaekim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -5,11 +17,11 @@
 # include <fcntl.h>
 # include <stdlib.h>
 # include <sys/wait.h>
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <signal.h>
-#include <termios.h>
+# include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <signal.h>
+# include <termios.h>
 # include <dirent.h>
 # include <errno.h>
 //tcgetattr, tcsetattr
@@ -31,19 +43,19 @@ typedef struct s_list // 환경 변수를 위한 리트스 구조체
 	struct s_list	*next;
 }	t_list;
 
-/*typedef struct s_redirect
-{
-	char				*name;
-	int					redirect_kind;
-	struct s_redirect	*next;
-}	t_redirect;*/
-
 typedef struct s_word
 {
-	int		start;
-	int		end;
-	int		len;
-} t_word;
+	int	start;
+	int	end;
+	int	len;
+}	t_word;
+
+typedef struct s_data
+{
+	int	quote;
+	int	r_idx;
+	int	start;
+}	t_data;
 
 typedef struct s_info
 {
@@ -62,10 +74,10 @@ typedef struct s_info
 	t_list	*env_list;
 }	t_info;
 
-void	init_ctrl();
+void	init_ctrl(void);
 void	ft_signal(int signum);
 void	ft_here_doc_sig(int signum);
-void	ft_here_doc_sig_parent();
+void	ft_here_doc_sig_parent(int signum);
 int		init_env(t_info *info, char **envp);
 void	init_reset(t_info *info);
 void	free_exit(t_info *info);
@@ -74,12 +86,14 @@ int		check_syntax(char *input, t_info *info);
 char	**pipe_parsing(char *input, t_info *info);
 int		solve_redirect(char *bundle, t_info *info);
 int		here_doc(char *limit, t_info *info);
-char	**split_words(char *bundle, t_info *info);
+char	**parsing_words(char *bundle, t_info *info);
 int		interpret_word(char **parts, t_info *info);
-char	**split_equal(char *str, int *flag);
+char	**parsing_equal(char *str, int *flag);
+int		parse_redirect(char *bundle, char *name, t_info *info, t_word w_info);
 
 int		get_word_len(char *bundle, t_info *info, int idx, int *end);
-void	get_interpret_word(char *bundle, char *res, t_info *info, t_word w_info);
+void	get_interpret_word(char *bundle, char *res, \
+t_info *info, t_word w_info);
 int		is_valid_character(char c);
 int		is_space(char c);
 int		is_quote(char c);
@@ -116,7 +130,7 @@ void	list_remove(t_list **list, char *key);
 void	list_insert_for_export(t_list **list, t_list *item);
 
 void	ft_print_error(char *cmd, char *arg, char *msg);
-void	ft_error(int exit_status);
+void	ft_error(int exit_status, t_info *info);
 void	free_str(char **en_paths);
 void	init_str(char **strs, int len);
 void	free_all(t_info *info);

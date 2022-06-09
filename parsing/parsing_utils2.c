@@ -1,41 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*   parsing_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/10 05:31:11 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 05:31:11 by chaekim          ###   ########.fr       */
+/*   Created: 2022/06/10 06:14:34 by chaekim           #+#    #+#             */
+/*   Updated: 2022/06/10 06:14:34 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	fill_word(char *str, char *res, int start, int end)
+int	is_quote(char c)
 {
-	int	i;
-
-	i = 0;
-	while (start < end)
-	{
-		res[i] = str[start];
-		i++;
-		start++;
-	}
-	res[i] = 0;
+	return (c == '\'' || c == '\"');
 }
 
-void	skip_space(char *str, int *start)
+int	is_space(char c)
 {
-	while (str[*start] && is_space(str[*start]))
-		(*start)++;
+	return (c == 32 || (9 <= c && c <= 13));
 }
 
-void	check_quote(char c, int *quote)
+int	is_redirect(char c)
 {
-	if (!(*quote) && (c == '\"' || c == '\''))
-		*quote = c;
-	else if ((*quote) && (c == '\"' || c == '\'') && (*quote) == c)
-		*quote = 0;
+	return (c == '<' || c == '>');
 }

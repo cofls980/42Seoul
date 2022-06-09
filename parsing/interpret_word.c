@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   interpret_word.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/10 05:31:04 by chaekim           #+#    #+#             */
+/*   Updated: 2022/06/10 05:31:04 by chaekim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 int	have_to_change(char *part)
@@ -37,7 +49,7 @@ char	*make_new_word(char *part, t_info *info)
 int	interpret_word(char **parts, t_info *info)
 {
 	int	i;
-	
+
 	i = 0;
 	while (parts[i])
 	{

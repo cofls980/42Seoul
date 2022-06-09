@@ -101,7 +101,7 @@ int	ft_export(char **command, t_info *info)
 	while (command[++i])
 	{
 		flag = 0;
-		envp_item = split_equal(command[i], &flag);
+		envp_item = parsing_equal(command[i], &flag);
 		if (envp_item && !is_key_valid(envp_item[0]))
 		{
 			if (have_equal(command[i]))
