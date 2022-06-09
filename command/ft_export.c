@@ -105,15 +105,9 @@ int	ft_export(char **command, t_info *info)
 		if (envp_item && !is_key_valid(envp_item[0]))
 		{
 			if (have_equal(command[i]))
-			{
 				list_insert(&(info->env_list), new_item(ft_strdup(envp_item[0]), ft_strdup(envp_item[1]), 1));
-				//list_insert_for_export(&(info->user_list), new_item(ft_strdup(envp_item[0]), ft_strdup(envp_item[1])));
-			}
 			else
-			{
 				list_insert(&(info->env_list), new_item(ft_strdup(envp_item[0]), 0, 0));
-				//list_insert_for_export(&(info->user_list), new_item(ft_strdup(envp_item[0]), 0));
-			}
 		}
 		else
 		{

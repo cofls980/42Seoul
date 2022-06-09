@@ -85,7 +85,6 @@ void	ft_readline(t_info *info)
 {
 	char	*input;
 
-	
 	while (1)
 	{
 		init_ctrl();

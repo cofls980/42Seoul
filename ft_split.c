@@ -75,6 +75,7 @@ char	**ft_split(char const *s, char c)
 	str = (char **)malloc(sizeof(char *) * (ft_wordcount(s, c) + 1));
 	if (!str)
 		return (0);
+	init_str(str,ft_wordcount(s, c) + 1);
 	i = 0;
 	start = 0;
 	end = 0;
