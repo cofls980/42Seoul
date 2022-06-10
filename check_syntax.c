@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_syntax.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/10 15:51:32 by chaekim           #+#    #+#             */
+/*   Updated: 2022/06/10 16:16:13 by chaekim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./includes/minishell.h"
 
 int	is_valid_quote(char *input)
@@ -18,7 +30,7 @@ int	is_valid_quote(char *input)
 int	is_valid_pipe(char *input, t_info *info)
 {
 	int	i;
-	int quote;
+	int	quote;
 
 	i = 0;
 	skip_space(input, &i);
@@ -57,7 +69,8 @@ int	is_valid_redirect(char *input)
 			if (input[i] && input[i] == input[i - 1])
 				i++;
 			skip_space(input, &i);
-			if (!input[i] || input[i] == '<' || input[i] == '>' || input[i] == '|')
+			if (!input[i] || input[i] == '<' \
+			|| input[i] == '>' || input[i] == '|')
 				return (1);
 		}
 		i++;

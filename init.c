@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/10 15:51:43 by chaekim           #+#    #+#             */
+/*   Updated: 2022/06/10 16:28:24 by chaekim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./includes/minishell.h"
 
 void	init_ctrl(void)
@@ -19,14 +31,15 @@ int	init_env(t_info *info, char **envp)
 
 	g_exit_num = 0;
 	info->bundles = 0;
-	info->env_list = 0; // env를 위한 리스트
+	info->env_list = 0;
 	i = 0;
 	while (envp[i])
 	{
 		envp_item = parsing_equal(envp[i], &flag);
 		if (!envp_item)
 			return (0);
-		list_insert(&(info->env_list), new_item(ft_strdup(envp_item[0]), ft_strdup(envp_item[1]), 1));
+		list_insert(&(info->env_list), \
+		new_item(ft_strdup(envp_item[0]), ft_strdup(envp_item[1]), 1));
 		free_str(envp_item);
 		i++;
 	}
@@ -48,4 +61,13 @@ void	init_reset(t_info *info)
 	if (info->output_fd != 1)
 		close(info->output_fd);
 	info->exit = 0;
+}
+
+void	init_after_pipe(t_info *info, int i)
+{
+	info->r_in_fd = -1;
+	info->r_out_fd = -1;
+	info->r_kind = 0;
+	info->here_doc = 0;
+	info->pids[i] = -2;
 }

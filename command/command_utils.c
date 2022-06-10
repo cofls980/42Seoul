@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   command_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/10 15:52:22 by chaekim           #+#    #+#             */
+/*   Updated: 2022/06/10 15:55:22 by chaekim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 int	is_builtin(char *command)
@@ -8,7 +20,7 @@ int	is_builtin(char *command)
 		|| ft_strcmp(command, "exit") == 0);
 }
 
-int	builtin_command(char **command, t_info *info) // 명령어 추가
+int	builtin_command(char **command, t_info *info)
 {
 	int	status;
 
@@ -49,7 +61,6 @@ void	set_output_fd(t_info *info)
 
 void	set_input_fd(t_info *info)
 {
-	//자식 프로세스 안에서 input은 dup2를 사용하면되지만
 	if (info->r_in_fd != -1)
 	{
 		if (info->input_fd != 0)
@@ -63,7 +74,4 @@ void	set_input_fd(t_info *info)
 		if (info->input_fd != 0)
 			close(info->input_fd);
 	}
-	//output은 나중에 출력을 할 때 문제가 생김(빌트인 함수)
 }
-//pipe 사용하면 dup2사용하기 때문에 printf가 편함
-//사용안하면 write를 사용해야하는

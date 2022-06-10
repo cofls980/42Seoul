@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyjeong <hyjeong@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 02:41:23 by hyunjoo           #+#    #+#             */
-/*   Updated: 2022/06/05 14:39:41 by hyjeong          ###   ########.fr       */
+/*   Updated: 2022/06/10 16:08:42 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,29 +76,30 @@ static int	handle_home(char **command, t_list *tmp)
 	char	*home_path;
 	int		ret;
 
-	if (list_find(&tmp, "HOME") == 0) //HOME이라는 이름의 환경 변수가 없을 때
+	if (list_find(&tmp, "HOME") == 0)
 		return (0);
-	if (command[1][0] == 0 || (command[1][0] == '~' && command[1][1] == 0) \
-	|| (command[1][0] == '~' && command[1][1] == '/' && command[1][2] == 0))//cmd 뒤에 들어온 것이 없음
+	if (command[1] == 0 || (command[1][0] == '~' && command[1][1] == 0) \
+	|| (command[1][0] == '~' && command[1][1] == '/' && command[1][2] == 0))
 		home_path = concat_path(list_find(&tmp, "HOME"), "");
 	else
 		home_path = concat_path(list_find(&tmp, "HOME"), \
-		&command[1][3]);//cd ~/... 뒤에 ...을 넣어줘야함
+		&command[1][3]);
 	ret = handle_absolute(command[1], home_path);
 	free(home_path);
 	return (ret);
 }
 
-int	ft_cd(char **command, t_info *info) // return exit status 설정
+int	ft_cd(char **command, t_info *info)
 {
 	t_list	*tmp;
-	char *path;
+	char	*path;
 
 	tmp = info->env_list;
 	path = getcwd(NULL, 0);
-	if (command[1] == 0 || (command[1][0] == '~' && ((command[1][1] == '\0') || (command[1][1] == '/')))) //cd, cd ~, cd ~/
+	if (command[1] == 0 || (command[1][0] == '~' \
+	&& ((command[1][1] == '\0') || (command[1][1] == '/'))))
 		return (handle_home(command, tmp->next));
-	if(command[1][0] == '/')
+	if (command[1][0] == '/')
 		return (handle_absolute(command[1], command[1]));
 	else
 		return (handle_relative(command[1]));

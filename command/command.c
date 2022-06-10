@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   command.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/10 15:52:16 by chaekim           #+#    #+#             */
+/*   Updated: 2022/06/10 15:54:50 by chaekim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 void	execute(char **command, t_info *info)
@@ -20,7 +32,6 @@ void	execute(char **command, t_info *info)
 		}
 		free(path);
 		free_all(info);
-		//에러 num 종류에 따라 다른 숫자로 exit();
 		exit(status);
 	}
 }
@@ -50,9 +61,9 @@ void	execute_command(char **command, t_info *info)
 	}
 }
 
-pid_t	last_command(char **command, t_info *info)//단순 실행
+pid_t	last_command(char **command, t_info *info)
 {
-	pid_t pid;
+	pid_t	pid;
 
 	pid = fork();
 	if (pid < 0)
@@ -104,7 +115,7 @@ pid_t	command(char **command, t_info *info)
 		if (info->pipe_num)
 			pid = commands(command, info);
 		else
-			pid = last_command(command, info); //마지막 명령어는 exit 기록이 남는다.
+			pid = last_command(command, info);
 	}
 	else
 	{

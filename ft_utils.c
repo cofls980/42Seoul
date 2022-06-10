@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyjeong <hyjeong@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 00:59:12 by hyunjoo           #+#    #+#             */
-/*   Updated: 2022/06/05 14:10:07 by hyjeong          ###   ########.fr       */
+/*   Updated: 2022/06/10 16:47:08 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ void	ft_print_error(char *cmd, char *arg, char *msg)
 
 void	ft_error(int exit_status, t_info *info)
 {
-	struct termios	new_term;
+	//struct termios	new_term;
 
-	tcgetattr(0, &new_term);
+	/*tcgetattr(0, &new_term);
 	new_term.c_lflag |= (ECHOCTL); //왜 사용했는지 물어보기
-	tcsetattr(0, TCSANOW, &new_term);
+	tcsetattr(0, TCSANOW, &new_term);*/
 	free_all(info);
 	exit(exit_status);
 }

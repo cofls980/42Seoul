@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   list_insert.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/10 15:51:11 by chaekim           #+#    #+#             */
+/*   Updated: 2022/06/10 16:44:56 by chaekim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./includes/minishell.h"
 
-void	list_insert(t_list **list, t_list *item) //key=value만 들어옴
+void	list_insert(t_list **list, t_list *item)
 {
 	t_list	*tmp;
 
@@ -36,13 +48,12 @@ void	list_insert_for_export(t_list **list, t_list *item)
 	tmp = (*list);
 	if (tmp)
 	{
-		if (ft_strcmp(tmp->key, item->key) )
 		while (tmp)
 		{
 			if (tmp == *list && ft_strcmp(tmp->key, item->key) > 0)
 			{
 				item->next = tmp;
-				(*list) = item; 
+				(*list) = item;
 				break ;
 			}
 			else if (ft_strcmp(tmp->key, item->key) < 0 && (!tmp->next || ft_strcmp(tmp->next->key, item->key) > 0))

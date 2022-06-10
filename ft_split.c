@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 05:31:52 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 05:31:52 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/10 16:17:52 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,27 +69,26 @@ char	**ft_split(char const *s, char c)
 {
 	char	**str;
 	int		i;
-	int		start;
-	int		end;
+	int		se[2];
 
 	str = (char **)malloc(sizeof(char *) * (ft_wordcount(s, c) + 1));
 	if (!str)
 		return (0);
-	init_str(str,ft_wordcount(s, c) + 1);
+	init_str(str, ft_wordcount(s, c) + 1);
 	i = 0;
-	start = 0;
-	end = 0;
+	se[0] = 0;
+	se[1] = 0;
 	while (i < ft_wordcount(s, c))
 	{
-		ft_findword(s, c, &start, &end);
-		str[i] = (char *)malloc(sizeof(char) * (end - start + 1));
+		ft_findword(s, c, &se[0], &se[1]);
+		str[i] = (char *)malloc(sizeof(char) * (se[1] - se[0] + 1));
 		if (!str[i])
 		{
 			free_str(str);
 			return (0);
 		}
-		ft_cpy(str[i++], s, start, end);
-		start = end;
+		ft_cpy(str[i++], s, se[0], se[1]);
+		se[0] = se[1];
 	}
 	str[i] = 0;
 	return (str);

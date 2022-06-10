@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/10 15:51:26 by chaekim           #+#    #+#             */
+/*   Updated: 2022/06/10 16:48:06 by chaekim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./includes/minishell.h"
 
 void	free_pid(t_info *info)
@@ -38,12 +50,8 @@ void	parsing(char **bundles, t_info *info)
 	i = -1;
 	while (bundles[++i])
 	{
-		info->r_in_fd = -1;
-		info->r_out_fd = -1;
-		info->r_kind = 0;
-		info->here_doc = 0;
+		init_after_pipe(info, i);
 		parts = 0;
-		info->pids[i] = -2;
 		if (solve_redirect(bundles[i], info) != -2)
 		{
 			parts = parsing_words(bundles[i], info);
@@ -132,3 +140,24 @@ int	main(int argc, char **argv, char **envp)
 	system("leaks minishell > leaks_result; cat leaks_result | grep leaked; rm -rf leaks_result");
 	return (0);
 }
+
+/*
+int	insert_not_end(t_list **tmp, t_list *item, t_list **list)
+{
+	if ((*tmp) == *list && ft_strcmp((*tmp)->key, item->key) > 0)
+	{
+		(*tmp)->next = *tmp;
+		(*list) = item;
+		return (1);
+	}
+	else if (ft_strcmp((*tmp)->key, item->key) < 0 \
+	&& (!(*tmp)->next || ft_strcmp((*tmp)->next->key, item->key) > 0))
+	{
+		item->next = (*tmp)->next;
+		(*tmp)->next = item;
+		return (1);
+	}
+	*tmp = (*tmp)->next;
+	return (0);
+}
+*/

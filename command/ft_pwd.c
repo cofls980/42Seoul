@@ -1,8 +1,15 @@
-/*
-	pwd 뒤에 어떤 파라미터가 오던지 상관없음
-	대신 옵션이 들어오는 순간 오류 출력
-	옵션은 따옴표에 상관없이 -[c]가 오면 인식
-*/
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/10 15:53:04 by chaekim           #+#    #+#             */
+/*   Updated: 2022/06/10 15:58:36 by chaekim          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 int	ft_pwd(char **cmd, t_info *info)
@@ -23,7 +30,7 @@ int	ft_pwd(char **cmd, t_info *info)
 	path = getcwd(NULL, 0);
 	if (!path)
 	{
-		ft_print_error(cmd[0],cmd[1],strerror(errno));
+		ft_print_error(cmd[0], cmd[1], strerror(errno));
 		return (1);
 	}
 	ft_print(info, path);

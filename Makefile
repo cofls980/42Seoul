@@ -1,7 +1,7 @@
 NAME = minishell
 SRC = main.c ft_split.c find_path.c utils.c list.c ft_signal.c init.c\
 	ft_utils.c list_insert.c ft_strutils.c\
-	check_syntax.c command/ft_echo.c command/ft_env.c command/ft_export.c\
+	check_syntax.c command/ft_echo.c command/ft_env.c command/ft_export.c command/ft_export2.c\
 	command/ft_pwd.c command/command.c command/ft_unset.c\
 	command/ft_cd.c command/ft_exit.c command/command_utils.c\
 	parsing/pipes_parsing.c parsing/words_parsing.c parsing/equal_parsing.c\

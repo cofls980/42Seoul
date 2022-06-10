@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 07:33:57 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 07:33:57 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/10 16:30:46 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,10 @@ void	set_output_fd(t_info *info);
 void	set_input_fd(t_info *info);
 int		is_builtin(char *command);
 int		builtin_command(char **command, t_info *info);
+int		is_key_valid(char *str);
+int		have_equal(char *str);
+void	print_declare(t_info *info, char *key, char *value);
+void	export_print(int i, t_info *info);
 
 char	**ft_split(char const *s, char c);
 char	*ft_strjoin(char const *s1, char const *s2);
@@ -138,5 +142,6 @@ void	free_list(t_list **list);
 
 char	*find_path(char *command, char **envp);
 void	ft_oldpwd(t_list *env, char *path);
+void	init_after_pipe(t_info *info, int i);
 
 #endif
