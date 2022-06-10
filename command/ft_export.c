@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 15:52:58 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 16:42:59 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/10 18:55:59 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,10 @@ int	export(char **command, int *status, int i, t_info *info)
 	{
 		*status = 1;
 		if (flag == 1)
+		{
+			free_str(envp_item);
 			return (0);
+		}
 		ft_print_error(command[0], command[i], "not a valid identifier");
 	}
 	free_str(envp_item);

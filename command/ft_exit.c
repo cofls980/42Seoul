@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 02:41:32 by hyunjoo           #+#    #+#             */
-/*   Updated: 2022/06/10 16:01:09 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/10 18:46:15 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ static int	is_in_range(char *str)
 
 static int	exit_non_numeric(char *str, t_info *info)
 {
-	ft_print(info, "exit\n");
+	if (info->have_pipe == 0)
+		ft_print(info, "exit\n");
 	ft_print_error("exit", str, "numeric argument required");
 	g_exit_num = 255;
 	ft_error(255, info);
@@ -96,10 +97,13 @@ static long long	stoll(char *str)
 int	ft_exit(char **command, t_info *info)
 {
 	g_exit_num = EXIT_FAILURE;
-	if (command[1] == NULL && info->have_pipe == 0)
+	if (command[1] == NULL)
 	{
-		ft_print(info, "exit\n");
-		ft_error(0, info);
+		if (info->have_pipe == 0)
+		{
+			ft_print(info, "exit\n");
+			ft_error(0, info);
+		}
 	}
 	else if (command[2] == NULL)
 	{

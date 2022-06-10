@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 15:52:58 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 16:15:09 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/10 18:42:50 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,26 @@ int	have_equal(char *str)
 
 void	print_declare(t_info *info, char *key, char *value)
 {
+	int		i;
+	char	c;
+
+	i = 0;
 	ft_print(info, "declare -x ");
 	ft_print(info, key);
 	if (value)
 	{
 		ft_print(info, "=\"");
-		ft_print(info, value);
+		while (value[i])
+		{
+			if (value[i] == '\"')
+			{
+				c = '\\';
+				write(info->output_fd, &c, 1);
+			}
+			c = value[i];
+			write(info->output_fd, &c, 1);
+			i++;
+		}
 		ft_print(info, "\"");
 	}
 	ft_print(info, "\n");

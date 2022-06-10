@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 02:41:23 by hyunjoo           #+#    #+#             */
-/*   Updated: 2022/06/10 16:08:42 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/10 18:38:24 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ static int	handle_home(char **command, t_list *tmp)
 	char	*home_path;
 	int		ret;
 
+	ret = 0;
+	home_path = 0;
 	if (list_find(&tmp, "HOME") == 0)
 		return (0);
 	if (command[1] == 0 || (command[1][0] == '~' && command[1][1] == 0) \
@@ -93,15 +95,19 @@ int	ft_cd(char **command, t_info *info)
 {
 	t_list	*tmp;
 	char	*path;
+	int		status;
 
 	tmp = info->env_list;
 	path = getcwd(NULL, 0);
 	if (command[1] == 0 || (command[1][0] == '~' \
 	&& ((command[1][1] == '\0') || (command[1][1] == '/'))))
-		return (handle_home(command, tmp->next));
-	if (command[1][0] == '/')
-		return (handle_absolute(command[1], command[1]));
+		status = (handle_home(command, tmp->next));
+	else if (command[1][0] == '/')
+		status = (handle_absolute(command[1], command[1]));
 	else
-		return (handle_relative(command[1]));
-	ft_oldpwd(tmp, path);
+		status = (handle_relative(command[1]));
+	if (status == 0)
+		ft_oldpwd(tmp, path);
+	free(path);
+	return (status);
 }

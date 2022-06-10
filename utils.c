@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chaekim <chaekim@student.42seoul.k>        +#+  +:+       +#+        */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 15:51:54 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 15:51:58 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/10 18:32:59 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	free_list(t_list **list)
 void	free_all(t_info *info)
 {
 	if (info->bundles)
-		free(info->bundles);
+		free_str(info->bundles);
 	if (info->pids)
 		free(info->pids);
 	free_list(&(info->env_list));

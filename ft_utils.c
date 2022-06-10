@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 00:59:12 by hyunjoo           #+#    #+#             */
-/*   Updated: 2022/06/10 16:47:08 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/10 18:18:58 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	ft_oldpwd(t_list *env, char *path)
 	t_list	*new2;
 
 	new1 = env;
+	new2 = env;
 	new_path = getcwd(NULL, 0);
 	if (list_find(&new1, "OLDPWD"))
 	{
@@ -59,4 +60,7 @@ void	ft_oldpwd(t_list *env, char *path)
 	{
 		list_insert(&(env), new_item(ft_strdup("PWD"), ft_strdup(new_path), 1));
 	}
+	/*free(new1);
+	free(new2);*/
+	free(new_path);
 }

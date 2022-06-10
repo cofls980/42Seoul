@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chaekim <chaekim@student.42seoul.k>        +#+  +:+       +#+        */
+/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 15:51:50 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 15:51:51 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/10 18:57:43 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	delete_item(t_list *item)
 		item->next = 0;
 		free(item->key);
 		free(item->value);
+		free(item->next);
 		free(item);
 	}
 }
