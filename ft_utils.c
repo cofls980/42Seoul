@@ -34,11 +34,9 @@ void	ft_print_error(char *cmd, char *arg, char *msg)
 
 void	ft_error(int exit_status, t_info *info)
 {
-	//struct termios	new_term;
-
-	/*tcgetattr(0, &new_term);
-	new_term.c_lflag |= (ECHOCTL); //왜 사용했는지 물어보기
-	tcsetattr(0, TCSANOW, &new_term);*/
+	if (info->have_pipe == 0 && info->r_in_fd != -1)
+		close_fd(info->r_in_fd, info);
+	close_fd(info->output_fd, info);
 	free_all(info);
 	exit(exit_status);
 }
@@ -52,15 +50,15 @@ void	ft_oldpwd(t_list *env, char *path)
 	new1 = env;
 	new2 = env;
 	new_path = getcwd(NULL, 0);
-	if (list_find(&new1, "OLDPWD"))
+	if (list_valid_key(&new1, "OLDPWD"))
 	{
-		list_insert(&(env), new_item(ft_strdup("OLDPWD"), ft_strdup(path), 1));
+		list_insert(&(env), new_item(ft_strdup("OLDPWD"), \
+		ft_strdup(path), 1));
 	}
-	if (list_find(&new2, "PWD"))
+	if (list_valid_key(&new2, "PWD"))
 	{
-		list_insert(&(env), new_item(ft_strdup("PWD"), ft_strdup(new_path), 1));
+		list_insert(&(env), new_item(ft_strdup("PWD"), \
+		ft_strdup(new_path), 1));
 	}
-	/*free(new1);
-	free(new2);*/
 	free(new_path);
 }

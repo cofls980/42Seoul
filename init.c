@@ -29,21 +29,26 @@ int	init_env(t_info *info, char **envp)
 	int		flag;
 	char	**envp_item;
 
-	g_exit_num = 0;
 	info->bundles = 0;
 	info->env_list = 0;
-	i = 0;
-	while (envp[i])
+	info->envp = envp;
+	info->pids = 0;
+	envp_item = 0;
+	info->input_fd = 0;
+	info->output_fd = 1;
+	i = -1;
+	while (envp[++i])
 	{
 		envp_item = parsing_equal(envp[i], &flag);
 		if (!envp_item)
-			return (0);
-		list_insert(&(info->env_list), \
-		new_item(ft_strdup(envp_item[0]), ft_strdup(envp_item[1]), 1));
+			free_exit(info);
+		list_insert(&(info->env_list), new_item(ft_strdup(envp_item[0]), \
+		ft_strdup(envp_item[1]), 1));
 		free_str(envp_item);
-		i++;
 	}
-	info->envp = envp;
+	if (list_find(&(info->env_list), "OLDPWD") == 0)
+		list_insert(&(info->env_list), \
+		new_item(ft_strdup("OLDPWD"), 0, 0));
 	return (1);
 }
 
@@ -53,14 +58,12 @@ void	init_reset(t_info *info)
 	info->pids = 0;
 	info->pipe_num = 0;
 	info->have_pipe = 0;
+	if (info->input_fd != 0)
+		close_fd(info->input_fd, info);
+	if (info->output_fd != 1)
+		close_fd(info->output_fd, info);
 	info->input_fd = 0;
 	info->output_fd = 1;
-	if (info->input_fd != 0)
-		close(info->input_fd);
-	info->input_fd = 0;
-	if (info->output_fd != 1)
-		close(info->output_fd);
-	info->exit = 0;
 }
 
 void	init_after_pipe(t_info *info, int i)

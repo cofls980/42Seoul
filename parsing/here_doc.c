@@ -28,11 +28,11 @@ int	chech_input(char *limit, char *input, int fd)
 	return (1);
 }
 
-void	child_process(int *fd, char *limit)
+void	child_process(int *fd, char *limit, t_info *info)
 {
 	char	*input;
 
-	close(fd[0]);
+	close_fd(fd[0], info);
 	while (1)
 	{
 		signal(SIGINT, ft_here_doc_sig);
@@ -58,20 +58,22 @@ int	here_doc(char *limit, t_info *info)
 	pid_t	pid;
 
 	if (pipe(fd) == -1)
+	{
+		close_iofd(info);
 		free_exit(info);
+	}
 	pid = fork();
 	if (pid < 0)
 	{
-		close(fd[0]);
-		close(fd[1]);
+		close_iofd(info);
+		close_fd(fd[0], info);
+		close_fd(fd[1], info);
 		free_exit(info);
 	}
 	else if (pid == 0)
-	{
-		child_process(fd, limit);
-	}
+		child_process(fd, limit, info);
 	signal(SIGINT, ft_here_doc_sig_parent);
-	close(fd[1]);
+	close_fd(fd[1], info);
 	waitpid(pid, &status, 0);
 	g_exit_num = (status & 0xff00) >> 8;
 	return (fd[0]);

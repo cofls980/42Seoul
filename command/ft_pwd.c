@@ -27,11 +27,14 @@ int	ft_pwd(char **cmd, t_info *info)
 			return (1);
 		}
 	}
-	path = getcwd(NULL, 0);
+	path = getcwd(0, 0);
 	if (!path)
 	{
 		ft_print_error(cmd[0], cmd[1], strerror(errno));
-		return (1);
+		if (info->have_pipe == 0 && info->r_in_fd != -1)
+			close_fd(info->r_in_fd, info);
+		close_fd(info->output_fd, info);
+		free_exit(info);
 	}
 	ft_print(info, path);
 	ft_print(info, "\n");

@@ -21,9 +21,14 @@ int	insert(t_list **list, t_list *item)
 	{
 		if (ft_strcmp(tmp->key, item->key) == 0)
 		{
-			tmp->value = ft_strdup(item->value);
-			tmp->print = item->print;
-			delete_item(item);
+			if (item->print != 0)
+			{
+				if (tmp->value)
+					free(tmp->value);
+				tmp->value = ft_strdup(item->value);
+				tmp->print = item->print;
+				delete_item(item);
+			}
 			return (0);
 		}
 		tmp = tmp->next;

@@ -54,7 +54,7 @@ void	set_output_fd(t_info *info)
 	if (info->r_out_fd != -1)
 	{
 		if (info->output_fd != 1)
-			close(info->output_fd);
+			close_fd(info->output_fd, info);
 		info->output_fd = info->r_out_fd;
 	}
 }
@@ -64,14 +64,14 @@ void	set_input_fd(t_info *info)
 	if (info->r_in_fd != -1)
 	{
 		if (info->input_fd != 0)
-			close(info->input_fd);
-		dup2(info->r_in_fd, STDIN_FILENO);
-		close(info->r_in_fd);
+			close_fd(info->input_fd, info);
+		duplicate(info->r_in_fd, STDIN_FILENO, info);
+		close_fd(info->r_in_fd, info);
 	}
 	else
 	{
-		dup2(info->input_fd, STDIN_FILENO);
+		duplicate(info->input_fd, STDIN_FILENO, info);
 		if (info->input_fd != 0)
-			close(info->input_fd);
+			close_fd(info->input_fd, info);
 	}
 }

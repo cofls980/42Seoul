@@ -68,6 +68,7 @@ char	**split_words(char *bundle, t_info *info, t_word w_info, int i)
 	if (!res)
 	{
 		ft_print_error(0, 0, strerror(errno));
+		close_iofd(info);
 		free_exit(info);
 	}
 	init_str(res, w_info.len + 1);
@@ -78,12 +79,12 @@ char	**split_words(char *bundle, t_info *info, t_word w_info, int i)
 		if (!res[i])
 		{
 			ft_print_error(0, 0, strerror(errno));
+			close_iofd(info);
 			free_str(res);
 			free_exit(info);
 		}
-		fill_word(bundle, res[i], w_info.start, w_info.end);
+		fill_word(bundle, res[i++], w_info.start, w_info.end);
 		w_info.start = w_info.end;
-		i++;
 	}
 	return (res);
 }

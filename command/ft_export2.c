@@ -95,6 +95,6 @@ void	export_print(int i, t_info *info)
 			print_declare(info, list->key, list->value);
 			list = list->next;
 		}
-		free_list(&set);
+		free_list(set);
 	}
 }

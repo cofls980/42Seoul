@@ -58,6 +58,7 @@ int	interpret_word(char **parts, t_info *info)
 			parts[i] = make_new_word(parts[i], info);
 			if (!parts[i])
 			{
+				close_iofd(info);
 				free_str(parts);
 				free_exit(info);
 			}

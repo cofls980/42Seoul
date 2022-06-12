@@ -1,6 +1,6 @@
 NAME = minishell
 SRC = main.c ft_split.c find_path.c utils.c list.c ft_signal.c init.c\
-	ft_utils.c list_insert.c ft_strutils.c\
+	ft_utils.c list_insert.c ft_strutils.c utils2.c\
 	check_syntax.c command/ft_echo.c command/ft_env.c command/ft_export.c command/ft_export2.c\
 	command/ft_pwd.c command/command.c command/ft_unset.c\
 	command/ft_cd.c command/ft_exit.c command/command_utils.c\
@@ -17,11 +17,11 @@ RM = rm -f
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -L $(shell brew --prefix readline)/lib/ -lreadline
-#
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -lreadline -g -fsanitize=address
+# -L $(shell brew --prefix readline)/lib/
 %.o: %.c
-	$(CC) $(CFLAGS) -I$(HEADER) -c -o $@ $< -I$(shell brew --prefix readline)/include/
-# -I lib/libft/include/ 
+	$(CC) $(CFLAGS) -I$(HEADER) -c -o $@ $<
+# -I lib/libft/include/  -I$(shell brew --prefix readline)/include/
 clean:
 	$(RM) $(OBJ)
 

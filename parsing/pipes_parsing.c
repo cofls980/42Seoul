@@ -45,7 +45,7 @@ char	**split_with_pipe(char *input, char **res, t_info *info)
 		if (!res[i])
 		{
 			ft_print_error(0, 0, strerror(errno));
-			return (0);
+			free_exit(info);
 		}
 		fill_word(input, res[i], start, end);
 		start = end + 1;
@@ -61,7 +61,7 @@ char	**pipe_parsing(char *input, t_info *info)
 	if (!res)
 	{
 		ft_print_error(0, 0, strerror(errno));
-		return (0);
+		free_exit(info);
 	}
 	init_str(res, info->pipe_num + 2);
 	return (split_with_pipe(input, res, info));

@@ -17,20 +17,21 @@ int	redirect_check(char *name, int fd, t_info *info)
 	if (fd == -1)
 	{
 		ft_print_error(name, 0, strerror(errno));
-		return (0);
+		close_iofd(info);
+		free_exit(info);
 	}
 	if (fd != -2)
 	{
 		if (info->r_kind == INPUT_R || info->r_kind == HERE_DOC_R)
 		{
 			if (info->r_in_fd != -1)
-				close(info->r_in_fd);
+				close_fd(info->r_in_fd, info);
 			info->r_in_fd = fd;
 		}
 		else
 		{
 			if (info->r_out_fd != -1)
-				close(info->r_out_fd);
+				close_fd(info->r_out_fd, info);
 			info->r_out_fd = fd;
 		}
 	}
@@ -50,7 +51,7 @@ int	redirection(char *name, t_info *info)
 		fd = here_doc(name, info);
 		if (g_exit_num == 1)
 		{
-			close(fd);
+			close_fd(fd, info);
 			info->here_doc = 1;
 			return (0);
 		}	

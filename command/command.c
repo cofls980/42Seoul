@@ -45,7 +45,7 @@ void	execute_command(char **command, t_info *info)
 	{
 		status = builtin_command(command, info);
 		if (info->output_fd != 1)
-			close(info->output_fd);
+			close_fd(info->output_fd, info);
 		free_all(info);
 		exit(status);
 	}
@@ -54,8 +54,8 @@ void	execute_command(char **command, t_info *info)
 		set_output_fd(info);
 		if (info->output_fd != 1)
 		{
-			dup2(info->output_fd, STDOUT_FILENO);
-			close(info->output_fd);
+			duplicate(info->output_fd, STDOUT_FILENO, info);
+			close_fd(info->output_fd, info);
 		}
 		execute(command, info);
 	}
@@ -90,18 +90,18 @@ pid_t	commands(char **command, t_info *info)
 	pid = fork();
 	if (pid < 0)
 	{
-		close(fd[0]);
-		close(fd[1]);
+		close_fd(fd[0], info);
+		close_fd(fd[1], info);
 		ft_print_error(0, 0, strerror(errno));
 		free_exit(info);
 	}
 	else if (pid == 0)
 	{
-		close(fd[0]);
+		close_fd(fd[0], info);
 		info->output_fd = fd[1];
 		execute_command(command, info);
 	}
-	close(fd[1]);
+	close_fd(fd[1], info);
 	info->input_fd = fd[0];
 	return (pid);
 }
@@ -126,11 +126,6 @@ pid_t	command(char **command, t_info *info)
 		}
 		else
 			pid = last_command(command, info);
-	}
-	if (pid == -1000)
-	{
-		init_reset(info);
-		free_exit(info);
 	}
 	return (pid);
 }

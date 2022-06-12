@@ -28,10 +28,10 @@ void	delete_item(t_list *item)
 {
 	if (item)
 	{
-		item->next = 0;
-		free(item->key);
-		free(item->value);
-		free(item->next);
+		if (item->key != 0)
+			free(item->key);
+		if (item->value != 0)
+			free(item->value);
 		free(item);
 	}
 }
@@ -59,6 +59,23 @@ void	list_remove(t_list **list, char *key)
 			tmp = tmp->next;
 		}
 	}
+}
+
+int	list_valid_key(t_list **list, char *key)
+{
+	t_list	*tmp;
+
+	tmp = (*list);
+	if (tmp)
+	{
+		while (tmp)
+		{
+			if (ft_strcmp(tmp->key, key) == 0)
+				return (1);
+			tmp = tmp->next;
+		}
+	}
+	return (0);
 }
 
 char	*list_find(t_list **list, char *key)

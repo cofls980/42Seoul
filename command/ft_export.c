@@ -59,11 +59,13 @@ int	ft_export(char **command, t_info *info)
 	{
 		if (!export(command, &status, i, info))
 		{
-			status = -1000;
-			break ;
+			if (info->have_pipe == 0 && info->r_in_fd != -1)
+				close_fd(info->r_in_fd, info);
+			close_fd(info->output_fd, info);
+			free_exit(info);
 		}
 	}
-	if (status != -1000)
+	if (status != 1)
 		export_print(i, info);
 	return (status);
 }

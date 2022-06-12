@@ -113,8 +113,6 @@ void	ft_readline(t_info *info)
 			minishell(input, info);
 			free(input);
 		}
-		if (info->exit == 1)
-			break ;
 	}
 }
 
@@ -126,9 +124,10 @@ int	main(int argc, char **argv, char **envp)
 	{
 		if (!init_env(&info, envp))
 		{
-			free_list(&(info.env_list));
+			free_list(info.env_list);
 			return (0);
 		}
+		g_exit_num = 0;
 		ft_readline(&info);
 		free_all(&info);
 	}
@@ -136,7 +135,5 @@ int	main(int argc, char **argv, char **envp)
 	{
 		ft_print_error(0, 0, "too many parameters\n");
 	}
-	//leaks
-	system("leaks minishell > leaks_result; cat leaks_result | grep leaked; rm -rf leaks_result");
 	return (0);
 }

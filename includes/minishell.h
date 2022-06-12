@@ -24,8 +24,6 @@
 # include <termios.h>
 # include <dirent.h>
 # include <errno.h>
-//tcgetattr, tcsetattr
-//int tcsetattr(int fildes, int optional_actions, struct termios *termios_p);
 
 # define INPUT_R 1
 # define OUTPUT_R 2
@@ -35,7 +33,7 @@
 
 int	g_exit_num;
 
-typedef struct s_list // 환경 변수를 위한 리트스 구조체
+typedef struct s_list
 {
 	char			*key;
 	char			*value;
@@ -68,7 +66,6 @@ typedef struct s_info
 	int		r_out_fd;
 	int		output_fd;
 	int		input_fd;
-	int		exit;
 	int		here_doc;
 	pid_t	*pids;
 	t_list	*env_list;
@@ -132,16 +129,20 @@ void	list_insert(t_list **list, t_list *item);
 char	*list_find(t_list **list, char *key);
 void	list_remove(t_list **list, char *key);
 void	list_insert_for_export(t_list **list, t_list *item);
+int		list_valid_key(t_list **list, char *key);
 
 void	ft_print_error(char *cmd, char *arg, char *msg);
 void	ft_error(int exit_status, t_info *info);
 void	free_str(char **en_paths);
 void	init_str(char **strs, int len);
 void	free_all(t_info *info);
-void	free_list(t_list **list);
+void	free_list(t_list *list);
 
 char	*find_path(char *command, char **envp);
 void	ft_oldpwd(t_list *env, char *path);
 void	init_after_pipe(t_info *info, int i);
+void	close_fd(int fd, t_info *info);
+void	duplicate(int fd1, int fd2, t_info *info);
+void	close_iofd(t_info *info);
 
 #endif
