@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 05:31:04 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 05:31:04 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/13 15:13:16 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,28 @@ char	*make_new_word(char *part, t_info *info)
 		ft_print_error(0, 0, strerror(errno));
 		return (0);
 	}
-	res[w_info.len] = '\0';
-	w_info.start = 0;
-	get_interpret_word(part, res, info, w_info);
+	if (w_info.len == 0 && info->is_null == 1)
+		info->command_null++;
+	else
+	{
+		if (info->is_null)
+			info->is_null = 0;
+		res[w_info.len] = '\0';
+		w_info.start = 0;
+		get_interpret_word(part, res, info, w_info);
+	}
 	free(part);
 	return (res);
+}
+
+void	check_part(char **parts, int i, t_info *info)
+{
+	if (!parts[i])
+	{
+		close_iofd(info);
+		free_str(parts);
+		free_exit(info);
+	}
 }
 
 int	interpret_word(char **parts, t_info *info)
@@ -56,14 +73,19 @@ int	interpret_word(char **parts, t_info *info)
 		if (have_to_change(parts[i]))
 		{
 			parts[i] = make_new_word(parts[i], info);
-			if (!parts[i])
+			check_part(parts, i, info);
+			if (parts[i][0] == '\0')
 			{
-				close_iofd(info);
-				free_str(parts);
-				free_exit(info);
+				if (info->is_null && (i == 0 || !parts[i - 1]))
+				{
+					free(parts[i]);
+					parts[i] = 0;
+				}
+				info->is_null = 0;
 			}
 		}
 		i++;
 	}
+	info->word_num = i;
 	return (1);
 }

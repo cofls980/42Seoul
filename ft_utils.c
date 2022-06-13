@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/27 00:59:12 by hyunjoo           #+#    #+#             */
-/*   Updated: 2022/06/10 18:18:58 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/13 15:52:19 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,14 @@ void	ft_print_error(char *cmd, char *arg, char *msg)
 	write(fd, "\n", 1);
 }
 
-void	ft_error(int exit_status, t_info *info)
+void	ft_error(int exit_status, t_info *info, int print)
 {
 	if (info->have_pipe == 0 && info->r_in_fd != -1)
 		close_fd(info->r_in_fd, info);
 	close_fd(info->output_fd, info);
 	free_all(info);
+	if (print == 1)
+		printf("exit\n");
 	exit(exit_status);
 }
 

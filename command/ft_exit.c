@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 02:41:32 by hyunjoo           #+#    #+#             */
-/*   Updated: 2022/06/10 18:46:15 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/13 15:52:02 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,8 @@ static int	exit_non_numeric(char *str, t_info *info)
 		ft_print(info, "exit\n");
 	ft_print_error("exit", str, "numeric argument required");
 	g_exit_num = 255;
-	ft_error(255, info);
+	ft_error(255, info, 0);
+	exit(255);
 	return (255);
 }
 
@@ -96,14 +97,10 @@ static long long	stoll(char *str)
 
 int	ft_exit(char **command, t_info *info)
 {
-	g_exit_num = EXIT_FAILURE;
 	if (command[1] == NULL)
 	{
 		if (info->have_pipe == 0)
-		{
-			ft_print(info, "exit\n");
-			ft_error(0, info);
-		}
+			ft_error(0, info, 1);
 	}
 	else if (command[2] == NULL)
 	{
@@ -111,12 +108,13 @@ int	ft_exit(char **command, t_info *info)
 			return (exit_non_numeric(command[1], info));
 		g_exit_num = (unsigned char)stoll(command[1]);
 		if (info->have_pipe == 0)
-		{
-			ft_print(info, "exit\n");
-			ft_error(g_exit_num, info);
-		}
+			ft_error(g_exit_num, info, 1);
 	}
 	else
+	{
 		ft_print_error("exit", command[1], "too many arguments");
+		g_exit_num = 1;
+		ft_error(g_exit_num, info, 0);
+	}
 	return (g_exit_num);
 }

@@ -6,11 +6,21 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 15:52:58 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 18:55:59 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/13 14:16:02 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	key_value_insert(char *command, char **envp_item, t_info *info)
+{
+	if (have_equal(command))
+		list_insert(&(info->env_list), \
+		new_item(ft_strdup(envp_item[0]), ft_strdup(envp_item[1]), 1));
+	else
+		list_insert(&(info->env_list), \
+		new_item(ft_strdup(envp_item[0]), 0, 0));
+}
 
 int	export(char **command, int *status, int i, t_info *info)
 {
@@ -21,12 +31,7 @@ int	export(char **command, int *status, int i, t_info *info)
 	envp_item = parsing_equal(command[i], &flag);
 	if (envp_item && !is_key_valid(envp_item[0]))
 	{
-		if (have_equal(command[i]))
-			list_insert(&(info->env_list), \
-			new_item(ft_strdup(envp_item[0]), ft_strdup(envp_item[1]), 1));
-		else
-			list_insert(&(info->env_list), \
-			new_item(ft_strdup(envp_item[0]), 0, 0));
+		key_value_insert(command[i], envp_item, info);
 	}
 	else
 	{

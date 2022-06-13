@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 07:33:57 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 18:31:51 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/13 16:06:19 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,9 @@ typedef struct s_info
 	int		output_fd;
 	int		input_fd;
 	int		here_doc;
+	int		is_null;
+	int		command_null;
+	int		word_num;
 	pid_t	*pids;
 	t_list	*env_list;
 }	t_info;
@@ -132,7 +135,7 @@ void	list_insert_for_export(t_list **list, t_list *item);
 int		list_valid_key(t_list **list, char *key);
 
 void	ft_print_error(char *cmd, char *arg, char *msg);
-void	ft_error(int exit_status, t_info *info);
+void	ft_error(int exit_status, t_info *info, int print);
 void	free_str(char **en_paths);
 void	init_str(char **strs, int len);
 void	free_all(t_info *info);
@@ -144,5 +147,9 @@ void	init_after_pipe(t_info *info, int i);
 void	close_fd(int fd, t_info *info);
 void	duplicate(int fd1, int fd2, t_info *info);
 void	close_iofd(t_info *info);
+int		check_command(char **command, t_info *info);
+void	words_free(char **parts, t_info *info);
+void	check_execute_command(char **command, t_info *info);
+int		check_pid(int *i, int *e_num, t_info *info);
 
 #endif

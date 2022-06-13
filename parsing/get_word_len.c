@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 05:30:52 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 05:30:52 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/13 14:36:55 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ int	get_env_len(char *str, int *start, t_info *info)
 	c = str[i];
 	str[i] = 0;
 	value = list_find(&(info->env_list), str + *start);
+	if (!value)
+		info->is_null = 1;
 	str[i] = c;
 	*start = i - 1;
 	return (ft_strlen(value));

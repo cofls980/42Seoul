@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 15:52:16 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 15:54:50 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/13 15:40:59 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,19 @@ void	execute(char **command, t_info *info)
 	char	*path;
 	int		status;
 
+	check_execute_command(command, info);
 	path = find_path(command[0], info->envp);
 	if (execve(path, command, info->envp) == -1)
 	{
-		if (ft_strcmp(path, command[0]) == 0)
+		if (ft_strcmp(command[0], path) == 0)
 		{
 			ft_print_error(command[0], 0, "command not found");
-			status = 127;
+			free(path);
+			free_all(info);
+			exit(127);
 		}
-		else
-		{
-			ft_print_error(command[0], 0, strerror(errno));
-			status = 1;
-		}
+		ft_print_error(command[0], 0, strerror(errno));
+		status = 1;
 		free(path);
 		free_all(info);
 		exit(status);
@@ -109,7 +109,12 @@ pid_t	commands(char **command, t_info *info)
 pid_t	command(char **command, t_info *info)
 {
 	pid_t	pid;
+	int		i;
 
+	i = check_command(command, info);
+	if (i == -2)
+		return (i);
+	command = command + i;
 	if (info->have_pipe)
 	{
 		if (info->pipe_num)

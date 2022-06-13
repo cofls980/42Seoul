@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/13 01:15:45 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/13 04:02:44 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/13 16:07:18 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,29 @@ void	close_iofd(t_info *info)
 {
 	close_fd(info->output_fd, info);
 	close_fd(info->input_fd, info);
+}
+
+void	words_free(char **parts, t_info *info)
+{
+	int	i;
+
+	i = 0;
+	while (i < info->word_num)
+	{
+		if (parts[i])
+			free(parts[i]);
+		i++;
+	}
+	free(parts);
+}
+
+int	check_pid(int *i, int *e_num, t_info *info)
+{
+	if (info->pids[*i] == -2)
+	{
+		(*i)++;
+		*e_num = -1;
+		return (1);
+	}
+	return (0);
 }

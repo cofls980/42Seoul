@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 15:51:43 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 18:33:15 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/13 15:05:00 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	init_ctrl(void)
 	signal(SIGINT, ft_signal);
 	signal(SIGQUIT, ft_signal);
 	tcgetattr(STDIN_FILENO, &term);
-	term.c_lflag &= ~ECHOCTL;//check
+	term.c_lflag &= ~ECHOCTL;
 	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
 
@@ -73,4 +73,7 @@ void	init_after_pipe(t_info *info, int i)
 	info->r_kind = 0;
 	info->here_doc = 0;
 	info->pids[i] = -2;
+	info->command_null = 0;
+	info->is_null = 0;
+	info->word_num = 0;
 }

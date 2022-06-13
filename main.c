@@ -6,7 +6,7 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 15:51:26 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 19:00:01 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/13 16:06:29 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ void	free_pid(t_info *info)
 	e_num = -1;
 	while (i < info->have_pipe + 1)
 	{
-		if (info->pids[i] == -2)
-		{
-			i++;
-			e_num = -1;
+		if (check_pid(&i, &e_num, info))
 			continue ;
+		if (waitpid(info->pids[i++], &status, 0) == -1)
+		{
+			close_iofd(info);
+			free_exit(info);
 		}
-		waitpid(info->pids[i++], &status, 0);
 		e_num = (status & 0xff00) >> 8;
 	}
 	if (info->here_doc)
@@ -63,7 +63,7 @@ void	parsing(char **bundles, t_info *info)
 		else
 			g_exit_num = 1;
 		info->pipe_num--;
-		free_str(parts);
+		words_free(parts, info);
 	}
 }
 
@@ -72,7 +72,7 @@ void	minishell(char *input, t_info *info)
 	if (check_syntax(input, info))
 	{
 		ft_print_error(0, 0, "syntax error near unexpected token");
-		g_exit_num = 258;//check
+		g_exit_num = 258;
 		return ;
 	}
 	info->bundles = pipe_parsing(input, info);
@@ -135,5 +135,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		ft_print_error(0, 0, "too many parameters\n");
 	}
+	//leaks
+	system("leaks minishell > leaks_result; cat leaks_result | grep leaked; rm -rf leaks_result");
 	return (0);
 }

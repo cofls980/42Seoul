@@ -6,16 +6,15 @@
 /*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 15:53:04 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 15:58:36 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/13 14:08:04 by chaekim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	ft_pwd(char **cmd, t_info *info)
+int	check_pwd_valid(char **cmd)
 {
-	int		i;
-	char	*path;
+	int	i;
 
 	if (cmd[1])
 	{
@@ -26,6 +25,17 @@ int	ft_pwd(char **cmd, t_info *info)
 			ft_print_error(cmd[0], cmd[1], "invalid option");
 			return (1);
 		}
+	}
+	return (0);
+}
+
+int	ft_pwd(char **cmd, t_info *info)
+{
+	char	*path;
+
+	if (check_pwd_valid(cmd) == 1)
+	{
+		return (1);
 	}
 	path = getcwd(0, 0);
 	if (!path)
