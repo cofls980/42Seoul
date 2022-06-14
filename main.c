@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hyjeong <hyjeong@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 15:51:26 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/13 16:06:29 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/13 16:49:51 by hyjeong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,5 @@ int	main(int argc, char **argv, char **envp)
 	{
 		ft_print_error(0, 0, "too many parameters\n");
 	}
-	//leaks
-	system("leaks minishell > leaks_result; cat leaks_result | grep leaked; rm -rf leaks_result");
 	return (0);
 }

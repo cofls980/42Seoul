@@ -6,7 +6,7 @@
 /*   By: hyjeong <hyjeong@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/05 02:52:33 by hyunjoo           #+#    #+#             */
-/*   Updated: 2022/06/05 14:37:18 by hyjeong          ###   ########.fr       */
+/*   Updated: 2022/06/13 16:48:32 by hyjeong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,13 @@ void	ft_signal(int signum)
 		printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
+		rl_redisplay();
+		g_exit_num = 1;
+	}
+	if (signum == SIGQUIT)
+	{
+		g_exit_num = 127;
+		rl_on_new_line();
 		rl_redisplay();
 	}
 	return ;

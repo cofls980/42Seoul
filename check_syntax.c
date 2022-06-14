@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_syntax.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chaekim <chaekim@student.42.fr>            +#+  +:+       +#+        */
+/*   By: hyjeong <hyjeong@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 15:51:32 by chaekim           #+#    #+#             */
-/*   Updated: 2022/06/10 16:16:13 by chaekim          ###   ########.fr       */
+/*   Updated: 2022/06/13 16:18:48 by hyjeong          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ int	is_valid_pipe(char *input, t_info *info)
 
 	i = 0;
 	skip_space(input, &i);
-	if (!input[i] || input[i] == '|')
+	if (!input[i])
+		return (0);
+	if (input[i] == '|')
 		return (1);
 	quote = 0;
 	while (input[i])
@@ -80,11 +82,11 @@ int	is_valid_redirect(char *input)
 
 int	check_syntax(char *input, t_info *info)
 {
+	if (is_valid_pipe(input, info) != 0)
+		return (1);
 	if (is_valid_quote(input) != 0)
 		return (1);
 	if (is_valid_redirect(input) != 0)
-		return (1);
-	if (is_valid_pipe(input, info) != 0)
 		return (1);
 	return (0);
 }

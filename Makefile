@@ -18,10 +18,8 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -L $(shell brew --prefix readline)/lib/ -lreadline
-# -g -fsanitize=address
 %.o: %.c
 	$(CC) $(CFLAGS) -I$(HEADER) -c -o $@ $< -I$(shell brew --prefix readline)/include/
-# -I lib/libft/include/ 
 clean:
 	$(RM) $(OBJ)
 
