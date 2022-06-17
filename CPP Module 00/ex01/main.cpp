@@ -1,4 +1,3 @@
-//#include <iostream>
 #include "PhoneBook.hpp"
 
 void	add_contact(PhoneBook* phone_book)
@@ -40,7 +39,10 @@ int main(void)
 		std::cout << "User> ";
 		std::cin >> command;
 		if (command.compare("EXIT") == 0)
+		{
+			phone_book.lost_contacts();
 			break ;
+		}
 		if (command.compare("ADD") == 0)
 			add_contact(&phone_book);
 		else if (command.compare("SEARCH") == 0)
@@ -49,4 +51,6 @@ int main(void)
 			std::cout << "TRY AGAIN!" << std::endl;
 	}
 	// phonebook 비우기
+	//phone_book.~PhoneBook();
+	return (0);
 }

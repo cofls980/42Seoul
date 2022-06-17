@@ -13,12 +13,11 @@ private :
 	std::string darkest_secret;
 
 public :
-	Contact();
-	void add();
-	void display();
-	void display_specific_contact();
-	//~Contact();
-	//Contact(std::string fn, std::string ln, std::string nn, std::string ph, std::string ds);
+	Contact(void);
+	void add(void);
+	void display(void);
+	void display_specific_contact(void);
+	//~Contact(void);//소멸자
 };
 
 #endif

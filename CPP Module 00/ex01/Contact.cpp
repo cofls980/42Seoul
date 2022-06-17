@@ -1,6 +1,6 @@
 #include "Contact.hpp"
 
-Contact::Contact()
+Contact::Contact(void)
 {
 	this->first_name = "";
 	this->last_name = "";
@@ -9,7 +9,7 @@ Contact::Contact()
 	this->darkest_secret = "";
 }
 
-void	Contact::add()
+void	Contact::add(void)
 {
 	std::string fn, ln, nn, ph, ds;
 
@@ -30,23 +30,23 @@ void	Contact::add()
 	this->darkest_secret = ds;
 }
 
-void	Contact::display()
+void	Contact::display(void)
 {
 	if (this->first_name.length() > 10)
-		std::cout << std::setw(10) << this->first_name.substr(0, 9) << ". | ";
+		std::cout << std::setw(10) << this->first_name.substr(0, 9).append(".") << " | ";
 	else
 		std::cout << std::setw(10) << this->first_name << " | ";
 	if (this->last_name.length() > 10)
-		std::cout << std::setw(10) << this->last_name.substr(0, 9) << ". | ";
+		std::cout << std::setw(10) << this->last_name.substr(0, 9).append(".") << " | ";
 	else
 		std::cout << std::setw(10) << this->last_name << " | ";
 	if (this->nickname.length() > 10)
-		std::cout << std::setw(10) << this->nickname.substr(0, 9) << '.' << std::endl;
+		std::cout << std::setw(10) << this->nickname.substr(0, 9).append(".") << std::endl;
 	else
 		std::cout << std::setw(10) << this->nickname << std::endl;
 }
 
-void	Contact::display_specific_contact()
+void	Contact::display_specific_contact(void)
 {
 	std::cout << "FIRST NAME: " << first_name << std::endl;
 	std::cout << "LAST NAME: " << last_name << std::endl;

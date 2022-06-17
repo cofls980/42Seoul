@@ -10,11 +10,11 @@ private :
 	Contact users[8];
 
 public :
-	PhoneBook();
+	PhoneBook(void);
 	void add(Contact user);
-	int display();
+	int display(void);
 	int search(int index);
-	//~PhoneBook();
+	void lost_contacts(void);
 };
 
 #endif

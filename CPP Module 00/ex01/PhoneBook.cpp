@@ -1,6 +1,6 @@
 #include "PhoneBook.hpp"
 
-PhoneBook::PhoneBook()
+PhoneBook::PhoneBook(void)
 {
 	count = 0;
 	oldest = 0;
@@ -12,6 +12,8 @@ void	PhoneBook::add(Contact user)
 	{
 		users[oldest] = user;
 		oldest++;
+		if (oldest == 8)
+			oldest = 0;
 	}
 	else
 	{
@@ -20,7 +22,7 @@ void	PhoneBook::add(Contact user)
 	}
 }
 
-int	PhoneBook::display()
+int	PhoneBook::display(void)
 {
 	if (count == 0)
 		return (0);
@@ -49,4 +51,10 @@ int	PhoneBook::search(int index)
 		std::cout << "WRONG NUMBER. TRY AGAIN!" << std::endl;
 		return (0);
 	}
+}
+
+
+void	PhoneBook::lost_contacts(void)
+{
+	std::cout << "THE CONTACTS ARE LOST FOREVER!" << std::endl;
 }
