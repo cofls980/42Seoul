@@ -10,10 +10,10 @@ RM = rm -rf
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) -o $(NAME) $(OBJ)
-# $(CFLAGS) $(CFLAGS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
+
 %.o: %.cpp
-	$(CC) -c -o $@ $< -std=c++98
+	$(CC) $(CFLAGS) -c -o $@ $< -std=c++98
 
 clean:
 	$(RM) $(OBJ)
