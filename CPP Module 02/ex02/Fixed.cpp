@@ -100,12 +100,12 @@ bool Fixed::operator!=(const Fixed& fRef) const
 
 Fixed Fixed::operator+(const Fixed& fRef) const
 {
-	return Fixed(this->getRawBits() + fRef.getRawBits());
+	return Fixed(this->toFloat() + fRef.toFloat());
 }
 
 Fixed Fixed::operator-(const Fixed& fRef) const
 {
-	return Fixed(this->getRawBits() - fRef.getRawBits());
+	return Fixed(this->toFloat() - fRef.toFloat());
 }
 
 Fixed Fixed::operator*(const Fixed& fRef) const
