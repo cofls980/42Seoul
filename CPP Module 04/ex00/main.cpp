@@ -16,5 +16,8 @@ int main()
 	meta->makeSound();
 	//meta->getType();
 	//...
+	delete meta;
+	delete j;
+	delete i;
 	return 0;
 }

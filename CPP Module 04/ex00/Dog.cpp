@@ -8,7 +8,7 @@ Dog::Dog()
 
 Dog::Dog(const Dog& ref) : Animal(ref)
 {
-	*this = ref;
+	this->type = ref.type;
 }
 
 Dog& Dog::operator=(const Dog& ref)

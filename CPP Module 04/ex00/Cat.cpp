@@ -8,7 +8,7 @@ Cat::Cat()
 
 Cat::Cat(const Cat& ref) : Animal(ref)
 {
-	*this = ref;
+	this->type = ref.type;
 }
 
 Cat& Cat::operator=(const Cat& ref)

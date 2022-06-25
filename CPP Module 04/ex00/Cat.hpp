@@ -9,7 +9,7 @@ public:
 	Cat();
 	Cat(const Cat& ref);
 	Cat& operator=(const Cat& ref);
-	~Cat();
+	virtual ~Cat();
 
 	virtual std::string getType() const;
 	virtual void makeSound() const;

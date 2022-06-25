@@ -6,16 +6,10 @@ Animal::Animal()
 	this->type = "nothing";
 }
 
-/*Animal::Animal(std::string type)
-{
-	std::cout << "Animal constructor called with type " << type << std::endl;
-	this->type = type;
-}*/
-
 Animal::Animal(const Animal& ref)
 {
 	std::cout << "Animal copy constructor called" << std::endl;
-	*this = ref;
+	this->type = ref.type;
 }
 
 Animal& Animal::operator=(const Animal& ref)
