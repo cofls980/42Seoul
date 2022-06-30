@@ -1,6 +1,6 @@
 #include "PresidentialPardonForm.hpp"
 
-PresidentialPardonForm::PresidentialPardonForm() : Form("Presidential", 25, 5)
+PresidentialPardonForm::PresidentialPardonForm() : Form("presidential pardon", 25, 5)
 {
 	this->target = "in Presidential";
 }
@@ -19,7 +19,7 @@ PresidentialPardonForm& PresidentialPardonForm::operator=(const PresidentialPard
 PresidentialPardonForm::~PresidentialPardonForm()
 {}
 
-PresidentialPardonForm::PresidentialPardonForm(std::string target) : Form(target, 25, 5)
+PresidentialPardonForm::PresidentialPardonForm(std::string target) : Form("presidential pardon", 25, 5)
 {
 	this->target = target;
 }

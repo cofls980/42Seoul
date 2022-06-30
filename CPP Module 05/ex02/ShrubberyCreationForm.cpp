@@ -1,6 +1,6 @@
 #include "ShrubberyCreationForm.hpp"
 
-ShrubberyCreationForm::ShrubberyCreationForm() : Form("Shrubbery", 145, 137)
+ShrubberyCreationForm::ShrubberyCreationForm() : Form("shrubbery creation", 145, 137)
 {
 	this->target = "in shrubbery";
 }
@@ -19,7 +19,7 @@ ShrubberyCreationForm& ShrubberyCreationForm::operator=(const ShrubberyCreationF
 ShrubberyCreationForm::~ShrubberyCreationForm()
 {}
 
-ShrubberyCreationForm::ShrubberyCreationForm(std::string target) : Form(target, 145, 137)
+ShrubberyCreationForm::ShrubberyCreationForm(std::string target) : Form("shrubbery creation", 145, 137)
 {
 	this->target = target;
 }

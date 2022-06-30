@@ -1,6 +1,6 @@
 #include "RobotomyRequestForm.hpp"
 
-RobotomyRequestForm::RobotomyRequestForm() : Form("Robotomy", 72, 45)
+RobotomyRequestForm::RobotomyRequestForm() : Form("robotomy request", 72, 45)
 {
 	this->target = "in robotomy";
 }
@@ -19,7 +19,7 @@ RobotomyRequestForm& RobotomyRequestForm::operator=(const RobotomyRequestForm& r
 RobotomyRequestForm::~RobotomyRequestForm()
 {}
 
-RobotomyRequestForm::RobotomyRequestForm(std::string target) : Form(target, 72, 45)
+RobotomyRequestForm::RobotomyRequestForm(std::string target) : Form("robotomy request", 72, 45)
 {
 	this->target = target;
 }
