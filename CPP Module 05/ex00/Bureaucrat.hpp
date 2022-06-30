@@ -13,7 +13,7 @@ public:
 	Bureaucrat();
 	Bureaucrat(const Bureaucrat& ref);
 	Bureaucrat& operator=(const Bureaucrat& ref);
-	virtual ~Bureaucrat();
+	~Bureaucrat(); // virtual?
 	Bureaucrat(std::string name, int grade);
 
 	std::string getName() const;
