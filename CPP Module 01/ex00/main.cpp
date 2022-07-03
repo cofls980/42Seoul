@@ -8,7 +8,9 @@ int main(void)
 	randomChump("Marry");
 
 	Zombie *zz = newZombie("Harry");
-	(*zz).announce();
+	zz->announce();
+
+	delete zz;
 
 	return (0);
 }

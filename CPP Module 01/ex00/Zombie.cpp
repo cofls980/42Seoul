@@ -15,3 +15,8 @@ Zombie::~Zombie()
 {
 	std::cout << "DESTROY " << this->name << std::endl;
 }
+
+Zombie::Zombie()
+{
+	this->name = "DEFAULT";
+}
