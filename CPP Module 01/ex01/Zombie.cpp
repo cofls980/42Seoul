@@ -2,7 +2,12 @@
 
 Zombie::Zombie()
 {
-	this->name = "";
+	this->name = "DEFAULT";
+}
+
+Zombie::Zombie(std::string name)
+{
+	this->name = name;
 }
 
 void	Zombie::init(std::string name)
