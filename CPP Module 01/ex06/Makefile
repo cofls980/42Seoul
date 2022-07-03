@@ -3,17 +3,17 @@ SRC = main.cpp Harl.cpp
 OBJ = $(SRC:%.cpp=%.o)
 INC = ./
 
-CC = c++
+CC = clang++
 CFLAGS = -Wall -Wextra -Werror 
 RM = rm -rf
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC)  -o $(NAME) $(OBJ)
-#$(CFLAGS) $(CFLAGS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) -std=c++98
+
 %.o: %.cpp
-	$(CC) -c -o $@ $< -std=c++98
+	$(CC) $(CFLAGS) -c -o $@ $< -std=c++98
 
 clean:
 	$(RM) $(OBJ)
