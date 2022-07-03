@@ -1,5 +1,6 @@
-#ifndef HUMANA_H
-#define HUMANA_H
+#pragma once
+#ifndef __HUMANA_H__
+#define __HUMANA_H__
 
 #include "Weapon.hpp"
 
@@ -7,7 +8,7 @@ class HumanA {
 
 private:
 	std::string name;
-	Weapon weapon;
+	Weapon *weapon;
 
 public:
 	HumanA(std::string name, Weapon &weapon);

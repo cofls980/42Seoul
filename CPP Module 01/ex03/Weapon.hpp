@@ -1,17 +1,17 @@
-#ifndef WEAPON_H
-#define WEAPON_H
+#pragma once
+#ifndef __WEAPON_H__
+#define __WEAPON_H__
 
 #include <iostream>
 
-class Weapon { // reference & pointer 생각
+class Weapon {
 
 private:
 	std::string type;
 
 public:
-	Weapon();
 	Weapon(std::string type);
-	std::string getType() const; // const reference
+	const std::string &getType();
 	void setType(std::string type);
 	~Weapon();
 };
