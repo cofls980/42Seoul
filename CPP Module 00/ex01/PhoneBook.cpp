@@ -48,7 +48,7 @@ int	PhoneBook::search(int index)
 	}
 	else
 	{
-		std::cout << "WRONG NUMBER. TRY AGAIN!" << std::endl;
+		std::cout << "WRONG NUMBER!" << std::endl;
 		return (0);
 	}
 }

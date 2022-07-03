@@ -15,13 +15,10 @@ void	search_contact(PhoneBook phone_book)
 
 	if (phone_book.display())
 	{
-		while (1)
-		{
-			std::cout << "CONTACT INDEX> ";
-			std::cin >> index;
-			if (phone_book.search(index) != 0)
-				break ;
-		}
+		std::cout << "CONTACT INDEX> ";
+		std::cin >> index;
+		if (phone_book.search(index) != 0)
+			return ;
 	}
 	else
 	{
@@ -38,7 +35,7 @@ int main(void)
 	{
 		std::cout << "User> ";
 		std::cin >> command;
-		if (command.compare("EXIT") == 0)
+		if (command.compare("EXIT") == 0 || std::cin.eof())
 		{
 			phone_book.lost_contacts();
 			break ;
