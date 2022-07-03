@@ -1,7 +1,9 @@
-#ifndef HARL_H
-#define HARL_H
+#pragma once
+#ifndef __HARL_H__
+#define __HARL_H__
 
 #include <iostream>
+#include <string>
 
 class Harl
 {

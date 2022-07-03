@@ -1,12 +1,10 @@
 #include "Harl.hpp"
 
-Harl::Harl(/* args */)
-{
-}
+Harl::Harl()
+{}
 
 Harl::~Harl()
-{
-}
+{}
 
 void Harl::debug(void)
 {
