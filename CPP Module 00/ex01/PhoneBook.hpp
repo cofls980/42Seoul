@@ -1,5 +1,6 @@
-#ifndef PHONEBOOK_H
-#define PHONEBOOK_H
+#pragma once
+#ifndef __PHONEBOOK_H__
+#define __PHONEBOOK_H__
 
 #include "Contact.hpp"
 
