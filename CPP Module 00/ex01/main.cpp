@@ -50,7 +50,5 @@ int main(void)
 		else
 			std::cout << "TRY AGAIN!" << std::endl;
 	}
-	// phonebook 비우기
-	//phone_book.~PhoneBook();
 	return (0);
 }

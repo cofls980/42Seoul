@@ -17,7 +17,6 @@ public :
 	void add(void);
 	void display(void);
 	void display_specific_contact(void);
-	//~Contact(void);//소멸자
 };
 
 #endif
