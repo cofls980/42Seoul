@@ -1,12 +1,10 @@
 #include "Harl.hpp"
 
 Harl::Harl()
-{
-}
+{}
 
 Harl::~Harl()
-{
-}
+{}
 
 void Harl::debug(void)
 {
@@ -46,7 +44,7 @@ void Harl::complain(std::string level)
 	fp[2] = &Harl::warning;
 	fp[3] = &Harl::error;
 
-	int num;
+	int num = -1;
 	std::string complain[4] = {"DEBUG", "INFO", "WARNING", "ERROR"};
 	for (int i = 0;i < 4;i++)
 	{
@@ -59,7 +57,7 @@ void Harl::complain(std::string level)
 	switch (num)
 	{
 		case 0:
-				(this->*fp[0])();
+			(this->*fp[0])();
 		case 1:
 			(this->*fp[1])();
 		case 2:
