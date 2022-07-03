@@ -133,6 +133,7 @@ void	Account::_displayTimestamp(void)
 	std::cout << tinfo->tm_sec;
 	std::cout << "] ";
 }
+
 Account::Account(void)
 {
 	this->_accountIndex = Account::_nbAccounts;
