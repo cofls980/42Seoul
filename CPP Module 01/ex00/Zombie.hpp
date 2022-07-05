@@ -10,8 +10,7 @@ private:
 	std::string name;
 
 public:
-	Zombie();
-	Zombie(std::string name);
+	Zombie(std::string _name);
 	void announce(void);
 	~Zombie();
 };

@@ -1,9 +1,7 @@
 #include "Zombie.hpp"
 
-Zombie::Zombie(std::string name)
-{
-	this->name = name;
-}
+Zombie::Zombie(std::string _name) : name(_name)
+{}
 
 void	Zombie::announce(void)
 {
@@ -14,9 +12,4 @@ void	Zombie::announce(void)
 Zombie::~Zombie()
 {
 	std::cout << "DESTROY " << this->name << std::endl;
-}
-
-Zombie::Zombie()
-{
-	this->name = "DEFAULT";
 }
