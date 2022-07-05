@@ -1,19 +1,18 @@
 #include "Fixed.hpp"
-#include <iostream>
 
-Fixed::Fixed()
-{
-	this->value = 0;
-}
+const int Fixed::bit = 8;
+
+Fixed::Fixed() : fixedPointValue(0)
+{}
 
 Fixed::Fixed(const Fixed& fRef)
 {
-	*this = fRef;
+	this->fixedPointValue = fRef.getRawBits();
 }
 
 Fixed& Fixed::operator=(const Fixed& fRef)
 {
-	this->value = fRef.getRawBits();
+	this->fixedPointValue = fRef.getRawBits();
 	return *this;
 }
 
@@ -22,32 +21,32 @@ Fixed::~Fixed()
 
 int Fixed::getRawBits(void) const
 {
-	return (this->value);
+	return (this->fixedPointValue);
 }
 
 void Fixed::setRawBits(int const raw)
 {
-	this->value = raw;
+	this->fixedPointValue = raw;
 }
 
 Fixed::Fixed(const int value)
 {
-	this->value = value * (1 << this->bit);
+	this->fixedPointValue = value * (1 << this->bit);
 }
 
 Fixed::Fixed(const float value)
 {
-	this->value = roundf(value * (1 << this->bit));
+	this->fixedPointValue = roundf(value * (1 << this->bit));
 }
 
 float Fixed::toFloat(void) const
 {
-	return ((float)this->value / (float)(1 << this->bit));
+	return ((float)this->fixedPointValue / (float)(1 << this->bit));
 }
 
 int Fixed::toInt(void) const
 {
-	return (this->value >> this->bit);
+	return (this->fixedPointValue >> this->bit);
 }
 
 std::ostream& operator<<(std::ostream &out, const Fixed& fRef)
@@ -117,32 +116,32 @@ Fixed Fixed::operator/(const Fixed& fRef) const
 {
 	return Fixed(this->toFloat() / fRef.toFloat());
 }
-//전위 증가
+
 Fixed& Fixed::operator++()
 {
-	this->value += 1;
+	this->fixedPointValue += 1;
 	return *this;
 }
-//후위 증가
+
 Fixed Fixed::operator++(int)
 {
 	Fixed fix;
-	fix.setRawBits(this->value);
-	this->value += 1;
+	fix.setRawBits(this->fixedPointValue);
+	this->fixedPointValue += 1;
 	return fix;
 }
 
 Fixed& Fixed::operator--()
 {
-	this->value -= 1;
+	this->fixedPointValue -= 1;
 	return *this;
 }
 
 Fixed Fixed::operator--(int)
 {
 	Fixed fix;
-	fix.setRawBits(this->value);
-	this->value -= 1;
+	fix.setRawBits(this->fixedPointValue);
+	this->fixedPointValue -= 1;
 	return fix;
 }
 

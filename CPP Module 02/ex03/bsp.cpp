@@ -17,10 +17,6 @@ bool bsp(Point const a, Point const b, Point const c, Point const point)
 	Fixed t3 = getTriangle(a, c, point);
 	Fixed t4 = getTriangle(b, c, point);
 	
-	std::cout << t1.toFloat() << std::endl;
-	std::cout << t2.toFloat() << std::endl;
-	std::cout << t3.toFloat() << std::endl;
-	std::cout << t4.toFloat() << std::endl;
 	return (t1 == (t2 + t3 + t4));
 }
 /*
