@@ -3,7 +3,7 @@ SRC = main.cpp Weapon.cpp HumanA.cpp HumanB.cpp
 OBJ = $(SRC:%.cpp=%.o)
 INC = ./
 
-CC = clang++
+CC = c++
 CFLAGS = -Wall -Wextra -Werror
 RM = rm -rf
 
