@@ -1,6 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <string>
+#include "replace.hpp"
 
 void	string_replace(char **argv, std::ifstream *ifs, std::ofstream *ofs)
 {
@@ -31,19 +29,19 @@ int main(int argc, char **argv)
 		std::string s2 = argv[3];
 		if (!(file.length() && s1.length() && s2.length()))
 			return (0);
-
 		std::ifstream ifs;
-		ifs.open(file.data(), std::ios::in);//에러 처리
+		ifs.open(argv[1]);
 		if (!ifs.is_open())
 		{
 			std::cout << "file open ERROR" << std::endl;
 			return (0);
 		}
 		std::string rep_file = file.append(".replace");
-		std::ofstream ofs(rep_file.data(), std::ios::out | std::ios::trunc);
+		std::ofstream ofs(rep_file.c_str());
 		if (!ofs.is_open())
 		{
 			std::cout << "file open ERROR" << std::endl;
+			return (0);
 		}
 		string_replace(argv, &ifs, &ofs);
 	}
