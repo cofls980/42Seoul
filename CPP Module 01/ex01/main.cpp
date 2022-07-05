@@ -5,8 +5,9 @@ int main(void)
 	Zombie zombie("TOO");
 	zombie.announce();
 
-	Zombie *zombies = zombieHorde(3, "Foo");
-	for (int i = 0;i < 3;i++)
+	int num = 3;
+	Zombie *zombies = zombieHorde(num, "Foo");
+	for (int i = 0;i < num;i++)
 	{
 		zombies[i].announce();
 	}

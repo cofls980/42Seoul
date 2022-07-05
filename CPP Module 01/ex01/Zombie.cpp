@@ -1,18 +1,14 @@
 #include "Zombie.hpp"
 
-Zombie::Zombie()
-{
-	this->name = "DEFAULT";
-}
+Zombie::Zombie() : name("")
+{}
 
-Zombie::Zombie(std::string name)
-{
-	this->name = name;
-}
+Zombie::Zombie(std::string _name) : name(_name)
+{}
 
-void	Zombie::init(std::string name)
+void	Zombie::init(std::string _name)
 {
-	this->name = name;
+	this->name = _name;
 }
 
 void	Zombie::announce(void)

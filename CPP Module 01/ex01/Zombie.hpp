@@ -11,8 +11,8 @@ private:
 
 public:
 	Zombie();
-	Zombie(std::string name);
-	void init(std::string name);
+	Zombie(std::string _name);
+	void init(std::string _name);
 	void announce(void);
 	~Zombie();
 };
