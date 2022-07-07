@@ -1,7 +1,7 @@
-#ifndef DIAMONDTRAP_H
-#define DIAMONDTRAP_H
+#pragma once
+#ifndef __DIAMONDTRAP_H__
+#define __DIAMONDTRAP_H__
 
-#include <iostream>
 #include "FragTrap.hpp"
 #include "ScavTrap.hpp"
 
@@ -12,13 +12,16 @@ private:
 
 public:
 	DiamondTrap();
-	DiamondTrap(std::string name);
 	DiamondTrap(const DiamondTrap& ref);
 	DiamondTrap& operator=(const DiamondTrap& ref);
-	~DiamondTrap();
+	virtual ~DiamondTrap();
+
+	DiamondTrap(std::string name);
 
 	void whoAmI();
 	void attack(const std::string& target);
+
+	std::string getName() const;
 };
 
 #endif

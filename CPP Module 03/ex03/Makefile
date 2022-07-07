@@ -3,17 +3,17 @@ SRC = main.cpp ClapTrap.cpp DiamondTrap.cpp FragTrap.cpp ScavTrap.cpp
 OBJ = $(SRC:%.cpp=%.o)
 INC = ./
 
-CC = c++
-CFLAGS = -Wall -Wextra -Werror
+CXX = c++
+CXXFLAGS = -Wshadow -Wall -Wextra -Werror -std=c++98
 RM = rm -rf
-
+# -Wno-shadow
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
+	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJ)
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) -c -o $@ $< -std=c++98
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 clean:
 	$(RM) $(OBJ)

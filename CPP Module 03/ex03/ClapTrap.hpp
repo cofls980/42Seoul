@@ -1,5 +1,6 @@
-#ifndef CLAPTRAP_H
-#define CLAPTRAP_H
+#pragma once
+#ifndef __CLAPTRAP_H__
+#define __CLAPTRAP_H__
 
 #include <iostream>
 
@@ -13,24 +14,20 @@ protected:
 
 public:
 	ClapTrap();
-	ClapTrap(std::string name);
 	ClapTrap(const ClapTrap& ref);
 	ClapTrap& operator=(const ClapTrap& ref);
 	virtual ~ClapTrap();
+	
+	ClapTrap(std::string _name);
 
 	void attack(const std::string& target);
 	void takeDamage(unsigned int amount);
 	void beRepaired(unsigned int amount);
 
-	std::string getName();
-	unsigned int getHitPoint();
-	unsigned int getEnergyPoint();
-	unsigned int getAttackDamage();
-
-	void setName(std::string name);
-	void setHitPoint(unsigned int hitPoint);
-	void setEnergyPoint(unsigned int energyPoint);
-	void setAttackDamage(unsigned int attackDamage);
+	std::string getName() const;
+	unsigned int getHitPoint() const;
+	unsigned int getEnergyPoint() const;
+	unsigned int getAttackDamage() const;
 };
 
 #endif
