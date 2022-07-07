@@ -31,7 +31,7 @@ void Fixed::setRawBits(int const raw)
 
 Fixed::Fixed(const int value)
 {
-	this->fixedPointValue = value * (1 << this->bit);
+	this->fixedPointValue = value << this->bit;
 }
 
 Fixed::Fixed(const float value)
@@ -114,6 +114,11 @@ Fixed Fixed::operator*(const Fixed& fRef) const
 
 Fixed Fixed::operator/(const Fixed& fRef) const
 {
+	if (fRef.toFloat() == 0.0)
+	{
+		std::cout << "Zero is not valid" << std::endl;
+		std::exit(1);
+	}
 	return Fixed(this->toFloat() / fRef.toFloat());
 }
 

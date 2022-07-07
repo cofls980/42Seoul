@@ -1,5 +1,6 @@
-#ifndef POINT_H
-#define POINT_H
+#pragma once
+#ifndef __POINT_H__
+#define __POINT_H__
 
 #include "Fixed.hpp"
 
