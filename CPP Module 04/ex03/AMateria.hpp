@@ -2,7 +2,7 @@
 #define AMATERIA_H
 
 #include <iostream>
-#include "ICharacter.hpp"
+#include "ICharacter.hpp" // I로 시작하는 헤더파일은 인터페이스
 
 class AMateria
 {
