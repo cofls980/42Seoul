@@ -11,7 +11,6 @@ public:
 	Dog& operator=(const Dog& ref);
 	virtual ~Dog();
 
-	virtual std::string getType() const;
 	virtual void makeSound() const;
 };
 

@@ -8,23 +8,20 @@ Cat::Cat()
 
 Cat::Cat(const Cat& ref) : Animal(ref)
 {
-	this->type = ref.type;
+	std::cout << "Cat copy constructor called" << std::endl;
+	this->type = ref.getType();
 }
 
 Cat& Cat::operator=(const Cat& ref)
 {
-	this->type = ref.type;
+	std::cout << "Cat copy assignment operator called" << std::endl;
+	this->type = ref.getType();
 	return *this;
 }
 
 Cat::~Cat()
 {
 	std::cout << "Cat destructor called" << std::endl;
-}
-
-std::string Cat::getType() const
-{
-	return this->type;
 }
 
 void Cat::makeSound() const

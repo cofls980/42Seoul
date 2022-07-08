@@ -9,13 +9,13 @@ Animal::Animal()
 Animal::Animal(const Animal& ref)
 {
 	std::cout << "Animal copy constructor called" << std::endl;
-	this->type = ref.type;
+	this->type = ref.getType();
 }
 
 Animal& Animal::operator=(const Animal& ref)
 {
 	std::cout << "Animal copy assignment operator called" << std::endl;
-	this->type = ref.type;
+	this->type = ref.getType();
 	return *this;
 }
 
@@ -29,7 +29,7 @@ std::string Animal::getType() const
 	return this->type;
 }
 
-void Animal::makeSound() const
+void Animal::makeSound() const //필요없지 않나 싶은데...
 {
 	std::cout << "NOTHING!" << std::endl;
 }

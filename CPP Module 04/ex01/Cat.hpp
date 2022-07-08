@@ -7,7 +7,7 @@
 class Cat : public Animal
 {
 private:
-	Brain *idea;
+	Brain *brain;
 
 public:
 	Cat();
@@ -15,8 +15,10 @@ public:
 	Cat& operator=(const Cat& ref);
 	virtual ~Cat();
 
-	virtual std::string getType() const;
 	virtual void makeSound() const;
+
+	Brain *getBrain() const;
+	void setBrain(Brain &brain);
 };
 
 #endif

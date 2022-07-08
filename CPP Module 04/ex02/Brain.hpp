@@ -2,7 +2,7 @@
 #define BRAIN_H
 
 #include <iostream>
-#include <sstream>
+//#include <sstream>
 
 class Brain
 {
@@ -15,7 +15,8 @@ public:
 	Brain& operator=(const Brain& ref);
 	~Brain();
 
-	void setIdeas();
+	void setIdea(int index, std::string idea);
+	std::string getIdea(int index) const;
 };
 
 #endif

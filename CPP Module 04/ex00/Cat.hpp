@@ -11,7 +11,6 @@ public:
 	Cat& operator=(const Cat& ref);
 	virtual ~Cat();
 
-	virtual std::string getType() const;
 	virtual void makeSound() const;
 };
 

@@ -8,23 +8,20 @@ Dog::Dog()
 
 Dog::Dog(const Dog& ref) : Animal(ref)
 {
-	this->type = ref.type;
+	std::cout << "Dog copy constructor called" << std::endl;
+	this->type = ref.getType();
 }
 
 Dog& Dog::operator=(const Dog& ref)
 {
-	this->type = ref.type;
+	std::cout << "Dog copy assignment operator called" << std::endl;
+	this->type = ref.getType();
 	return *this;
 }
 
 Dog::~Dog()
 {
 	std::cout << "Dog destructor called" << std::endl;
-}
-
-std::string Dog::getType() const
-{
-	return this->type;
 }
 
 void Dog::makeSound() const
