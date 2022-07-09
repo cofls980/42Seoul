@@ -6,21 +6,21 @@
 class Bureaucrat
 {
 private:
-	std::string name;
+	const std::string name;
 	int grade;
 
 public:
 	Bureaucrat();
 	Bureaucrat(const Bureaucrat& ref);
 	Bureaucrat& operator=(const Bureaucrat& ref);
-	~Bureaucrat(); // virtual?
+	~Bureaucrat();
 	Bureaucrat(std::string name, int grade);
 
-	std::string getName() const;
+	const std::string getName() const;
 	int getGrade() const;
 
-	void gradeIncrement(int plus);
-	void gradeDecrement(int minus);
+	void gradeIncrement();
+	void gradeDecrement();
 	
 	class GradeTooHighException : public std::exception
 	{
