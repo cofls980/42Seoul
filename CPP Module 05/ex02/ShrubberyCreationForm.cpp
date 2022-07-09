@@ -1,38 +1,50 @@
 #include "ShrubberyCreationForm.hpp"
 
-ShrubberyCreationForm::ShrubberyCreationForm() : Form("shrubbery creation", 145, 137)
+ShrubberyCreationForm::ShrubberyCreationForm() : Form("shrubbery creation", 145, 137), target("in_shrubbery")
 {
-	this->target = "in shrubbery";
+	std::cout << "SCF default constructor called" << std::endl;
 }
 
-ShrubberyCreationForm::ShrubberyCreationForm(const ShrubberyCreationForm& ref) : Form(ref.target, 145, 137)
+ShrubberyCreationForm::ShrubberyCreationForm(const ShrubberyCreationForm& ref) : Form(ref.getTarget(), 145, 137), target(ref.getTarget())
 {
-	this->target = ref.target;
+	std::cout << "SCF copy constructor called" << std::endl;
 }
 
-ShrubberyCreationForm& ShrubberyCreationForm::operator=(const ShrubberyCreationForm& ref) //
+ShrubberyCreationForm& ShrubberyCreationForm::operator=(const ShrubberyCreationForm& ref)
 {
-	this->target = ref.target;
+	std::cout << "SCF copy assignment operator called" << std::endl;
+	this->target = ref.getTarget();
 	return (*this);
 }
 
 ShrubberyCreationForm::~ShrubberyCreationForm()
-{}
-
-ShrubberyCreationForm::ShrubberyCreationForm(std::string target) : Form("shrubbery creation", 145, 137)
 {
-	this->target = target;
+	std::cout << "SCF destructor called" << std::endl;
+}
+
+ShrubberyCreationForm::ShrubberyCreationForm(std::string _target) : Form("shrubbery creation", 145, 137), target(_target)
+{
+	std::cout << "SCF constructor called" << std::endl;
+}
+
+std::string ShrubberyCreationForm::getTarget() const
+{
+	return this->target;
 }
 
 void ShrubberyCreationForm::execute(Bureaucrat const & executor) const
 {
-	if (executor.getGrade() > Form::getGradeExecute())
+	if (this->getIsSigned() == false)
+		throw Form::NotSignedException();
+	if (executor.getGrade() > this->getGradeExecute())
 		throw Form::GradeTooLowException();
-	std:: string t = this->target;
-	std::string file = t.append("_shrubbery");
-	std::ofstream ofs(file.data(), std::ios::out | std::ios::trunc);
+	std::string file = this->getTarget() + "_shrubbery";
+	std::ofstream ofs(file.c_str(), std::ios::out | std::ios::trunc);
 	if (ofs.fail())
-		throw ;
+	{
+		std::cout << "the file open error" << std::endl;
+		return ;
+	}
 	std::string tree = "\
      ccee88oo\n\
   C8O8O8Q8PoOb o8oo\n\
@@ -47,9 +59,4 @@ CgggbU8OU qOp qOdoUOdcb\n\
    .....//||||\\....\n";
 	ofs << tree;
 	ofs.close();
-}
-
-const char * ShrubberyCreationForm::FileCreationFailException::what() const throw()
-{
-	return ("Fail to create file.");
 }

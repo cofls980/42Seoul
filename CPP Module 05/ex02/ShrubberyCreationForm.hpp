@@ -1,11 +1,9 @@
 #ifndef SHRUBBERYCREATIONFORM_H
 #define SHRUBBERYCREATIONFORM_H
 
-#include <iostream>
 #include <fstream>
 #include <string>
 #include "Form.hpp"
-#include "Bureaucrat.hpp"
 
 class Bureaucrat;
 
@@ -18,16 +16,12 @@ public:
 	ShrubberyCreationForm();
 	ShrubberyCreationForm(const ShrubberyCreationForm& ref);
 	ShrubberyCreationForm& operator=(const ShrubberyCreationForm& ref);
-	~ShrubberyCreationForm();
-	ShrubberyCreationForm(std::string target);
+	virtual ~ShrubberyCreationForm();
+	ShrubberyCreationForm(std::string _target);
+
+	std::string getTarget() const;
 
 	virtual void execute(Bureaucrat const & executor) const;
-
-	class FileCreationFailException : public std::exception
-	{
-	public:
-		const char * what() const throw();
-	};
 };
 
 #endif

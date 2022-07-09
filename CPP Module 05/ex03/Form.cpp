@@ -1,43 +1,34 @@
 #include "Form.hpp"
 
-Form::Form()
+Form::Form() : name("FORM_Default"), gradeSign(150), gradeExecute(150), isSigned(false)
 {
-	this->name = "FORM";
-	this->isSigned = false;
-	this->gradeSign = 1;
-	this->gradeExecute = 150;
+	std::cout << "Form default constructor called" << std::endl;
 }
 
-Form::Form(const Form& ref)
+Form::Form(const Form& ref) : name(ref.getName()), gradeSign(ref.getGradeSign()), gradeExecute(ref.getGradeExecute()), isSigned(ref.getIsSigned())
 {
-	this->name = ref.name;
-	this->isSigned = false;
-	this->gradeSign = ref.gradeSign;
-	this->gradeExecute = ref.gradeExecute;
+	std::cout << "Form copy constructor called" << std::endl;
 }
 
-Form& Form::operator=(const Form& ref)
+Form& Form::operator=(const Form& ref) 
 {
-	this->name = ref.name;
-	this->isSigned = false; //
-	this->gradeSign = ref.gradeSign;
-	this->gradeExecute = ref.gradeExecute;
+	std::cout << "Form copy assignment operator called" << std::endl;
+	this->isSigned = ref.getIsSigned();
 	return (*this);
 }
 
 Form::~Form()
-{}
-
-Form::Form(std::string name, int gradeSign, int gradeExecute)
 {
+	std::cout << "Form destructor called" << std::endl;
+}
+
+Form::Form(std::string _name, int _gradeSign, int _gradeExecute) : name(_name), gradeSign(_gradeSign), gradeExecute(_gradeExecute), isSigned(false)
+{
+	std::cout << "Form constructor called" << std::endl;
 	if (gradeSign < 1 || gradeExecute < 1)
-		throw GradeTooHighException();
+		throw Form::GradeTooHighException();
 	else if (gradeSign > 150 || gradeExecute > 150)
-		throw GradeTooLowException();
-	this->name = name;
-	this->isSigned = false;
-	this->gradeSign = gradeSign;
-	this->gradeExecute = gradeExecute;
+		throw Form::GradeTooLowException();
 }
 
 std::string Form::getName() const
@@ -60,7 +51,7 @@ int Form::getGradeExecute() const
 	return this->gradeExecute;
 }
 
-void Form::beSigned(Bureaucrat& ref)
+void Form::beSigned(const Bureaucrat& ref)
 {
 	if (ref.getGrade() <= this->getGradeSign())
 		this->isSigned = true;
@@ -82,10 +73,15 @@ std::ostream& operator<<(std::ostream& out, const Form& ref)
 
 const char * Form::GradeTooHighException::what() const throw()
 {
-	return ("grade too high");
+	return ("a grade is too high");
 }
 
 const char * Form::GradeTooLowException::what() const throw()
 {
-	return ("grade too low");
+	return ("a grade is too low");
+}
+
+const char * Form::NotSignedException::what() const throw()
+{
+	return ("a form is not signed");
 }

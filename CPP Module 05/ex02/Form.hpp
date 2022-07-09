@@ -2,6 +2,7 @@
 #define FORM_H
 
 #include <iostream>
+#include <string>
 #include "Bureaucrat.hpp"
 
 class Bureaucrat;
@@ -9,24 +10,24 @@ class Bureaucrat;
 class Form
 {
 private:
-	std::string name;
+	const std::string name;
+	const int gradeSign;
+	const int gradeExecute;
 	bool isSigned;
-	int gradeSign;
-	int gradeExecute;
 
 public:
 	Form();
 	Form(const Form& ref);
 	Form& operator=(const Form& ref);
-	~Form();
-	Form(std::string name, int gradeSign, int gradeExecute);
+	virtual ~Form();
+	Form(std::string _name, int _gradeSign, int _gradeExecute);
 
 	std::string getName() const;
-	bool getIsSigned() const;
 	int getGradeSign() const;
 	int getGradeExecute() const;
+	bool getIsSigned() const;
 
-	void beSigned(Bureaucrat& ref);
+	void beSigned(const Bureaucrat& ref);
 
 	virtual void execute(Bureaucrat const & executor) const = 0;
 	
@@ -37,6 +38,12 @@ public:
 	};
 
 	class GradeTooLowException : public std::exception
+	{
+	public:
+		const char * what() const throw();
+	};
+
+	class NotSignedException : public std::exception
 	{
 	public:
 		const char * what() const throw();

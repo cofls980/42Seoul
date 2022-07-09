@@ -1,10 +1,8 @@
 #ifndef ROBOTOMYREQUESTFORM_H
 #define ROBOTOMYREQUESTFORM_H
 
-#include <iostream>
 #include <cstdlib>
 #include "Form.hpp"
-#include "Bureaucrat.hpp"
 
 class Bureaucrat;
 
@@ -17,8 +15,10 @@ public:
 	RobotomyRequestForm();
 	RobotomyRequestForm(const RobotomyRequestForm& ref);
 	RobotomyRequestForm& operator=(const RobotomyRequestForm& ref);
-	~RobotomyRequestForm();
-	RobotomyRequestForm(std::string target);
+	virtual ~RobotomyRequestForm();
+	RobotomyRequestForm(std::string _target);
+
+	std::string getTarget() const;
 
 	virtual void execute(Bureaucrat const & executor) const;
 };

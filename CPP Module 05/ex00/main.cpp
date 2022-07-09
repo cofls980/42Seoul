@@ -4,39 +4,48 @@ int main(void)
 {
 	try
 	{
-		Bureaucrat a("aa", 151);
+		Bureaucrat a("low", 151);
 		std::cout << a;
 	}
 	catch (std::exception & e)
 	{
 		std::cout << e.what() << std::endl;
 	}
+	std::cout << std::endl;
 	try
 	{
-		Bureaucrat b("chaekim", 2);
+		Bureaucrat a("high", 0);
+		std::cout << a;
+	}
+	catch (std::exception & e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	std::cout << std::endl;
+	try
+	{
+		Bureaucrat b("chaekim", 1);
 		std::cout << b;
-		std:: cout << b.getName() << std::endl;
-		std:: cout << b.getGrade() << std::endl;
-		b.gradeIncrement(3);
+		b.gradeIncrement();
 	}
 	catch(const std::exception& e)
 	{
 		std::cout << e.what() << std::endl;
 	}
+	std::cout << std::endl;
 	try
 	{
-		Bureaucrat c("cc", 10);
+		Bureaucrat c("cc", 150);
 		std::cout << c;
-		std:: cout << c.getName() << std::endl;
-		std:: cout << c.getGrade() << std::endl;
-		c.gradeIncrement(3);
+		c.gradeIncrement();
 		std::cout << c;
-		c.gradeDecrement(20);
+		c.gradeDecrement();
+		std::cout << c;
+		c.gradeDecrement();
 		std::cout << c;
 	}
 	catch(const std::exception& e)
 	{
 		std::cout << e.what() << std::endl;
 	}
-	system("leaks Bureaucrat");
 }

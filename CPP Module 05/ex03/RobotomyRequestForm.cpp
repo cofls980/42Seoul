@@ -1,35 +1,45 @@
 #include "RobotomyRequestForm.hpp"
 
-RobotomyRequestForm::RobotomyRequestForm() : Form("robotomy request", 72, 45)
+RobotomyRequestForm::RobotomyRequestForm() : Form("robotomy request", 72, 45), target("in_robotomy")
 {
-	this->target = "in robotomy";
+	std::cout << "RRF default constructor called" << std::endl;
 }
 
-RobotomyRequestForm::RobotomyRequestForm(const RobotomyRequestForm& ref) : Form(ref.target, 72, 45)
+RobotomyRequestForm::RobotomyRequestForm(const RobotomyRequestForm& ref) : Form(ref.target, 72, 45), target(ref.getTarget())
 {
-	this->target = ref.target;
+	std::cout << "RRF copy constructor called" << std::endl;
 }
 
-RobotomyRequestForm& RobotomyRequestForm::operator=(const RobotomyRequestForm& ref) //
+RobotomyRequestForm& RobotomyRequestForm::operator=(const RobotomyRequestForm& ref)
 {
-	this->target = ref.target;
+	std::cout << "RRF copy assignment operator called" << std::endl;
+	this->target = ref.getTarget();
 	return (*this);
 }
 
 RobotomyRequestForm::~RobotomyRequestForm()
-{}
-
-RobotomyRequestForm::RobotomyRequestForm(std::string target) : Form("robotomy request", 72, 45)
 {
-	this->target = target;
+	std::cout << "RRF destructor called" << std::endl;
+}
+
+RobotomyRequestForm::RobotomyRequestForm(std::string _target) : Form("robotomy request", 72, 45), target(_target)
+{
+	std::cout << "RRF constructor called" << std::endl;
+}
+
+std::string RobotomyRequestForm::getTarget() const
+{
+	return this->target;
 }
 
 void RobotomyRequestForm::execute(Bureaucrat const & executor) const
 {
-	if (executor.getGrade() > Form::getGradeExecute())
+	if (this->getIsSigned() == false)
+		throw Form::NotSignedException();
+	if (executor.getGrade() > this->getGradeExecute())
 		throw Form::GradeTooLowException();
 	std::cout << "[ DRILL NOISES ]" << std::endl;
-	srand((unsigned int)time(NULL));
+	srand(time(NULL));
 	if (rand() % 2)
 		std::cout << this->target << " has been robotomized successfully" << std::endl;
 	else

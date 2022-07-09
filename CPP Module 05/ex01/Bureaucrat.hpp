@@ -2,6 +2,8 @@
 #define BUREAUCRAT_H
 
 #include <iostream>
+#include <string>
+#include <exception>
 #include "Form.hpp"
 
 class Form;
@@ -9,24 +11,24 @@ class Form;
 class Bureaucrat
 {
 private:
-	std::string name;
+	const std::string name;
 	int grade;
 
 public:
 	Bureaucrat();
 	Bureaucrat(const Bureaucrat& ref);
 	Bureaucrat& operator=(const Bureaucrat& ref);
-	virtual ~Bureaucrat();
-	Bureaucrat(std::string name, int grade);
+	~Bureaucrat();
+	Bureaucrat(std::string _name, int _grade);
 
-	std::string getName() const;
+	const std::string getName() const;
 	int getGrade() const;
 
-	void gradeIncrement(int plus);
-	void gradeDecrement(int minus);
-
-	void signForm(Form& form);
+	void gradeIncrement();
+	void gradeDecrement();
 	
+	void signForm(Form& form) const;
+
 	class GradeTooHighException : public std::exception
 	{
 	public:

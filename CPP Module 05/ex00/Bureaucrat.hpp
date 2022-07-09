@@ -2,6 +2,8 @@
 #define BUREAUCRAT_H
 
 #include <iostream>
+#include <string>
+#include <exception>
 
 class Bureaucrat
 {
@@ -14,7 +16,7 @@ public:
 	Bureaucrat(const Bureaucrat& ref);
 	Bureaucrat& operator=(const Bureaucrat& ref);
 	~Bureaucrat();
-	Bureaucrat(std::string name, int grade);
+	Bureaucrat(std::string _name, int _grade);
 
 	const std::string getName() const;
 	int getGrade() const;

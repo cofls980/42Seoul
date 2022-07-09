@@ -1,38 +1,41 @@
 #include "Intern.hpp"
 
 Intern::Intern()
-{}
+{
+	std::cout << "Intern default constructor called" << std::endl;
+}
 
 Intern::Intern(const Intern& ref)
 {
-	*this = ref;
+	std::cout << "Intern copy constructor called" << std::endl;
+	(void)ref;
 }
 
 Intern& Intern::operator=(const Intern& ref)
 {
-	*this = ref;
+	std::cout << "Intern copy assignment operator called" << std::endl;
+	(void)ref;
 	return (*this);
 }
 
 Intern::~Intern()
-{}
+{
+	std::cout << "Intern destructor called" << std::endl;
+}
 
 Form* Intern::Shrubbery(std::string targetForm)
 {
-	Form *f = new ShrubberyCreationForm(targetForm);
-	return (f);
+	return new ShrubberyCreationForm(targetForm);
 }
 
 Form* Intern::Robotomy(std::string targetForm)
 {
-	Form *f = new RobotomyRequestForm(targetForm);
-	return (f);
+	return new RobotomyRequestForm(targetForm);
 }
 
 Form* Intern::Presidential(std::string targetForm)
 {
-	Form *f = new PresidentialPardonForm(targetForm);
-	return (f);
+	return new PresidentialPardonForm(targetForm);
 }
 
 Form* Intern::makeForm(std::string formName, std::string targetForm)

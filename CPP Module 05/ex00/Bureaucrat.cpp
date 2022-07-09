@@ -8,10 +8,10 @@ Bureaucrat::Bureaucrat() : name("Default"), grade(150)
 Bureaucrat::Bureaucrat(std::string _name, int _grade) : name(_name)
 {
 	std::cout << "Bureaucrat constructor called" << std::endl;
-	if (grade < 1)
-		throw GradeTooHighException();
-	else if (grade > 150)
-		throw GradeTooLowException();
+	if (_grade < 1)
+		throw Bureaucrat::GradeTooHighException();
+	else if (_grade > 150)
+		throw Bureaucrat::GradeTooLowException();
 	this->grade = _grade;
 }
 
@@ -58,7 +58,7 @@ void Bureaucrat::gradeDecrement()
 
 std::ostream& operator<<(std::ostream& out, const Bureaucrat& ref)
 {
-	out << ref.getName() << ", bureaucrat grade " << ref.getGrade() << "." << std::endl;
+	out << ref.getName() << ", bureaucrat grade " << ref.getGrade() << ".";
 	return (out);
 }
 

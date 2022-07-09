@@ -1,12 +1,12 @@
-#include "Form.hpp"
 #include "Bureaucrat.hpp"
+#include "Form.hpp"
 
 int main(void)
 {
 	try
 	{
-		Bureaucrat a("aa", 151);
-		std::cout << a << std::endl;
+		Bureaucrat a("low", 151);
+		std::cout << a;
 	}
 	catch (std::exception & e)
 	{
@@ -15,11 +15,19 @@ int main(void)
 	std::cout << std::endl;
 	try
 	{
-		Bureaucrat b("chaekim", 2);
-		std::cout << b << std::endl;
-		std:: cout << b.getName() << std::endl;
-		std:: cout << b.getGrade() << std::endl;
-		b.gradeIncrement(3);
+		Bureaucrat a("high", 0);
+		std::cout << a;
+	}
+	catch (std::exception & e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	std::cout << std::endl;
+	try
+	{
+		Bureaucrat b("chaekim", 1);
+		std::cout << b;
+		b.gradeIncrement();
 	}
 	catch(const std::exception& e)
 	{
@@ -28,35 +36,30 @@ int main(void)
 	std::cout << std::endl;
 	try
 	{
-		Bureaucrat c("cc", 10);
-		std::cout << c << std::endl;
-		std:: cout << c.getName() << std::endl;
-		std:: cout << c.getGrade() << std::endl;
-		c.gradeIncrement(3);
-		std::cout << c << std::endl;
-		c.gradeDecrement(20);
-		std::cout << c << std::endl;
+		Bureaucrat c("cc", 150);
+		std::cout << c;
+		c.gradeIncrement();
+		std::cout << c;
+		c.gradeDecrement();
+		std::cout << c;
+		c.gradeDecrement();
+		std::cout << c;
 	}
 	catch(const std::exception& e)
 	{
 		std::cout << e.what() << std::endl;
 	}
 	std::cout << std::endl;
+	std::cout << "* EX01 *" << std::endl;
 	try
 	{
-		Form a("aa", 2, 5);
-		Bureaucrat b("bb", 25);
+		Form a("form", 2, 5);
+		Bureaucrat b("tester", 25);
 		b.signForm(a);
 		std::cout << b <<std::endl;
 		std::cout << a << std::endl;
-		b.gradeIncrement(13);
-		b.signForm(a);
-		std::cout << b <<std::endl;
-		std::cout << a << std::endl;
-		b.gradeIncrement(10);
-		b.signForm(a);
-		std::cout << b <<std::endl;
-		std::cout << a << std::endl;
+		for (int i = 0;i < 24;i++)
+			b.gradeIncrement();
 		b.signForm(a);
 		std::cout << b <<std::endl;
 		std::cout << a << std::endl;
@@ -65,5 +68,4 @@ int main(void)
 	{
 		std::cout << e.what() << std::endl;
 	}
-	
 }
