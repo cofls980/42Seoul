@@ -2,7 +2,6 @@
 #define BRAIN_H
 
 #include <iostream>
-//#include <sstream>
 
 class Brain
 {

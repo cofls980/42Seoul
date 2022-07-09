@@ -6,7 +6,7 @@ Dog::Dog()
 	this->type = "Dog";
 }
 
-Dog::Dog(const Dog& ref) : Animal(ref)
+Dog::Dog(const Dog& ref)
 {
 	std::cout << "Dog copy constructor called" << std::endl;
 	this->type = ref.getType();

@@ -29,7 +29,7 @@ std::string Animal::getType() const
 	return this->type;
 }
 
-void Animal::makeSound() const //필요없지 않나 싶은데...
+void Animal::makeSound() const
 {
 	std::cout << "NOTHING!" << std::endl;
 }
