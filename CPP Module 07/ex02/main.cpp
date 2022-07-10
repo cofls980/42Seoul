@@ -2,32 +2,38 @@
 
 int main(void)
 {
-	Array<int> a(3);
+	const size_t s = 3;
+	Array<int> a(s);
 
-	for (unsigned int i = 0;i < 3;i++)
-	{
-		std::cout << a[i] << ", ";
-	}
-	std::cout << std::endl;
-	for (unsigned int i = 0;i < 3;i++)
+	for (unsigned int i = 0;i < s;i++)
 	{
 		a[i] = i;
 	}
-	for (unsigned int i = 0;i < 3;i++)
+	for (unsigned int i = 0;i < s;i++)
 	{
-		std::cout << a[i] << ", ";
+		std::cout << a[i] << "    ";
 	}
 	std::cout << std::endl;
-	std::cout << "size: " << a.size() << std::endl;
+	Array<int> b;
+	b = a;
+	std::cout << "size: " << b.size() << std::endl;
 	try
 	{
-		a[10] = 1;
-		std::cout << "num: " << a[10] << std::endl;
+		b[10] = 1;
+		std::cout << "num: " << b[10] << std::endl;
 	}
 	catch(const std::exception& e)
 	{
 		std::cout << e.what() << std::endl;
 	}
-	
+	try
+	{
+		b[1] = 100;
+		std::cout << "num: " << b[1] << std::endl;
+	}
+	catch(const std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 	return (0);
 }

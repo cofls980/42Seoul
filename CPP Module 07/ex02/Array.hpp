@@ -11,39 +11,23 @@ private:
 	unsigned int n;
 
 public:
-	Array()
+	Array() : arr(NULL), n(0) {}
+	Array(unsigned int _n) : arr(new T[_n]), n(_n) {}
+	Array(const Array<T>& ref)
 	{
-		this->arr = NULL;
-		this->n = 0;
+		this->n = ref.size();
+		this->arr = new T[this->n];
+		for (unsigned int i = 0;i < this->n;i++)
+			this->arr[i] = ref.arr[i];
 	}
-	Array(unsigned int n)
-	{
-		if (n == 0)
-		{
-			this->arr = NULL;
-			this->n = 0;
-		}
-		else
-		{
-			this->arr = new T[n];
-			this->n = n;
-		}
-		//display *arr
-	}
-	Array(const Array& ref)
-	{
-		*this = ref;
-	}
-	Array& operator=(const Array& ref)
+	Array<T>& operator=(const Array<T>& ref)
 	{
 		if (this->arr)
 			delete [] this->arr;
-		this->arr = new T[ref.n];
-		this->n = ref.n;
-		for (unsigned int i = 0;i < ref.n;i++)
-		{
+		this->n = ref.size();
+		this->arr = new T[this->n];
+		for (unsigned int i = 0;i < this->n;i++)
 			this->arr[i] = ref.arr[i];
-		}
 		return (*this);
 	}
 	~Array()
@@ -69,7 +53,7 @@ public:
 	public:
 		const char * what() const throw()
 		{
-			return ("index is out of bounds.");
+			return ("index is out of range.");
 		}
 	};
 };

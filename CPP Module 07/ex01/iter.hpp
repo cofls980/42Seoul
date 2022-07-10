@@ -4,9 +4,18 @@
 #include <iostream>
 
 template <typename T>
-void print(T a);
+void print(const T& a)
+{
+	std::cout << a << std::endl;
+}
 
-template <typename T, typename Func>
-void iter(T *a, size_t b, Func func);
+template <typename T>
+void iter(T *arr, size_t n, void (*f)(const T&))
+{
+	for (size_t i = 0;i < n;i++)
+	{
+		f(arr[i]);
+	}
+}
 
 #endif
