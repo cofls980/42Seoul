@@ -1,5 +1,5 @@
-#ifndef EASYFIND_H
-#define EASYFIND_H
+#ifndef EASYFIND_HPP
+#define EASYFIND_HPP
 
 #include <iostream>
 #include <exception>
@@ -16,12 +16,12 @@ public:
 };
 
 template <typename T>
-unsigned int easyfind(T &a, int b)
+typename T::iterator easyfind(T &a, int b)
 {
-	typename T::iterator iter = find(a.begin(), a.end(), b);
+	typename T::iterator iter = std::find(a.begin(), a.end(), b);
 	if (iter == a.end())
 		throw NoOccurrenceException();
-	return *iter;
+	return iter;
 }
 
 #endif

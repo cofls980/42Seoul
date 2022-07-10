@@ -2,18 +2,28 @@
 
 int main(void)
 {
-	std::vector<int> arr(3);
+	std::vector<int> arr;
 	for (int i = 0;i<3;i++)
-		arr[i] = i;
+		arr.push_back(i);
 	try
 	{
-		unsigned int num = ::easyfind(arr, 2);
-		std::cout << num << std::endl;
+		std::vector<int>::iterator iter;
+		iter = easyfind(arr, 2);
+		std::cout << *iter << std::endl;
 	}
 	catch(const std::exception& e)
 	{
 		std::cout << e.what() << std::endl;
 	}
-	
+	try
+	{
+		std::vector<int>::iterator iter;
+		iter = easyfind(arr, 10);
+		std::cout << *iter << std::endl;
+	}
+	catch(const std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 	return (0);
 }

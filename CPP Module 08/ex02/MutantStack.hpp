@@ -1,5 +1,5 @@
-#ifndef MUTANTSTACK_H
-#define MUTANTSTACK_H
+#ifndef MUTANTSTACK_HPP
+#define MUTANTSTACK_HPP
 
 #include <iostream>
 #include <stack>
@@ -8,18 +8,19 @@
 template<typename T>
 class MutantStack : public std::stack<T>
 {
-/*private:
-	std::deque<T> dq;*/
 public:
 	MutantStack();
 	MutantStack(const MutantStack& ref);
 	MutantStack& operator=(const MutantStack& ref);
 	~MutantStack();
 
-	typedef typename std::deque<T>::iterator iterator;
-
+	typedef typename std::stack<T>::container_type::iterator iterator;
 	iterator begin();
 	iterator end();
+
+	typedef typename std::stack<T>::container_type::reverse_iterator reverse_iterator;
+	reverse_iterator rbegin();
+	reverse_iterator rend();
 };
 
 template<typename T>
@@ -53,6 +54,18 @@ template<typename T>
 typename MutantStack<T>::iterator MutantStack<T>::end()
 {
 	return (this->c.end());
+}
+
+template<typename T>
+typename MutantStack<T>::reverse_iterator MutantStack<T>::rbegin()
+{
+	return this->c.rbegin();
+}
+
+template<typename T>
+typename MutantStack<T>::reverse_iterator MutantStack<T>::rend()
+{
+	return this->c.rend();
 }
 
 #endif

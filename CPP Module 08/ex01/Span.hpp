@@ -1,5 +1,5 @@
-#ifndef SPAN_H
-#define SPAN_H
+#ifndef SPAN_HPP
+#define SPAN_HPP
 
 #include <iostream>
 #include <exception>
@@ -10,32 +10,24 @@
 class Span
 {
 private:
-	std::vector<int> arr;
-	unsigned int maximum;
+	std::vector<int> _arr;
+	unsigned int _size;
 
 public:
 	Span();
-	Span(unsigned int N);
 	Span(const Span& ref);
 	Span& operator=(const Span& ref);
 	~Span();
+	Span(unsigned int N);
 
 	void addNumber(int element);
+	void addManyNumber(std::vector<int>::iterator begin, std::vector<int>::iterator end);
 
 	int shortestSpan();
 	int longestSpan();
 
-	template<typename T>
-	void addManyNumber(T &c)
-	{
-		if (c.size() > this->maximum - this->arr.size())
-			throw FullStoredException();
-		typename T::iterator iter = c.begin();
-		for (;iter != c.end();iter++)
-		{
-			this->arr.push_back(*iter);
-		}
-	}
+	std::vector<int> getArray() const;
+	unsigned int getSize() const;
 
 	class FullStoredException : public std::exception
 	{

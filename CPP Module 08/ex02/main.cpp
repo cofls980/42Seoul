@@ -51,6 +51,16 @@ int main(void)
 		std::cout << *it1 << std::endl;
 		++it1;
 	}
-
+	std::cout << std::endl;
+	{
+		MutantStack<int> m;
+		for (int i = 0;i < 10;i++)
+			m.push(i);
+		MutantStack<int>::reverse_iterator rit = m.rbegin();
+		MutantStack<int>::reverse_iterator rite = m.rend();
+		--rite;
+		std::cout << *rit << std::endl;
+		std::cout << *rite << std::endl;
+	}
 	return (0);
 }

@@ -2,35 +2,58 @@
 
 Span::Span()
 {
-	this->maximum = 0;
+	this->_size = 0;
 }
 
 Span::Span(unsigned int N)
 {
-	this->maximum = N;
+	this->_size = N;
 }
 
 Span::Span(const Span& ref)
 {
-	*this = ref;
+	this->_arr = ref.getArray();
+	this->_size = ref.getSize();
 }
 
 Span& Span::operator=(const Span& ref)
 {
-	this->arr = ref.arr;
-	this->maximum = ref.maximum;
+	this->_arr.clear();
+	this->_arr = ref.getArray();
+	this->_size = ref.getSize();
 	return (*this);
 }
 
 Span::~Span()
 {}
 
+std::vector<int> Span::getArray() const
+{
+	return this->_arr;
+}
+
+unsigned int Span::getSize() const
+{
+	return this->_size;
+}
+
 void Span::addNumber(int element)
 {
-	if (this->arr.size() < this->maximum)
-		this->arr.push_back(element);
+	if (this->_arr.size() < this->getSize())
+		this->_arr.push_back(element);
 	else
-		throw FullStoredException();
+		throw Span::FullStoredException();
+}
+
+void Span::addManyNumber(std::vector<int>::iterator begin, std::vector<int>::iterator end)
+{
+	std::vector<int>::iterator iter;
+	for (iter = begin;iter != end;iter++)
+	{
+		if (this->_arr.size() == this->getSize())
+			throw Span::FullStoredException();
+		this->_arr.push_back(*iter);
+	}
 }
 
 const char * Span::FullStoredException::what() const throw()
@@ -45,9 +68,9 @@ const char * Span::NoSpanFoundException::what() const throw()
 
 int Span::shortestSpan()
 {
-	if (arr.empty() || arr.size() == 1)
-		throw NoSpanFoundException();
-	std::vector<int> tmp = arr;
+	if (this->_arr.empty() || this->_arr.size() == 1)
+		throw Span::NoSpanFoundException();
+	std::vector<int> tmp = this->_arr;
 	std::sort(tmp.begin(), tmp.end());
 	int gap = -1;
 	for (unsigned int i = 0;i < tmp.size() - 1;i++)
@@ -60,9 +83,9 @@ int Span::shortestSpan()
 
 int Span::longestSpan()
 {
-	if (arr.empty() || arr.size() == 1)
-		throw NoSpanFoundException();
-	std::vector<int> tmp = arr;
+	if (this->_arr.empty() || this->_arr.size() == 1)
+		throw Span::NoSpanFoundException();
+	std::vector<int> tmp = this->_arr;
 	std::sort(tmp.begin(), tmp.end());
 	return (tmp.back() - tmp.front());
 }
