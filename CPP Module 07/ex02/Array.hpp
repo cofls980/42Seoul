@@ -11,42 +11,17 @@ private:
 	unsigned int n;
 
 public:
-	Array() : arr(NULL), n(0) {}
-	Array(unsigned int _n) : arr(new T[_n]), n(_n) {}
-	Array(const Array<T>& ref)
-	{
-		this->n = ref.size();
-		this->arr = new T[this->n];
-		for (unsigned int i = 0;i < this->n;i++)
-			this->arr[i] = ref.arr[i];
-	}
-	Array<T>& operator=(const Array<T>& ref)
-	{
-		if (this->arr)
-			delete [] this->arr;
-		this->n = ref.size();
-		this->arr = new T[this->n];
-		for (unsigned int i = 0;i < this->n;i++)
-			this->arr[i] = ref.arr[i];
-		return (*this);
-	}
-	~Array()
-	{
-		if (this->arr)
-			delete [] this->arr;
-	}
+	Array();
+	Array(unsigned int _n);
+	Array(const Array<T>& ref);
+	Array<T>& operator=(const Array<T>& ref);
+	~Array();
 
-	T& operator[](const unsigned int index)
-	{
-		if (index < 0 || index >= this->n)
-			throw OutOfBoundsException();
-		return (this->arr[index]);
-	}
+	T& operator[](const unsigned int index);
 
-	unsigned int size() const
-	{
-		return (this->n);
-	}
+	const T& operator[](const unsigned int index) const;
+
+	const unsigned int& size() const;
 
 	class OutOfBoundsException : public std::exception
 	{
@@ -57,5 +32,69 @@ public:
 		}
 	};
 };
+
+template<typename T>
+Array<T>::Array()
+{
+	this->arr = NULL;
+	this->n = 0;
+}
+
+template<typename T>
+Array<T>::Array(unsigned int _n)
+{
+	this->arr = new T[_n];
+	this->n = _n;
+}
+
+template<typename T>
+Array<T>::Array(const Array<T>& ref)
+{
+	this->n = ref.size();
+	this->arr = new T[this->n];
+	for (unsigned int i = 0;i < this->n;i++)
+		this->arr[i] = ref.arr[i];
+}
+
+template<typename T>
+Array<T>& Array<T>::operator=(const Array<T>& ref)
+{
+	if (this->arr)
+		delete [] this->arr;
+	this->n = ref.size();
+	this->arr = new T[this->n];
+	for (unsigned int i = 0;i < this->n;i++)
+		this->arr[i] = ref.arr[i];
+	return (*this);
+}
+
+template<typename T>
+Array<T>::~Array()
+{
+	if (this->arr)
+		delete [] this->arr;
+}
+
+template<typename T>
+T& Array<T>::operator[](const unsigned int index)
+{
+	if (index < 0 || index >= this->n)
+		throw OutOfBoundsException();
+	return (this->arr[index]);
+}
+
+template<typename T>
+const T& Array<T>::operator[](const unsigned int index) const
+{
+	if (index < 0 || index >= this->n)
+		throw OutOfBoundsException();
+	return (this->arr[index]);
+}
+
+template<typename T>
+const unsigned int& Array<T>::size() const
+{
+	return (this->n);
+}
 
 #endif
