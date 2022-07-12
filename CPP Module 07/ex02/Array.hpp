@@ -43,8 +43,18 @@ Array<T>::Array()
 template<typename T>
 Array<T>::Array(unsigned int _n)
 {
-	this->arr = new T[_n];
-	this->n = _n;
+	if (_n == 0)
+	{
+		this->arr = NULL;
+		this->n = 0;
+	}
+	else
+	{
+		this->arr = new T[_n];
+		this->n = _n;
+		for (unsigned int i = 0;i < this->n;i++)
+			this->arr[i] = 0;
+	}
 }
 
 template<typename T>
@@ -79,7 +89,7 @@ template<typename T>
 T& Array<T>::operator[](const unsigned int index)
 {
 	if (index < 0 || index >= this->n)
-		throw OutOfBoundsException();
+		throw Array::OutOfBoundsException();
 	return (this->arr[index]);
 }
 
@@ -87,7 +97,7 @@ template<typename T>
 const T& Array<T>::operator[](const unsigned int index) const
 {
 	if (index < 0 || index >= this->n)
-		throw OutOfBoundsException();
+		throw Array::OutOfBoundsException();
 	return (this->arr[index]);
 }
 
