@@ -12,15 +12,18 @@ Span::Span(unsigned int N)
 
 Span::Span(const Span& ref)
 {
-	this->_arr = ref.getArray();
 	this->_size = ref.getSize();
+	this->_arr = ref.getArray();
 }
 
 Span& Span::operator=(const Span& ref)
 {
-	this->_arr.clear();
-	this->_arr = ref.getArray();
-	this->_size = ref.getSize();
+	if (this != &ref)
+	{
+		this->_arr.clear();
+		this->_size = ref.getSize();
+		this->_arr = ref.getArray();
+	}
 	return (*this);
 }
 
@@ -85,7 +88,7 @@ int Span::longestSpan()
 {
 	if (this->_arr.empty() || this->_arr.size() == 1)
 		throw Span::NoSpanFoundException();
-	std::vector<int> tmp = this->_arr;
-	std::sort(tmp.begin(), tmp.end());
-	return (tmp.back() - tmp.front());
+	int min = *std::min_element(this->_arr.begin(), this->_arr.end());
+	int max = *std::max_element(this->_arr.begin(), this->_arr.end());
+	return (max - min);
 }

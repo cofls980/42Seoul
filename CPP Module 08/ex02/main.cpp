@@ -51,6 +51,7 @@ int main(void)
 		std::cout << *it1 << std::endl;
 		++it1;
 	}
+	std::cout << "_______________________________" << std::endl;
 	std::cout << std::endl;
 	{
 		MutantStack<int> m;
@@ -61,6 +62,32 @@ int main(void)
 		--rite;
 		std::cout << *rit << std::endl;
 		std::cout << *rite << std::endl;
+		*rit = 100;
+		std::cout << *rit << std::endl;
+	}
+	std::cout << std::endl;
+	{
+		MutantStack<int> m;
+		for (int i = 0;i < 10;i++)
+			m.push(i);
+		MutantStack<int>::const_iterator cit = m.cbegin();
+		MutantStack<int>::const_iterator cite = m.cend();
+		--cite;
+		std::cout << *cit << std::endl;
+		std::cout << *cite << std::endl;
+		//*cit = 100;
+	}
+	std::cout << std::endl;
+	{
+		MutantStack<int> m;
+		for (int i = 0;i < 10;i++)
+			m.push(i);
+		MutantStack<int>::const_reverse_iterator crit = m.crbegin();
+		MutantStack<int>::const_reverse_iterator crite = m.crend();
+		--crite;
+		std::cout << *crit << std::endl;
+		std::cout << *crite << std::endl;
+		//*crit = 100;
 	}
 	return (0);
 }
