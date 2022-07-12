@@ -1,1 +1,2 @@
-# Minishell project from 42Seoul
+# Minishell
+Minishell project from 42Seoul
