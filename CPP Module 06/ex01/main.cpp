@@ -1,28 +1,16 @@
-#include <iostream>
-#include <stdint.h>
-
-struct Data
-{
-	unsigned int test;
-};
-
-
-uintptr_t serialize(Data* ptr)
-{
-	return uintptr_t(ptr);
-}
-
-Data* deserialize(uintptr_t raw) //reinterpret_cast
-{
-	Data* test = reinterpret_cast<Data *>(raw);
-	return test;
-}
+#include "Data.hpp"
 
 int main(void)
 {
 	Data test;
 
-	std::cout << serialize(&test) << std::endl;
-	std::cout << deserialize(serialize(&test)) << std::endl;
-	std::cout << &test << std::endl;
+	std::cout << "get number: " << test.getNum() << std::endl;
+	std::cout << "data address: " << &test << std::endl;
+	uintptr_t tmp1 = serialize(&test);
+	std::cout << "serialized address: " << tmp1 << std::endl;
+	Data *tmp2 = deserialize(tmp1);
+	std::cout << "deserialized address: " << tmp2 << std::endl;
+	std::cout << "again get number: " << tmp2->getNum() << std::endl;
+
+	return (0);
 }

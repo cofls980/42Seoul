@@ -1,19 +1,19 @@
 NAME = convert
-SRC = main.cpp
+SRC = main.cpp Static.cpp
 OBJ = $(SRC:%.cpp=%.o)
 INC = ./
 
-CC = g++
-CFLAGS = -Wall -Wextra -Werror
+CXX = c++
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 RM = rm -rf
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJ)
+	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJ)
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) -c -o $@ $< -std=c++98
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 clean:
 	$(RM) $(OBJ)

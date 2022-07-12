@@ -4,6 +4,10 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <cmath>
+#include <cfloat>
+#include <limits>
+#include <locale>
 
 class Static
 {
@@ -16,7 +20,7 @@ public:
 	Static& operator=(const Static& ref);
 	~Static();
 
-	Static(std::string p);
+	Static(char *arg);
 
 	double getNum() const;
 

@@ -1,74 +1,72 @@
-#include "Base.hpp"
 #include "A.hpp"
 #include "B.hpp"
 #include "C.hpp"
-#include <iostream>
-#include <cstdlib>
 
 Base * generate(void)
 {
 	Base * p;
-	char c;
 
-	srand((unsigned int)time(NULL));
+	srand(time(NULL));
 	int num = rand() % 3;
 	if (num == 0)
 	{
-		c = 'A';
 		p = new A;
+		std::cout << "A is generated" << std::endl;
 	}
 	else if (num == 1)
 	{
-		c = 'B';
 		p = new B;
+		std::cout << "B is generated" << std::endl;
 	}
 	else if (num == 2)
 	{
-		c = 'C';
 		p = new C;
+		std::cout << "C is generated" << std::endl;
 	}
-	std::cout << c << " is generated" << std::endl;
+	else
+	{
+		p = NULL;
+		std::cout << "Nothing generated" << std::endl;
+	}
 	return (p);
 }
 
 void identify(Base* p)
 {
 	A * a = dynamic_cast<A *>(p);
-	if (a)
-		std::cout << "A";
+	if (a != NULL)
+		std::cout << "A is identified(pointer)" << std::endl;
 	B * b = dynamic_cast<B *>(p);
-	if (b)
-		std::cout << "B";
+	if (b != NULL)
+		std::cout << "B is identified(pointer)" << std::endl;
 	C * c = dynamic_cast<C *>(p);
-	if (c)
-		std::cout << "C";
-	std::cout << " is identified(pointer)" << std::endl;
+	if (c != NULL)
+		std::cout << "C is identified(pointer)" << std::endl;
 }
 
 void identify(Base &p)
 {
 	try
 	{
-		A a = dynamic_cast<A &>(p);
-		std::cout << "A";
+		(void)dynamic_cast<A &>(p);
+		std::cout << "A is identified(reference)" << std::endl;
 	}
 	catch(const std::exception& e)
 	{}
 	try
 	{
-		B b = dynamic_cast<B &>(p);
-		std::cout << "B";
+		(void)dynamic_cast<B &>(p);
+		std::cout << "B is identified(reference)" << std::endl;
 	}
 	catch(const std::exception& e)
 	{}
 	try
 	{
-		C c = dynamic_cast<C &>(p);
-		std::cout << "C";
+		(void)dynamic_cast<C &>(p);
+		std::cout << "C is identified(reference)" << std::endl;
 	}
 	catch(const std::exception& e)
 	{}
-	std::cout << " is identified(reference)" << std::endl;
 }
 
 int main()
@@ -76,4 +74,7 @@ int main()
 	Base * base = generate();
 	identify(base);
 	identify(*base);
+	if (base)
+		delete base;
+	return (0);
 }

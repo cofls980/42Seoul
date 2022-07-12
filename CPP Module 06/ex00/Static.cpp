@@ -15,10 +15,9 @@ Static& Static::operator=(const Static& ref)
 Static::~Static()
 {}
 
-Static::Static(std::string p)
+Static::Static(char *arg)
 {
-	//this->num = atof(p.c_str());
-	this->num = std::strtod(p.c_str(), NULL);
+	this->num = std::strtod(arg, NULL);
 }
 
 double Static::getNum() const
@@ -28,25 +27,53 @@ double Static::getNum() const
 
 void Static::printChar()
 {
-	if (0 <= value && value <= 31)
-		std::cout << "char: Non displayable" << std::endl;
-	else if (char(value) == 0 || value > 255 || value < 0)
+	if (this->getNum() < -128 || this->getNum() > 127 || std::isnan(this->getNum()) || std::isinf(this->getNum()))
 		std::cout << "char: impossible" << std::endl;
+	else if (std::isprint(this->getNum()) == 0)
+		std::cout << "char: Non displayable" << std::endl;
 	else
-		std::cout << "char: '" << char(value) << "'" << std::endl;
+		std::cout << "char: '" << static_cast<char>(this->getNum()) << "'" << std::endl;
 }
 
 void Static::printInt()
 {
-	int value = static_cast<int>(this->getNum());
-	if (-2147483648 <= value && value <= 2147483647)
-		std::cout << "int: " << value << std::endl;
-	else
+	if (std::isnan(this->getNum()) || std::isinf(this->getNum()))
 		std::cout << "int: impossible" << std::endl;
+	else if (this->getNum() < INT_MIN || this->getNum() > INT_MAX)
+		std::cout << "int: impossible" << std::endl;
+	else
+		std::cout << "int: " << static_cast<int>(this->getNum()) << std::endl;
+
 }
 
 void Static::printFloat()
-{}
+{
+	if (std::isnan(this->getNum()) || std::isinf(this->getNum()))
+		std::cout << "float: " << static_cast<float>(this->getNum()) << "f" << std::endl;
+	else if (this->getNum() > FLT_MAX)
+	{
+		std::cout << "float: impossible" << std::endl;
+	}
+	else
+	{
+		std::cout << std::fixed;
+		std::cout.precision(1);
+		std::cout << "float: " << static_cast<float>(this->getNum()) << "f" << std::endl;
+	}
+}
 
 void Static::printDouble()
-{}
+{
+	if (std::isnan(this->getNum()) || std::isinf(this->getNum()))
+		std::cout << "float: " << this->getNum() << std::endl;
+	else if (this->getNum() > DBL_MAX)
+	{
+		std::cout << "double: impossible" << std::endl;
+	}
+	else
+	{
+		std::cout << std::fixed;
+		std::cout.precision(1);
+		std::cout << "double: " << this->getNum() << std::endl;
+	}
+}
