@@ -4,18 +4,19 @@
 #include <iostream>
 #include <memory>
 #include <limits>
+#include <cstddef>
 #include "iterator.hpp"
-#include "iterator_traits.hpp"
+//#include "iterator_traits.hpp"
 
 //	TOODO
 //	- iterator
-//	- vector without iterator
+//	- vector with iterator
 
 // allocator 사용 이유: 특정 컨테이너에 최적화된 유연한 메모리 사용과 관리를 위해 사용
 namespace ft {
 	template < class T, class Alloc = std::allocator<T> > class vector {
 
-		protected:
+		public:
 		typedef T value_type;
 		typedef Alloc allocator_type;
 		typedef T* pointer;
@@ -23,6 +24,7 @@ namespace ft {
 		typedef const T* const_pointer;
 		typedef const T& const_reference;
 		typedef typename ft::iterator<value_type> iterator;
+		typedef ptrdiff_t difference_type;
 		//typedef typename iterator_traits<iterator>::difference_type difference_type;
 		typedef unsigned int size_type;
 		// const_iterator
@@ -48,15 +50,16 @@ namespace ft {
 		// 생성자
 		explicit vector (const allocator_type& alloc = allocator_type()) : _size(0), _capacity(0), _pointer(0), _allocator(alloc) {} // default
 		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) { // fill....?
+			//std::cout << "??" << std::endl;
 			_allocator = alloc;
 			_size = n;
 			_capacity = n;
 			_pointer = _allocator.allocate(n);
-			for (int i = 0;i < n;i++) {
+			for (size_type i = 0;i < n;i++) {
 				_pointer[i] = val;
 			}
 		}
-		template <class InputIterator> vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()); // range
+		/*template <class InputIterator> vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()); // range
 		vector (const vector& x) { // copy
 			this->_allocator = x._allocator;
 			this->_size = x._size;
@@ -66,7 +69,7 @@ namespace ft {
 				this->_pointer[i] = x._pointer[i];
 			}
 			//this->_iterator = x._iterator;
-		}
+		}*/
 
 		// 소멸자
 		~vector() {
@@ -75,7 +78,7 @@ namespace ft {
 		}
 
 		// 복사 대입 생성자
-		vector& operator= (const vector& x) {
+		/*vector& operator= (const vector& x) {
 			this->_allocator = x._allocator;
 			this->_size = x._size;
 			this->_capacity = x._capacity;
@@ -85,20 +88,26 @@ namespace ft {
 			}
 			//this->_iterator = x._iterator;
 			return this;
-		}
+		}*/
 		
-		/*
+		
 		//------iterators------//
 	
 		// begin
-		iterator begin();
-		const_iterator begin() const;
+		iterator begin() {
+			return iterator(_pointer);
+		}
+		/*const_iterator begin() const {
+			return iterator(_pointer);
+		}*/
 
 		// end
-		iterator end();
-		const_iterator end() const;
+		iterator end() {
+			return (iterator(_pointer + _size));
+		}
+		//const_iterator end() const;
 
-		// rbegin
+		/*// rbegin
 		reverse_iterator rbegin();
 		const_reverse_iterator rbegin() const;
 
@@ -113,7 +122,7 @@ namespace ft {
 
 		// max_size
 		size_type max_size() const { // 컨테이너가 담을 수 있는 최대 원소의 개수
-			return std::numeric_limits<unsigned int>::max();
+			return std::numeric_limits<difference_type>::max();
 		}
 
 		// resize
@@ -128,10 +137,10 @@ namespace ft {
 					_capacity *= 2;
 				}
 				pointer tmp = _allocator.allocate(_capacity);
-				for (int i = 0;i < _size;i++) {
+				for (size_type i = 0;i < _size;i++) {
 					tmp[i] = _pointer[i];
 				}
-				for (int i = _size;i < n;i++) {
+				for (size_type i = _size;i < n;i++) {
 					tmp[i] = val;
 				}
 				_allocator.destroy(_pointer);
@@ -152,7 +161,7 @@ namespace ft {
 				return;
 			_capacity = n;
 			pointer tmp = _allocator.allocate(_capacity);
-			for (int i = 0;i < _size;i++) {
+			for (size_type i = 0;i < _size;i++) {
 				tmp[i] = _pointer[i];
 			}
 			_allocator.destroy(_pointer);
@@ -190,7 +199,7 @@ namespace ft {
 				_pointer = _allocator.allocate(_capacity);
 				_capacity = n;
 			}
-			for (int i = 0;i < _size;i++) {
+			for (size_type i = 0;i < _size;i++) {
 				_pointer[i] = val;
 			}
 		}
@@ -204,7 +213,7 @@ namespace ft {
 				_capacity = 1;
 			} else if (_size == _capacity) {
 				pointer tmp = _allocator.allocate(_capacity * 2);
-				for (int i = 0;i < _size;i++) {
+				for (size_type i = 0;i < _size;i++) {
 					tmp[i] = _pointer[i];
 				}
 				_allocator.destroy(_pointer);
@@ -231,10 +240,10 @@ namespace ft {
 		//iterator erase (iterator position);iterator erase (iterator first, iterator last);
 
 		// swap
-		void swap (vector& x) {
+		/*void swap (vector& x) {
 			// 자기 자신이 매개변수로 들어오면 그냥 return
 			// _pointer, _iterator, _size, _capacity ... 아예 다 바뀜
-		}
+		}*/
 
 		// clear
 		void clear() {
@@ -252,7 +261,7 @@ namespace ft {
 		friend bool operator== (const vector& lhs, const vector& rhs) {
 			if (lhs.size() != rhs.size())
 				return false;
-			for (int i = 0;i < lhs.size();i++) {
+			for (size_type i = 0;i < lhs.size();i++) {
 				if (lhs[i] != rhs[i])
 					return false;
 			}
@@ -263,7 +272,7 @@ namespace ft {
 		}
 
 		friend bool operator<  (const vector& lhs, const vector& rhs) {
-			int i;
+			size_type i;
 			for (i = 0;i < lhs.size();i++) {
 				if (i == rhs.size() || rhs[i] < lhs[i])
 					return false;

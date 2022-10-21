@@ -9,7 +9,12 @@ namespace ft = std;*/
 #define COUNT 100
 
 int main(int argc, char** argv) {
-	ft::vector<int> vector_int;
+	ft::vector<int> vector_int(5,2);
+	for (int i = 0;i < vector_int.size();i++) {
+		std::cout << vector_int[i] << std::endl;
+	}
+	std::cout << vector_int.size() << std::endl;
+	std::cout << vector_int.capacity() << std::endl;
 	
 	/*ft::vector<int> vector_3(4);
 	ft::vector<int> vector1 = vector_3;
@@ -127,7 +132,7 @@ int main(int argc, char** argv) {
 		for (i=0; i<5; i++) myvector.get_allocator().destroy(&p[i]);
 		myvector.get_allocator().deallocate(p,5);
 	}*/
-	{//-------------non-member function overloads---------------//
+	/*{//-------------non-member function overloads---------------//
 		int i1 = 3;
 		int i2 = 3;
 		ft::vector<int> foo;   // three ints with a value of 100
@@ -146,6 +151,21 @@ int main(int argc, char** argv) {
 		std::cout <<"-------swap----------" << std::endl;
 
 		foo.swap(bar);
+	}*/
+	{//-------------iterators---------------//
+		int i1 = 3;
+		int i2 = 3;
+		ft::vector<int> foo;   // three ints with a value of 100
+		for (int i = 0;i < i1;i++) foo.push_back(2);
+		ft::vector<int> bar;   // two ints with a value of 200
+		for (int i = 0;i < i2;i++) bar.push_back(i+1);
+		std::cout << *(bar.begin()) << std::endl;
+		std::cout << *(bar.end()) << std::endl;
+		ft::vector<int>::iterator it(bar.begin());
+		for (it = bar.begin();it != bar.end();++it)
+			std::cout << *(it) << "\t";
+		std::cout << std::endl;
+		std::cout << it[1] << std::endl;
 	}
 
 	std::cout << "max_size: " << vector_int.max_size() << std::endl;
