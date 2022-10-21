@@ -1,0 +1,62 @@
+[설명]
+- C++ standard template library(STL)
+- container: 주로 데이터를 저장하고 관리하는 공간
+
+[구현]
+
++인트로+
+- 각 container마다 구조체가져야 함.
+- Orthodox Canonical 형식 지켜야함.
+- C++98에 해당하는 속성들만 모두 구현 (deprecated 처리된 것들도 구현)
+
++규칙+
+- 컴파일러: c++, 플래그: -Wall -Wextra -Werror -std=c++98
+- 컨테이너 이름을 파일 이름으로 정해야함
+- 42헤더 추가
+- 표준 라이브러리의 모든 것을 사용할 수 있음.
+- 외부 라이브러리 사용 불가능. (C++11, Boost library), *printf(), *alloc(), free() 불가능
+- 메모리 누수 확인
+- 함수 템플릿을 제외한 함수 구현은 헤더 파일에 있으면 안된다.
+- double inclusion 피하기
+- 헤더들을 다른 것들과 독립적으로 사용할 수 있어야한다. 따라서, 필요한 것들은 include해서 사용해야한다.
+- 필요하면 추가적인 파일 생성가능함.
+- STL 컨테이너를 recode하는 과제이므로 그대로 사용 불가능
+
++Mandatory part+
+- <container>.hpp 파일에 컨테이너 구현 후 제출
+- 구현
+    - vector
+        - vector<bool> 구현은 필요없음
+    - map
+    - stack
+        - 위에서 구현한 vector를 디폴트 컨테이너로 사용
+    - iterators_traits
+    - reverse_iterator
+    - enable_if
+        - C++11에 속해있지만 구현
+        - SFINAE발견 용도
+    - is_integral
+    - equal and/or lexicographical_compare
+    - std::pair
+    - std::make_pair
+- 요구사항
+    - namespace는 ft 사용
+    - 컨테이너 안의 데이터 구조체는 예를들어 단순 array를 사용해선 안된다.
+    - 표준 컨테이너에서 제공하는 퍼블릭 함수에서 추가로 퍼블릭 함수를 구현해선 안된다. ===> private 또는 protected 사용해야함. (public으로 된 함수는 변수는 정당화되어야한다.)
+    - 오리지널 네이밍을 따라야한다.
+    - 컨테이너가 iterator를 사용한다면 구현해야한다.
+    - std::allocator를 사용해야한다.
+    - non-member를 오버로드하기 위해, friend 사용이 허용된다. (friend 사용은 정당화되어야한다.)
+    - map::value_compare 구현을 위해, friend 사용이 허용된다.
+- 테스트
+    - main.cpp를 사용하여 테스터를 만들어야한다.
+    - 두 개의 바이너리 파일(구현한 컨테이너와 실제 STL 컨테이너)을 만들어 같은 테스트를 실행할 수 있어야한다.
+    - 출력 결과와 성능(시간)을 비교해야한다. (구현한 컨테이너는 최대 20배 느릴 수 있다.)
+    - 구현한 컨테이너를 ft::<container>로 테스트한다.
+
+[보너스]
+- set 구현
+    - Red-Black 트리 사용
+
+[동료 평가]
+- 깃 레포지토리에 제출

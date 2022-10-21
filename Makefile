@@ -1,5 +1,5 @@
 NAME = containers
-SRC = test.cpp
+SRC = test1.cpp
 OBJ = $(SRC:%.cpp=%.o)
 INC = ./
 

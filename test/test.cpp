@@ -21,7 +21,7 @@ struct Buffer
 };
 
 
-#define COUNT 10//(MAX_RAM / (int)sizeof(Buffer))
+#define COUNT 3//(MAX_RAM / (int)sizeof(Buffer))
 
 /*template<typename T>
 class MutantStack : public ft::stack<T>
@@ -43,7 +43,7 @@ public:
 };*/
 
 int main(int argc, char** argv) {
-	if (argc != 2)
+	/*if (argc != 2)
 	{
 		std::cerr << "Usage: ./test seed" << std::endl;
 		std::cerr << "Provide a seed please" << std::endl;
@@ -51,12 +51,16 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 	const int seed = atoi(argv[1]);
-	std::cout << seed << std::endl;
-	srand(seed);
-	std::cout << seed << std::endl;
+	srand(seed);*/
 
 	//ft::vector<std::string> vector_str;
 	ft::vector<int> vector_int;
+	ft::vector<int> vector_3(4, 1);
+	for (int i = 0;i < vector_3.size();i++)
+	{
+		std::cout << vector_3.at(i) << std::endl;
+	}
+	//vector_int.reserve(4);
 	//ft::stack<int> stack_int;
 	//ft::vector<Buffer> vector_buffer;
 	//ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
@@ -67,11 +71,12 @@ int main(int argc, char** argv) {
 		vector_int.push_back(i);
 	}
 
+	std::cout << "size: " << vector_int.size() << std::endl;
+
 	for (int i = 0;i < COUNT;i++)
 	{
-		std::cout << "index: " << i << std::endl;
+		std::cout << "at: " << vector_int.at(i) << std::endl;
 		//const int idx = rand() % COUNT;
-		//vector_int.at(idx);
 	}
 
 	/*for (int i = 0; i < COUNT; i++)

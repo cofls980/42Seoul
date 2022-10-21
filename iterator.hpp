@@ -2,10 +2,12 @@
 #define ITERATOR_HPP
 
 #include "iterator_traits.hpp"
-
+/*
+	random_access_iterator
+*/
 namespace ft {
 
-	template <class Iterator> class iterator_traits {
+	/*template <class Iterator> class iterator_traits {
 		public:
 			typedef typename Iterator::difference_type		difference_type;
 			typedef typename Iterator::value_type			value_type;
@@ -24,7 +26,20 @@ namespace ft {
 		typedef typename ft::iterator_traits<Iterator>::pointer pointer;
 		typedef typename ft::iterator_traits<Iterator>::reference reference;
 		typedef typename ft::iterator_traits<Iterator>::iterator_category iterator_category;
-    };
+    };*/
+
+	template<class T, class Pointer = T*, class Reference = T&> // difference_type 필요
+	class iterator {
+		public:
+			typedef T value_type;
+			typedef Pointer pointer;
+			typedef Reference reference;
+			pointer _pointer;
+
+			explicit iterator(pointer _p) : _pointer(_p) {}
+
+		// _num = 0) : num(_num) {}
+	};
 }
 
 #endif
