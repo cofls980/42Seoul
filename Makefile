@@ -4,7 +4,7 @@ OBJ = $(SRC:%.cpp=%.o)
 INC = ./
 
 CXX = c++
-CXXFLAGS =  -std=c++98 
+CXXFLAGS =  -std=c++98 -Wall -Wextra -Werror
 RM = rm -rf
 #-Wall -Wextra -Werror -DDEBUG_MODE -Wundef
 all: $(NAME)

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "vector.hpp"
+#include "vector/vector.hpp"
 /*#include <vector>
 namespace ft = std;*/
 
@@ -9,8 +9,10 @@ namespace ft = std;*/
 #define COUNT 100
 
 int main(int argc, char** argv) {
+	(void) argc;
+	(void) argv;
 	ft::vector<int> vector_int(5,2);
-	for (int i = 0;i < vector_int.size();i++) {
+	for (unsigned int i = 0;i < vector_int.size();i++) {
 		std::cout << vector_int[i] << std::endl;
 	}
 	std::cout << vector_int.size() << std::endl;
@@ -154,21 +156,46 @@ int main(int argc, char** argv) {
 	}*/
 	{//-------------iterators---------------//
 		int i1 = 3;
-		int i2 = 3;
+		int i2 = 10;
 		ft::vector<int> foo;   // three ints with a value of 100
 		for (int i = 0;i < i1;i++) foo.push_back(2);
 		ft::vector<int> bar;   // two ints with a value of 200
-		for (int i = 0;i < i2;i++) bar.push_back(i+1);
+		for (int i = 0;i < i2;i++) bar.push_back(i*2 + 1);
 		std::cout << *(bar.begin()) << std::endl;
 		std::cout << *(bar.end()) << std::endl;
 		ft::vector<int>::iterator it(bar.begin());
+		ft::vector<int>::iterator it1(bar.begin() + 1);
+		if (it == it1)
+		{
+			std::cout << "??" << std::endl;
+		}
 		for (it = bar.begin();it != bar.end();++it)
 			std::cout << *(it) << "\t";
 		std::cout << std::endl;
-		std::cout << it[1] << std::endl;
+	}
+	{
+		int i2 = 10;
+		ft::vector<int> bar;   // two ints with a value of 200
+		for (int i = 0;i < i2;i++) bar.push_back(i*2 + 1);
+		ft::vector<int>::iterator it(bar.begin());
+		std::cout << it[4] << std::endl;
+		std::cout << *it++ << std::endl;
+		std::cout << *it++ << std::endl;
+	}
+	{
+		int i2 = 10;
+		ft::vector<int> bar;   // two ints with a value of 200
+		for (int i = 0;i < i2;i++) bar.push_back(i*2 + 1);
+		ft::vector<int>::iterator it(bar.begin());
+		std::cout << it[4] << std::endl;
+		std::cout << *it++ << std::endl;
+		std::cout << *it++ << std::endl;
+		std::cout << std::endl;
+		ft::vector<int> foo(bar.begin(), bar.end());
+		std::cout << foo.size() << ", " << foo.capacity() << std::endl;
 	}
 
-	std::cout << "max_size: " << vector_int.max_size() << std::endl;
+	//std::cout << "max_size: " << vector_int.max_size() << std::endl;
 
 	//system("leaks containers");
 	return (0);
