@@ -2,8 +2,7 @@
 #define STACK_HPP
 
 #include <iostream>
-#include <vector>
-#include <deque>
+#include "../vector/vector.hpp"
 
 /*
 std::vector -> ft::vector
@@ -16,7 +15,7 @@ std::vector -> ft::vector
 */
 
 namespace ft {
-	template <class T, class Container = std::deque<T> > 
+	template <class T, class Container = ft::vector<T> > 
 	class stack {
 		public:
 		typedef T value_type;

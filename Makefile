@@ -1,5 +1,5 @@
 NAME = containers
-SRC = test1.cpp
+SRC = test3.cpp
 OBJ = $(SRC:%.cpp=%.o)
 INC = ./
 
@@ -8,6 +8,9 @@ CXXFLAGS =  -std=c++98 -Wall -Wextra -Werror
 RM = rm -rf
 #-Wall -Wextra -Werror -DDEBUG_MODE -Wundef
 all: $(NAME)
+
+ft_mode: $(OBJ)
+	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJ) -DFT_MODE
 
 $(NAME): $(OBJ)
 	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJ)

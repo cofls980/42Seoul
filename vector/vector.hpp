@@ -6,6 +6,8 @@
 #include <limits>
 #include <cstddef>
 #include "vector_iterator.hpp"
+#include "../utils/reverse_iterator.hpp"
+#include "../utils/utils.hpp"
 
 // allocator 사용 이유: 특정 컨테이너에 최적화된 유연한 메모리 사용과 관리를 위해 사용
 namespace ft {
@@ -14,292 +16,354 @@ namespace ft {
 		public:
 		typedef T value_type;
 		typedef Alloc allocator_type;
-		typedef T* pointer;
-		typedef T& reference;
-		typedef const T* const_pointer;
-		typedef const T& const_reference;
+		typedef typename allocator_type::pointer pointer;
+		typedef typename allocator_type::reference reference;
+		typedef typename allocator_type::const_pointer const_pointer;
+		typedef typename allocator_type::const_reference const_reference;
 		typedef typename ft::vector_iterator<value_type> iterator;
 		typedef typename ft::vector_iterator<const value_type> const_iterator;
-		typedef ptrdiff_t difference_type;
-		typedef unsigned int size_type;
-		// const_iterator
-		// reverse_iterator
-		// const_reverse_iterator
+		typedef typename ft::iterator_traits<pointer>::difference_type difference_type;
+		typedef typename ft::reverse_iterator<iterator> reverse_iterator;
+		typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
+		typedef typename allocator_type::size_type size_type;
 		
-		pointer _pointer;
-		allocator_type _allocator;
-		size_type _size;
-		size_type _capacity;
+		allocator_type _alloc;
+		pointer _begin;
+		pointer _end;
+		pointer _end_cap;
 
 		public:
 		// 생성자
-		explicit vector (const allocator_type& alloc = allocator_type()) : _pointer(0), _allocator(alloc), _size(0), _capacity(0) {} // default
-		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) { // fill....?
-			_allocator = alloc;
-			_size = n;
-			_capacity = n;
-			_pointer = _allocator.allocate(n);
+		explicit vector (const allocator_type& alloc = allocator_type()) : _alloc(alloc), _begin(0), _end(0), _end_cap(0) {}
+		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) {
+			_alloc = alloc;
+			_begin = _alloc.allocate(n);
+			_end = _begin;
+			_end_cap = _begin + n;
 			for (size_type i = 0;i < n;i++) {
-				_pointer[i] = val;
+				_alloc.construct(_end, val);
+				_end++;
 			}
 		}
-		template <class InputIterator = ft::vector_iterator<T> > vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) { // range
-			_allocator = alloc;
-			size_type s = 0;
-			for (InputIterator temp = first;temp != last;temp++) {
-				s++;
-			}
-			_size = s;
-			_capacity = s;
-			_pointer = this->_allocator.allocate(this->_capacity);
-			s = 0;
-			for (InputIterator temp = first;temp != last;temp++) {
-				_pointer[s] = *temp;
-				s++;
+		template <class InputIterator>
+		vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
+				typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) {
+			_alloc = alloc;
+			size_type s = last - first; //?
+			_begin = _alloc.allocate(s);
+			_end = _begin;
+			_end_cap = _begin + s;
+			for (size_type i = 0;i < s;i++) {
+				_alloc.construct(_end, *(first + i));
+				_end++;
 			}
 		}
-		vector (const vector& x) { // copy
-			if (*this != x) {
-				this->_allocator = x._allocator;
-				this->_size = x._size;
-				this->_capacity = x._capacity;
-				this->_pointer = this->_allocator.allocate(x._capacity);
-				for (size_type i = 0;i < this->_size;i++) {
-					this->_pointer[i] = x._pointer[i];
-				}
+		vector (const vector& x) {
+			_alloc = x.get_allocator();
+			_begin = _alloc.allocate(x.capacity());
+			_end = _begin;
+			_end_cap = _begin + x.capacity();
+			for (size_type i = 0;i < x.size();i++) {
+				_alloc.construct(_end, *(x.begin() + i));
+				_end++;
 			}
-			
 		}
 
 		// 소멸자
 		~vector() {
-			_allocator.destroy(_pointer);
-			_allocator.deallocate(_pointer, _capacity);
+			size_type curr_cap = capacity();
+			clear();
+			_alloc.deallocate(_begin, curr_cap);
 		}
 
 		// 복사 대입 생성자
 		vector& operator= (const vector& x) {
-			this->_allocator = x._allocator;
-			this->_size = x._size;
-			this->_capacity = x._capacity;
-			this->_pointer = this->_allocator.allocate(x._capacity);
-			for (size_type i = 0;i < this->_size;i++) {
-				this->_pointer[i] = x._pointer[i];
+			if (*this != x) {
+				_alloc = x.get_allocator();
+				_begin = _alloc.allocate(x.capacity());
+				_end = _begin;
+				_end_cap = _begin + x.capacity();
+				for (size_type i = 0;i < x.size();i++) {
+					_alloc.construct(_end, *(x.begin() + i));
+					_end++;
+				}
 			}
-			//this->_iterator = x._iterator;
 			return *this;
 		}
 		
-		
 		//------iterators------//
-	
-		// begin
-		iterator begin() {
-			iterator it(_pointer);
-			return it;
-		}
-		const_iterator begin() const {
-			return const_iterator(_pointer);
-		}
+		iterator begin() {return (iterator(_begin));}
+		const_iterator begin() const {return (const_iterator(_begin));}
+		iterator end() {return (iterator(_end));}
+		const_iterator end() const {return (const_iterator(_end));}
+		reverse_iterator rbegin() {return (reverse_iterator(end()));}
+		const_reverse_iterator rbegin() const {return (const_reverse_iterator(end()));}
+		reverse_iterator rend() {return (reverse_iterator(begin()));}
+		const_reverse_iterator rend() const {return (const_reverse_iterator(begin()));}
 
-		// end
-		iterator end() {
-			return (iterator(_pointer + _size));
-		}
-		const_iterator end() const {
-			return (const_iterator(_pointer + _size));
-		}
-
-		/*// rbegin
-		reverse_iterator rbegin();
-		const_reverse_iterator rbegin() const;
-
-		// rend
-		reverse_iterator rend();
-		const_reverse_iterator rend() const;
-		*/
-
-		
 		//------capacity------//
-		size_type size() const { return _size; }
+		size_type size() const {return (_end - _begin);}
+		size_type max_size() const {return (allocator_type().max_size());}
+		size_type capacity() const {return (_end_cap - _begin);}
+		bool empty() const {return (size() == 0);}
 
-		// max_size
-		difference_type max_size() const { // 컨테이너가 담을 수 있는 최대 원소의 개수
-			return std::numeric_limits<difference_type>::max();
-		}
-
-		// resize
-		void resize (size_type n, value_type val = value_type()) {
-			// 최대 크기 고려
-			if (n < _size) {
-				//destroy
-				_size = n;
-			} else if (n > _size) {
-				size_type c_tmp = _capacity;
-				while (n > _capacity) {
-					_capacity *= 2;
+		void resize (size_type n, value_type val = value_type()) { // insert? erase?
+			// capacity and size are affected
+			// n이 사이즈보다 작을 때 n만큼 사이즈 줄여준다.
+			// n이 사이즈보다 크면 추가된 만큼 val로 채워준다.
+			size_type curr_size = size();
+			if (n < curr_size) {
+				for (size_type i = curr_size - 1; i > n; i--) {
+					_alloc.destroy(_begin + i);
 				}
-				pointer tmp = _allocator.allocate(_capacity);
-				for (size_type i = 0;i < _size;i++) {
-					tmp[i] = _pointer[i];
-				}
-				for (size_type i = _size;i < n;i++) {
-					tmp[i] = val;
-				}
-				_allocator.destroy(_pointer);
-				_allocator.deallocate(_pointer, c_tmp);
-				_pointer = tmp;
-				_size = n;
+				_alloc.destroy(_begin + n);
 			}
-		}
-
-		size_type capacity() const { return _capacity; }
-
-		bool empty() const { return (_size == 0); }
-
-		// reserve
-		void reserve (size_type n) {
-			//최대 크기 고려 a length_error exception is thrown.
-			if (n <= _capacity)
-				return;
-			_capacity = n;
-			pointer tmp = _allocator.allocate(_capacity);
-			for (int i = 0;i < _size;i++) {
-				tmp[i] = _pointer[i];
+			else if (n > curr_size) {
+				if (n > capacity()) {
+					reserve(capacity() * 2 > n ? capacity() * 2 : n);//?
+				}
+				for (size_type i = curr_size;i < n;i++) {
+					_alloc.construct(_begin + i, val);
+				}
 			}
-			_allocator.destroy(_pointer);
-			_allocator.deallocate(_pointer, _capacity / 2);
-			_pointer = tmp;
+			_end = _begin + n;
+		}
+		void reserve (size_type n) { // capacity is affected (not size)
+			// n이 capacity 크기보다 클 때만 추가로 공간을 할당해준다.
+			// 원래 값 유지
+			//allocate exception?
+			if (n > max_size()) {
+				throw (std::length_error("ft::vector::resize"));
+			}
+			if (n > capacity()) {
+				pointer new_begin = _alloc.allocate(n);
+				size_type curr_size = size();
+				size_type curr_cap = capacity();
+				for (size_type i = 0;i < curr_size;i++) {
+					_alloc.construct(new_begin + i, *(_begin + i));
+				}
+				clear();
+				_alloc.deallocate(_begin, curr_cap);
+				_begin = new_begin;
+				_end = _begin + curr_size;
+				_end_cap = _begin + n;
+			}
 		}
 		
 		//------element access------//
-		reference operator[] (size_type n) { return _pointer[n]; }
-		const_reference operator[] (size_type n) const { return _pointer[n]; } // 테스트 방법 찾기
-		
-		// at
+		reference operator[] (size_type n) {return (*(_begin + n));}
+		const_reference operator[] (size_type n) const {return (*(_begin + n));}
 		reference at (size_type n) {
-			// 범위 내에 있는지 확인
-			return _pointer[n];//*this[n] 사용
+			if (n >= size()) {
+				throw std::out_of_range("ft::vector::at");
+			}
+			return (*(_begin + n));
 		}
-		//const_reference at (size_type n) const;
-
-		reference front() { return _pointer[0]; }
-		const_reference front() const { return _pointer[0]; }
-
-		reference back() { return _pointer[_size - 1]; }
-		const_reference back() const { return _pointer[_size - 1]; }
+		const_reference at (size_type n) const {
+			if (n >= size()) {
+				throw std::out_of_range("ft::vector::at");
+			}
+			return (*(_begin + n));
+		}
+		reference front() {return (*_begin);}
+		const_reference front() const {return (*_begin);}
+		reference back() {return (*(_end - 1));}
+		const_reference back() const {return (*(_end - 1));}
 		
 		
 		//------modifiers------//
-		// assign
-		//template <class InputIterator>  void assign (InputIterator first, InputIterator last); // range
-		void assign (size_type n, const value_type& val) { // fill
-			_size = n;
-			_allocator.destroy(_pointer);
-			if (_capacity < n) {
-				//새로 할당
-				_allocator.deallocate(_pointer, _capacity);
-				_pointer = _allocator.allocate(_capacity);
-				_capacity = n;
+		template <class InputIterator>
+		void assign (InputIterator first, InputIterator last,
+					typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) {
+			// 할당
+			//first> last 에러?
+			size_type it_size = last - first;
+			if (it_size > capacity()) {
+				reserve(it_size);//?
 			}
-			for (int i = 0;i < _size;i++) {
-				_pointer[i] = val;
+			clear();
+			for (size_type i = 0;i < it_size;i++) {
+				_alloc.construct(_begin + i, *(first + i));
 			}
+			_end = _begin + it_size;
+		}
+		void assign (size_type n, const value_type& val) {
+			// 처음부터 n 크기만큼 val넣음
+			if (n > capacity()) {
+				reserve(n);
+			} 
+			clear();
+			for (size_type i = 0;i < n;i++) {
+				_alloc.construct(_begin + i, val);
+			}
+			_end = _begin + n;
 		}
 
-		// push_back
 		void push_back (const value_type& val) {
-			// 최대 고려?안하나..?
-			// allocator exception
-			if (_pointer == 0) {
-				_pointer = _allocator.allocate(1);
-				_capacity = 1;
-			} else if (_size == _capacity) {
-				pointer tmp = _allocator.allocate(_capacity * 2);
-				for (size_type i = 0;i < _size;i++) {
-					tmp[i] = _pointer[i];
-				}
-				_allocator.destroy(_pointer);
-				_allocator.deallocate(_pointer, _capacity);
-				_pointer = tmp;
-				_capacity *= 2;
+			// allocator exception?
+			size_type curr_size = size();
+			if (curr_size == capacity()) {
+				reserve(curr_size == 0 ? 1 : curr_size * 2);
 			}
-			_pointer[_size] = val;
-			_size++;
+			_alloc.construct(_end, val);
+			_end++;
 		}
-
-		// pop_back
 		void pop_back() {
-			_allocator.destroy(_pointer + (_size - 1)); // 필요한가
-			_size--;
+			--_end;
+			_alloc.destroy(_end);
 		}
 		
 		// insert
-		//iterator insert (iterator position, const value_type& val); // single element
-		//void insert (iterator position, size_type n, const value_type& val); // fill
-		//template <class InputIterator>    void insert (iterator position, InputIterator first, InputIterator last); // range
+		iterator insert (iterator position, const value_type& val) { // single element
+			// position < begin() || position > end()?
+			size_type dist = position - begin();
+			size_type curr_size = size();
+			size_type curr_cap = capacity();
+			if (curr_size == curr_cap) {
+				reserve(curr_cap == 0 ? 1 : curr_cap * 2);
+			}
+			for (size_type i = curr_size;i > dist;i--) {
+				_alloc.construct(_begin + i, *(_begin + i - 1));
+				_alloc.destroy(_begin + i - 1);
+			}
+			_alloc.construct(_begin + dist, val);
+			_end++;
+			return (begin() + dist);
+		}
+		void insert (iterator position, size_type n, const value_type& val) { // fill
+			// position < begin() || position > end()?
+			size_type dist = position - begin();
+			size_type curr_cap = capacity();
+			size_type curr_size = size();
+			if (curr_size + n > curr_cap) {
+				reserve(curr_cap * 2 >= curr_size + n ? curr_cap * 2 : curr_size + n);// ? mac에서 확인
+			}
+			for (size_type i = curr_size;i > dist;i--) {
+				_alloc.construct(_begin + i + n - 1, *(_begin + i - 1));
+				_alloc.destroy(_begin + i - 1);
+			}
+			for (size_type i = 0;i < n;i++) {
+				_alloc.construct(_begin + dist + i, val);
+			}
+			_end += n;
+		}
+		template <class InputIterator>
+		void insert (iterator position, InputIterator first, InputIterator last,
+					typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) { // range
+			// position < begin() || position > end()?
+			// first > last ?
+			size_type dist = position - begin();
+			size_type it_size = last - first;
+			size_type curr_cap = capacity();
+			size_type curr_size = size();
+			if (curr_size + it_size > curr_cap) {
+				reserve(curr_cap * 2 >= curr_size + it_size ? curr_cap * 2 : curr_size + it_size);// ? mac에서 확인
+			}
+			for (size_type i = curr_size;i > dist;i--) {
+				_alloc.construct(_begin + i + it_size - 1, *(_begin + i - 1));
+				_alloc.destroy(_begin + i - 1);
+			}
+			for (size_type i = 0;i < it_size;i++) {
+				_alloc.construct(_begin + dist + i, *(first + i));
+			}
+			_end += it_size;
+		}
 
 		// erase
-		//iterator erase (iterator position);iterator erase (iterator first, iterator last);
+		iterator erase (iterator position) {
+			size_type dist = position - begin();
+			_alloc.destroy(_begin + dist);
+			for (size_type i = dist;i < size() - 1;i++) {
+				_alloc.construct(_begin + i, *(_begin + i + 1));
+				_alloc.destroy(_begin + i + 1);
+			}
+			_end--;
+			return begin() + dist;
+		}
+		iterator erase (iterator first, iterator last) {
+			// first > last?
+			size_type it_size = last - first;
+			size_type dist = first - begin();
+			for (size_type i = 0;i < it_size;i++) {
+				_alloc.destroy(_begin + dist + i);
+			}
+			for (size_type i = dist;i < size() - it_size;i++) {
+				_alloc.construct(_begin + i, *(_begin + i + it_size));
+				_alloc.destroy(_begin + i + it_size);
+			}
+			_end -= it_size;
+			return begin() + dist;
+		}
 
-		// swap
-		/*void swap (vector& x) {
-			// 자기 자신이 매개변수로 들어오면 그냥 return
-			// _pointer, _iterator, _size, _capacity ... 아예 다 바뀜
-		}*/
+		void swap (vector& x) {
+			if (*this == x)
+				return;
+			pointer tmp_begin = x._begin;
+			pointer tmp_end = x._end;
+			pointer tmp_end_cap = x._end_cap;
+			allocator_type tmp_alloc = x._alloc;
+			x._begin = this->_begin;
+			x._end = this->_end;
+			x._end_cap = this->_end_cap;
+			x._alloc = this->_alloc;
+			this->_begin = tmp_begin;
+			this->_end = tmp_end;
+			this->_end_cap = tmp_end_cap;
+			this->_alloc = tmp_alloc;
+		}
 
-		// clear
 		void clear() {
-			_size = 0;
-			_allocator.destroy(_pointer);
+			while (_begin != _end) {
+				--_end;
+				_alloc.destroy(_end);
+			}
 		}
-
 		
-		//------allocator------//
-		allocator_type get_allocator() const {
-			return _allocator;
-		}
-
-		//------non-member function overloads------//
-		friend bool operator== (const vector& lhs, const vector& rhs) {
-			if (lhs.size() != rhs.size())
-				return false;
-			for (size_type i = 0;i < lhs.size();i++) {
-				if (lhs[i] != rhs[i])
-					return false;
-			}
-			return true;
-		}
-		friend bool operator!= (const vector& lhs, const vector& rhs) {
-			return !(lhs == rhs);
-		}
-
-		friend bool operator<  (const vector& lhs, const vector& rhs) {
-			int i;
-			for (i = 0;i < lhs.size();i++) {
-				if (i == rhs.size() || rhs[i] < lhs[i])
-					return false;
-				else if (lhs[i] < rhs[i])
-					return true;
-			}
-			return (i != rhs.size());
-		}
-		friend bool operator<= (const vector& lhs, const vector& rhs) {
-			return !(rhs < lhs);
-		}
-		friend bool operator>  (const vector& lhs, const vector& rhs) {
-			return (rhs < lhs);
-		}
-		friend bool operator>= (const vector& lhs, const vector& rhs) {
-			return !(lhs < rhs);
-		}
-
-		// swap
-		friend void swap (vector& x, vector& y);
-
+		allocator_type get_allocator() const {return (_alloc);}
 	};
+	//------non-member function overloads------//
+	template <class T, class Alloc>
+	bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		if (lhs.size() != rhs.size()) {
+			return (false);
+		}
+
+		typename ft::vector<T>::const_iterator it1 = lhs.begin();
+		typename ft::vector<T>::const_iterator it2 = rhs.begin();
+		while (it1 != lhs.end()) {
+			if (*it1 != *it2) {
+				return (false);
+			}
+			it1++;
+			it2++;
+		}
+		return (true);
+	}
+	template <class T, class Alloc>
+	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (!(lhs == rhs));
+	}
+	template <class T, class Alloc>
+	bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+	}
+	template <class T, class Alloc>
+	bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (!(rhs < lhs));
+	}
+	template <class T, class Alloc>
+	bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (rhs < lhs);
+	}
+	template <class T, class Alloc>
+	bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
+		return (!(lhs < rhs));
+	}
+	// swap
+	template <class T, class Alloc>
+	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y) {
+		x.swap(y);
+	}
 }
-
-
 
 #endif
