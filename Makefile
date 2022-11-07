@@ -1,5 +1,5 @@
 NAME = containers
-SRC = test3.cpp
+SRC = capacity_test.cpp
 OBJ = $(SRC:%.cpp=%.o)
 INC = ./
 
@@ -9,15 +9,15 @@ RM = rm -rf
 #-Wall -Wextra -Werror -DDEBUG_MODE -Wundef
 all: $(NAME)
 
-ft_mode: $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJ) -DFT_MODE
-
 $(NAME): $(OBJ)
 	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJ)
 
 %.o: %.cpp
+ifeq ($(mode), ft_mode)
+	$(CXX) $(CXXFLAGS) -DFT_MODE -c -o $@ $<
+else
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
-
+endif
 clean:
 	$(RM) $(OBJ)
 
@@ -27,3 +27,5 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+
+# make mode=ft_mode

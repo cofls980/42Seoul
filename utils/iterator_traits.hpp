@@ -2,6 +2,7 @@
 #define ITERATOR_TRAITS_HPP
 
 #include <iostream>
+#include <cstddef>
 
 namespace ft {
 	template <class Iterator> class iterator_traits {

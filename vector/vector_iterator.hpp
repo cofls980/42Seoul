@@ -2,7 +2,7 @@
 #define VECTOR_ITERATOR_HPP
 
 #include <cstddef>
-#include "iterator_traits.hpp"
+#include "../utils/iterator_traits.hpp"
 /*
 	random_access_iterator
 */

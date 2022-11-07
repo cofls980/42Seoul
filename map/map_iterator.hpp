@@ -1,6 +1,9 @@
 #ifndef MAP_ITERATOR_HPP
 #define MAP_ITERATOR_HPP
 
+#include "../utils/utils.hpp"
+#include "../utils/iterator_traits.hpp"
+
 namespace ft {
     template<class T>
 	class map_iterator {

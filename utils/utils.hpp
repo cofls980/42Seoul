@@ -58,7 +58,8 @@ namespace ft {
 	template<> struct is_integral<unsigned long int> : public integral_constant<unsigned long int, true> {};
 	template<> struct is_integral<unsigned long long int> : public integral_constant<unsigned long long int, true> {};
 
-	template <class T1, class T2> struct pair {
+	template <class T1, class T2>
+	struct pair {
 		typedef T1 first_type;
 		typedef T2 second_type;
 
@@ -67,17 +68,11 @@ namespace ft {
 
 		pair() : first(), second() {}
 		template<class U, class V>
-		pair (const pair<U,V>& pr) {
-			first = pr.first;
-			second = pr.second;
-		}
-		pair (const first_type& a, const second_type& b) {
-			first = a;
-			second = b;
-		}
+		pair (const pair<U, V>& pr) : first(pr.first), second(pr.second) {}
+		pair (const first_type& a, const second_type& b) : first(a), second(b) {}
 
 		pair& operator= (const pair& pr) {
-			if (*this != pr) {
+			if (this != &pr) {
 				first = pr.first;
 				second = pr.second;
 			}
@@ -150,6 +145,28 @@ namespace ft {
 		}
 		return (true);
 	}
+
+	template<class T>
+	struct node {
+		T _value;
+		node *left;
+		node *right;
+		node *parent;
+
+		node() : _value(0), left(0), right(0), parent(0) {}
+		node(const T& value) : _value(value), left(0), right(0), parent(0) {}
+		node(const node& n) : _value(n._value), left(n.left), right(n.right), parent(n.parent) {}
+		~node() {}
+		node &operator=(const node &n) {
+			if (*this != n) {
+				_value = n._value;
+				left = n.left;
+				right = n.right;
+				parent = n.parent;
+			}
+			return (*this);
+		}
+	};
 }
 
 #endif
