@@ -27,6 +27,7 @@ namespace ft {
 
 		public:
 			explicit stack (const container_type& ctnr = container_type()) : _cont(ctnr) {}
+			stack( const stack& other ) : _cont(other._cont) {}
 			~stack() {}
 			stack& operator=( const stack& other ) {
 				if (this != &other) {
