@@ -89,5 +89,22 @@ int main() {
 	v1.insert(v1.end(), 2);
 	std::cout << "capacity: " << v1.capacity() << ", size: " << v1.size() << std::endl;
 
+	std::cout << "max_size: " << v1.max_size() << std::endl;
+
+	ft::vector<int> ve;
+	std::cout << "empty: " << ve.empty() << std::endl;
+
+	ve.push_back(1);
+	std::cout << ve.front() << std::endl;
+
+	ft::vector<int>::iterator it = ve.begin();
+	*it = 10;
+	std::cout << ve.front() << std::endl;
+	ve.push_back(99);
+	*it++;
+	std::cout << *it << std::endl;
+	ft::vector<int>::reverse_iterator r(it);
+	r.base();
+
 	return (0);
 } 

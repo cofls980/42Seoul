@@ -31,14 +31,12 @@ int main() {
 	m1.insert(ft::make_pair(2, 5));
 	std::cout << "-----------" << std::endl;
 	m1.insert(ft::make_pair(3, 5));
-	std::cout << "-----------" << std::endl;
-	//m1.insert(ft::make_pair(12, 5));
 
 	std::cout << "==========================" << std::endl;
 
 	m1.erase(3);
+	m1.erase(10);
 	//m1.erase(13);
-	// m1.erase(10);
 	
 	/*std::cout << m1[12] << std::endl;
 	m1[12] = 3;
