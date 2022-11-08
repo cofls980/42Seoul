@@ -2,6 +2,7 @@
 #define VECTOR_HPP
 
 #include <iostream>
+#include <limits>
 #include "vector_iterator.hpp"
 #include "../utils/reverse_iterator.hpp"
 #include "../utils/utils.hpp"
@@ -15,13 +16,20 @@ namespace ft {
 			typedef typename allocator_type::reference reference;
 			typedef typename allocator_type::const_pointer const_pointer;
 			typedef typename allocator_type::const_reference const_reference;
+			typedef typename allocator_type::difference_type difference_type;
+			typedef typename allocator_type::size_type size_type;
 			typedef typename ft::vector_iterator<value_type> iterator;
 			typedef typename ft::vector_iterator<const value_type> const_iterator;
-			typedef typename ft::iterator_traits<pointer>::difference_type difference_type;
 			typedef typename ft::reverse_iterator<iterator> reverse_iterator;
 			typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
-			typedef typename allocator_type::size_type size_type;
 
+		private:
+			allocator_type _alloc;
+			pointer _begin;
+			pointer _end;
+			pointer _end_cap;
+
+		public:
 			explicit vector (const allocator_type& alloc = allocator_type()) : _alloc(alloc), _begin(0), _end(_begin), _end_cap(_begin) {}
 			explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) {
 				_alloc = alloc;
@@ -36,9 +44,6 @@ namespace ft {
 			template <class InputIterator>
 			vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
 					typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) {
-				if (first > last) {
-					throw (std::length_error("vector"));//(o)
-				}
 				_alloc = alloc;
 				size_type s = last - first;
 				_begin = _alloc.allocate(s);
@@ -68,6 +73,9 @@ namespace ft {
 
 			vector& operator= (const vector& x) {
 				if (this != &x) {
+					size_type curr_cap = capacity();
+					clear();
+					_alloc.deallocate(_begin, curr_cap);
 					_alloc = x.get_allocator();
 					_begin = _alloc.allocate(x.capacity());
 					_end = _begin;
@@ -77,7 +85,7 @@ namespace ft {
 						_end++;
 					}
 				}
-				return *this;
+				return (*this);
 			}
 			
 			//------iterators------//
@@ -92,22 +100,20 @@ namespace ft {
 
 			//------capacity------//
 			size_type size() const {return (_end - _begin);}
-			size_type max_size() const {return (std::numeric_limits<size_type>::max() / sizeof(value_type));}
+			size_type max_size() const {return (std::numeric_limits<difference_type>::max() / sizeof(value_type));}//_alloc.max_size()
 			size_type capacity() const {return (_end_cap - _begin);}
 			bool empty() const {return (size() == 0);}
 			void resize (size_type n, value_type val = value_type()) {
-				// n이 사이즈보다 작을 때 n만큼 사이즈 줄여준다.
-				// n이 사이즈보다 크면 추가된 만큼 val로 채워준다.
 				size_type curr_size = size();
 				if (n < curr_size) {
 					for (size_type i = curr_size - 1; i > n; i--) {
 						_alloc.destroy(_begin + i);
 					}
-					_alloc.destroy(_begin + n);
+					_alloc.destroy(_begin + n);//?
 				}
 				else if (n > curr_size) {
 					if (n > capacity()) {
-						reserve(capacity() * 2 > n ? capacity() * 2 : n);
+						reserve(capacity() * 2 > n ? capacity() * 2 : n);//그냥 n인지 아닌지 확인 필요
 					}
 					for (size_type i = curr_size;i < n;i++) {
 						_alloc.construct(_begin + i, val);
@@ -116,11 +122,8 @@ namespace ft {
 				_end = _begin + n;
 			}
 			void reserve (size_type n) {
-				// n이 capacity 크기보다 클 때만 추가로 공간을 할당해준다.
-				// 원래 값 유지
-				//allocate exception?
 				if (n > max_size()) {
-					throw (std::length_error("vector"));//(o)
+					throw (std::length_error("vector"));
 				}
 				if (n > capacity()) {
 					pointer new_begin = _alloc.allocate(n);
@@ -142,13 +145,13 @@ namespace ft {
 			const_reference operator[] (size_type n) const {return (*(_begin + n));}
 			reference at (size_type n) {
 				if (n >= size()) {
-					throw std::out_of_range("ft::vector::at");
+					throw std::out_of_range("vector");
 				}
 				return (*(_begin + n));
 			}
 			const_reference at (size_type n) const {
 				if (n >= size()) {
-					throw std::out_of_range("ft::vector::at");
+					throw std::out_of_range("vector");
 				}
 				return (*(_begin + n));
 			}
@@ -162,12 +165,9 @@ namespace ft {
 			template <class InputIterator>
 			void assign (InputIterator first, InputIterator last,
 						typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) {
-				if (first > last) {
-					throw (std::length_error("vector"));//(o)
-				}
 				size_type it_size = last - first;
 				if (it_size > capacity()) {
-					reserve(it_size);
+					reserve(it_size);//max_size? and it_size?
 				}
 				clear();
 				for (size_type i = 0;i < it_size;i++) {
@@ -177,7 +177,7 @@ namespace ft {
 			}
 			void assign (size_type n, const value_type& val) {
 				if (n > capacity()) {
-					reserve(n);
+					reserve(n);//max_size? and n?
 				} 
 				clear();
 				for (size_type i = 0;i < n;i++) {
@@ -187,7 +187,6 @@ namespace ft {
 			}
 
 			void push_back (const value_type& val) {
-				// allocate exception?
 				size_type curr_size = size();
 				if (curr_size == capacity()) {
 					reserve(curr_size == 0 ? 1 : curr_size * 2);
@@ -196,8 +195,10 @@ namespace ft {
 				_end++;
 			}
 			void pop_back() {
-				--_end;
-				_alloc.destroy(_end);
+				if (_begin != _end) {
+					--_end;
+					_alloc.destroy(_end);
+				}
 			}
 			
 			// insert
@@ -217,6 +218,9 @@ namespace ft {
 				return (begin() + dist);
 			}
 			void insert (iterator position, size_type n, const value_type& val) {
+				if (n == 0) {
+					return ;
+				}
 				size_type dist = position - begin();
 				size_type curr_cap = capacity();
 				size_type curr_size = size();
@@ -235,7 +239,7 @@ namespace ft {
 			template <class InputIterator>
 			void insert (iterator position, InputIterator first, InputIterator last,
 						typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0) {
-				if (first > last) {
+				if (first == last) {
 					return ;
 				}
 				size_type dist = position - begin();
@@ -257,7 +261,9 @@ namespace ft {
 
 			// erase
 			iterator erase (iterator position) {
-				//?
+				if (position == end()) {
+					return (position);
+				}
 				size_type dist = position - begin();
 				_alloc.destroy(_begin + dist);
 				for (size_type i = dist;i < size() - 1;i++) {
@@ -268,7 +274,9 @@ namespace ft {
 				return begin() + dist;
 			}
 			iterator erase (iterator first, iterator last) {
-				//?
+				if (first == end() || first == last) {
+					return (first);
+				}
 				size_type it_size = last - first;
 				size_type dist = first - begin();
 				for (size_type i = 0;i < it_size;i++) {
@@ -307,12 +315,6 @@ namespace ft {
 			}
 			
 			allocator_type get_allocator() const {return (_alloc);}
-
-		private:
-			allocator_type _alloc;
-			pointer _begin;
-			pointer _end;
-			pointer _end_cap;
 	};
 	//------non-member function overloads------//
 	template <class T, class Alloc>
@@ -320,17 +322,7 @@ namespace ft {
 		if (lhs.size() != rhs.size()) {
 			return (false);
 		}
-
-		typename ft::vector<T>::const_iterator it1 = lhs.begin();
-		typename ft::vector<T>::const_iterator it2 = rhs.begin();
-		while (it1 != lhs.end()) {
-			if (*it1 != *it2) {
-				return (false);
-			}
-			it1++;
-			it2++;
-		}
-		return (true);
+		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 	template <class T, class Alloc>
 	bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs) {
