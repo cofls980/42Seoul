@@ -40,6 +40,7 @@ namespace ft {
 			}
 
 			node_pointer insert_node(const value_type& value) {//ft::pair<iterator, bool>
+				std::cout << "*********insert (" << value.first << ", " << value.second << ")*********" << std::endl;
 				//insert
 				if (_root == 0) {
 					//_root = newOne;
@@ -93,11 +94,13 @@ namespace ft {
 						std::cout << "1) ";
 						child = node->left;
 					} else {// 2) one child
+						std::cout << "2) ";
 						child = node->left ? node->left : node->right;
 						child->parent = node->parent;
 					}
 				} else {// 3) two child
-					node_pointer left_max = node->left;
+					std::cout << "3) ";
+					node_pointer left_max = _root->left;
 					while (left_max->right) {
 						left_max = left_max->right;
 					}
@@ -106,9 +109,14 @@ namespace ft {
 					} else {
 						left_max->parent->right = left_max->left;
 					}
+					std::cout << "left_max: " << left_max->_value.first << ", " << left_max->_value.second << std::endl;
 					left_max->parent = node->parent;
 					left_max->left = node->left;
 					left_max->right = node->right;
+					if (left_max->left)
+						left_max->left->parent = left_max;
+					if (left_max->right)
+						left_max->right->parent = left_max;
 					child = left_max;
 				}
 				if (node->parent) {
@@ -120,6 +128,7 @@ namespace ft {
 					}
 				}
 				else {
+					std::cout << "no parent" << std::endl;
 					_root = child;
 				}
 				_alloc.destroy(&node->_value);
@@ -141,8 +150,10 @@ namespace ft {
 						node = node->right;
 					}
 				}
-				std::cout << "start: " << node->_value.first << ", " << node->_value.second << std::endl;
-				std::cout << "parent: " << node->parent->_value.first << ", " << node->parent->_value.second << std::endl;
+				
+				std::cout << "*********erase (" << node->_value.first << ", " << node->_value.second << ")*********" << std::endl;
+				if (node->parent)
+					std::cout << "parent: " << node->parent->_value.first << ", " << node->parent->_value.second << std::endl;
 				erase_node(node);
 			}
 		
@@ -153,6 +164,9 @@ namespace ft {
 				node_pointer child = node->right;
 
 				now->right = child->left;
+				if (child->left) {
+					child->left->parent = now;
+				}
 				child->left = now;
 				now->parent = child;
 
@@ -172,6 +186,9 @@ namespace ft {
 				node_pointer child = node->left;
 
 				now->left = child->right;
+				if (child->right) {
+					child->right->parent = now;
+				}
 				child->right = now;
 				now->parent = child;
 
@@ -220,8 +237,8 @@ namespace ft {
 							std::cout << "lr" << std::endl;
 							now->left = l_rotate(now->left);
 						}
-						now = r_rotate(now);
 						std::cout << "ll" << std::endl;
+						now = r_rotate(now);
 					} else if (bf < -1) { // 오른쪽이 너무 큰 경우
 						diff = balance_factor(now->right);
 						std::cout << "diff: " << diff << std::endl;
@@ -229,8 +246,8 @@ namespace ft {
 							std::cout << "rl" << std::endl;
 							now->right = r_rotate(now->right);
 						}
-						now = l_rotate(now);
 						std::cout << "rr" << std::endl;
+						now = l_rotate(now);
 					}
 					if (now->parent == 0) {
 						_root = now;
@@ -242,10 +259,15 @@ namespace ft {
 			void display(node_pointer node) {
 				if (node) {
 					if (node == _root) {
+						std::cout << "==display" << std::endl;
 						std::cout << "root: " << node->_value.first << ", " << node->_value.second << std::endl;
 					}
 					display(node->left);
-					std::cout << node->_value.first << ", " << node->_value.second << std::endl;
+					std::cout << node->_value.first << ", " << node->_value.second << "----------";
+					if(node->parent)
+						std::cout << node->parent->_value.first << ", " << node->parent->_value.second << std::endl;
+					else
+						std::cout << "no parent" << std::endl;
 					display(node->right);
 				}
 			}
