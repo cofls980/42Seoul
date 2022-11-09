@@ -7,10 +7,8 @@
 	random_access_iterator
 */
 namespace ft {
-
 	template<class T>
 	class vector_iterator {
-		
 		public:
 			typedef typename ft::iterator_traits<T*>::value_type value_type;
 			typedef typename ft::iterator_traits<T*>::pointer pointer;

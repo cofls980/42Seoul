@@ -166,6 +166,13 @@ namespace ft {
 			}
 			return (*this);
 		}
+
+		// bool operator==(const node &n) {
+		// 	if (_value == n._value && left == n.left && right == n.right && parent == n.parent) {
+		// 		return (true);
+		// 	}
+		// 	return (false);
+		// }
 	};
 }
 
