@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <stdlib.h>
+#include <ctime>
 
 #ifdef FT_MODE
 	#include "map/map.hpp"
@@ -20,13 +21,22 @@ int main() {
 #endif
 	
 	ft::map<int,int> mp;
-	for (int i = 0;i < 20;i++) {
-		mp.insert(ft::make_pair(i + 1, i * 2));
+    clock_t start = clock(), end;
+	for (int i = 0;i < 20000;i++) {
+        int r = i;//rand();
+		mp.insert(ft::make_pair(r, r));
+        //mp.erase(mp.begin());
 	}
+    while (!mp.empty()) {
+        mp.erase(mp.begin());
+    }
+    end = clock();
+    double result = (double)(end-start) / CLOCKS_PER_SEC;
+    std::cout << "time diff: " << result << std::endl;
 	
 	// ft::pair<int, int> p;
 	// p = ft::make_pair(10, 3);
-	// ft::map<int, int> m1;
+	// ft::map<int, int> m1;    
 	// m1.insert(ft::make_pair(10,3));
 	// std::cout << "-----------" << std::endl;
 	// m1.insert(ft::make_pair(15, 5));

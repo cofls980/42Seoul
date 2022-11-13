@@ -25,9 +25,9 @@ namespace ft {
 			iterator_type base() const {return (_it);}
 
 			reference operator*() const {
-				Iterator tmp = _it;
+				iterator_type tmp = _it;
 				--tmp;
-				return (*(tmp));
+				return (*tmp);
 			}
 			pointer operator->() const {return &(operator*());}
 			reference operator[] (difference_type n) const {return (*(_it - n - 1));}

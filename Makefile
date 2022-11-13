@@ -1,5 +1,5 @@
 NAME = containers
-SRC = capacity_test.cpp
+SRC = map_test.cpp
 OBJ = $(SRC:%.cpp=%.o)
 INC = ./
 

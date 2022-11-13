@@ -71,13 +71,13 @@ namespace ft {
 		pair (const pair<U, V>& pr) : first(pr.first), second(pr.second) {}
 		pair (const first_type& a, const second_type& b) : first(a), second(b) {}
 
-		pair& operator= (const pair& pr) {
+		/*pair& operator= (const pair& pr) {
 			if (this != &pr) {
 				first = pr.first;
 				second = pr.second;
 			}
 			return (*this);
-		}
+		}*/
 	};
 	template <class T1, class T2>
 	bool operator== (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs) {
@@ -146,7 +146,7 @@ namespace ft {
 		return (true);
 	}
 
-	template<class T>
+	/*template<class T>
 	struct node {
 		T _value;
 		node *left;
@@ -173,7 +173,7 @@ namespace ft {
 		// 	}
 		// 	return (false);
 		// }
-	};
+	};*/
 }
 
 #endif
