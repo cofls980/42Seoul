@@ -343,8 +343,8 @@ namespace ft {//std?
 						tmp = tmp->left;
 					}
 				}
-				//balance(newOne);
-				display(_root);
+				balance(newOne);
+				//display(_root);
 				return (newOne);
 			}
 
@@ -358,20 +358,26 @@ namespace ft {//std?
 				} else {
 					tmp->parent->right = tmp->left;
 				}
+				if (tmp->left)
+					tmp->left->parent = tmp->parent;
 				return (tmp);
 			}
 
 			void erase_one(node *n) {
 				node *tmp = n;
 				node *child;
+				node *tmp_parent = 0;
 				
 				if (!tmp->left || !tmp->right) {
+					tmp_parent = tmp->parent;
 					child = tmp->left ? tmp->left : tmp->right;
 					if (child)
 						child->parent = tmp->parent;
 				} else {
+					//std::cout << "??" << std::endl;
 					node *left_max = max_node(tmp->left);
-					// std::cout << "left_max: " << left_max->_value.first << ", " << left_max->_value.second << std::endl;
+					//std::cout << "^^" << std::endl;
+					//std::cout << "left_max: " << left_max->_value.first << ", " << left_max->_value.second << std::endl;
 					left_max->parent = tmp->parent;
 					left_max->left = tmp->left;
 					left_max->right = tmp->right;
@@ -380,9 +386,10 @@ namespace ft {//std?
 					if (left_max->right)
 						left_max->right->parent = left_max;
 					child = left_max;
+					tmp_parent = child;
 				}
 				if (tmp->parent) {
-					// std::cout << "have parent" << std::endl;
+					//std::cout << "have parent" << std::endl;
 					if (tmp->parent->left == tmp) {
 						tmp->parent->left = child;
 					} else {
@@ -390,13 +397,15 @@ namespace ft {//std?
 					}
 				}
 				else {
-					// std::cout << "no parent" << std::endl;
+					//std::cout << "no parent" << std::endl;
 					_root = child;
 				}
 				_node_alloc.destroy(tmp);
 				_node_alloc.deallocate(tmp, 1);		
 				// balancing
-				display(_root);
+				if (tmp_parent)
+					balance(tmp_parent);
+				//display(_root);
 			}
 			
 			void erase_node(const iterator pos) {

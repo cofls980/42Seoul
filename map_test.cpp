@@ -22,14 +22,23 @@ int main() {
 	
 	ft::map<int,int> mp;
     clock_t start = clock(), end;
-	for (int i = 0;i < 20000;i++) {
-        int r = i;//rand();
+	for (int i = 0;i < 2000;i++) {
+        int r = rand() % 2000;
 		mp.insert(ft::make_pair(r, r));
         //mp.erase(mp.begin());
 	}
-    while (!mp.empty()) {
-        mp.erase(mp.begin());
-    }
+    //std::cout << "//" << std::endl;
+    for (int i = 0;i < 2000;i++) {
+        int r = rand() % 2000;
+        mp.find(r);
+        //std::cout << i << std::endl;
+        // int r = rand() % 2000;
+        // mp.erase(r);
+        //mp.erase(mp.begin());
+	}
+    // while (!mp.empty()) {
+    //     mp.erase(mp.begin());
+    // }
     end = clock();
     double result = (double)(end-start) / CLOCKS_PER_SEC;
     std::cout << "time diff: " << result << std::endl;
