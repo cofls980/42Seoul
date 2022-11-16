@@ -3,9 +3,7 @@
 
 #include <cstddef>
 #include "../utils/iterator_traits.hpp"
-/*
-	random_access_iterator
-*/
+
 namespace ft {
 	template<class T>
 	class vector_iterator {

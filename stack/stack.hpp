@@ -4,16 +4,6 @@
 #include <iostream>
 #include "../vector/vector.hpp"
 
-/*
-std::vector -> ft::vector
-*/
-
-/*
-컨테이너 어댑터: 기존 컨테이너의 인터페이스를 제한하여 만든 기능이 제한되거나 변형된 컨테이너
-				반복자를 지원하지 않으므로 STL 알고리즘에서는 사용할 수 없다.
-	- 종류: stack, queue, priority_queue
-*/
-
 namespace ft {
 	template <class T, class Container = ft::vector<T> > 
 	class stack {
@@ -23,37 +13,37 @@ namespace ft {
 			typedef size_t		size_type;
 
 		protected:
-			container_type _cont;
+			container_type c;
 
 		public:
-			explicit stack (const container_type& ctnr = container_type()) : _cont(ctnr) {}
-			stack( const stack& other ) : _cont(other._cont) {}
+			explicit stack (const container_type& ctnr = container_type()) : c(ctnr) {}
+			stack( const stack& other ) : c(other.c) {}
 			~stack() {}
 			stack& operator=( const stack& other ) {
 				if (this != &other) {
-					_cont = other._cont;
+					c = other.c;
 				}
 				return (*this);
 			}
 
-			bool empty() const {return (_cont.empty());}
+			bool empty() const {return (c.empty());}
 
-			size_type size() const {return (_cont.size());}
+			size_type size() const {return (c.size());}
 
-			value_type& top() {return (_cont.back());}
+			value_type& top() {return (c.back());}
 			
-			const value_type& top() const {return (_cont.back());}
+			const value_type& top() const {return (c.back());}
 
-			void push (const value_type& val) {_cont.push_back(val);}
+			void push (const value_type& val) {c.push_back(val);}
 
-			void pop() {_cont.pop_back();}
+			void pop() {c.pop_back();}
 
-			friend bool operator== (const stack& lhs, const stack& rhs) {return (lhs._cont == rhs._cont);}
-			friend bool operator!= (const stack& lhs, const stack& rhs) {return (lhs._cont != rhs._cont);}
-			friend bool operator< (const stack& lhs, const stack& rhs) {{return (lhs._cont < rhs._cont);}}
-			friend bool operator<= (const stack& lhs, const stack& rhs) {{return (lhs._cont <= rhs._cont);}}
-			friend bool operator> (const stack& lhs, const stack& rhs) {{return (lhs._cont > rhs._cont);}}
-			friend bool operator>= (const stack& lhs, const stack& rhs) {{return (lhs._cont >= rhs._cont);}}
+			friend bool operator== (const stack& lhs, const stack& rhs) {return (lhs.c == rhs.c);}
+			friend bool operator!= (const stack& lhs, const stack& rhs) {return (lhs.c != rhs.c);}
+			friend bool operator< (const stack& lhs, const stack& rhs) {{return (lhs.c < rhs.c);}}
+			friend bool operator<= (const stack& lhs, const stack& rhs) {{return (lhs.c <= rhs.c);}}
+			friend bool operator> (const stack& lhs, const stack& rhs) {{return (lhs.c > rhs.c);}}
+			friend bool operator>= (const stack& lhs, const stack& rhs) {{return (lhs.c >= rhs.c);}}
 	};
 }
 

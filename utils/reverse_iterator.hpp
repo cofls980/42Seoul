@@ -1,8 +1,11 @@
 #ifndef REVERSE_ITERATOR_HPP
 #define REVERSE_ITERATOR_HPP
 
+#include "iterator_traits.hpp"
+
 namespace ft {
-	template <class Iterator> class reverse_iterator {
+	template <class Iterator>
+	class reverse_iterator {
 		public:
 			typedef Iterator iterator_type;
 			typedef typename ft::iterator_traits<Iterator>::iterator_category iterator_category;
@@ -15,7 +18,7 @@ namespace ft {
 			iterator_type _it;
 
 		public:
-			reverse_iterator() : _it() {}
+			reverse_iterator() : _it(iterator_type()) {}
 			explicit reverse_iterator (iterator_type it) : _it(it) {}
 			template <class Iter>
 			reverse_iterator (const reverse_iterator<Iter>& rev_it) {
@@ -65,7 +68,6 @@ namespace ft {
 				return (*this);
 			}
 	};
-	// non-member function overloads
 	template <class Iterator>
 	bool operator== (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs) {
 		return (lhs.base() == rhs.base());

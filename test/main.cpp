@@ -1,18 +1,21 @@
 #include <iostream>
 #include <string>
-#include <deque>
-#if 1 //CREATE A REAL STL EXAMPLE
-	#include <map>
-	#include <stack>
-	#include <vector>
-	namespace ft = std;
-#else
-	#include <map.hpp>
-	#include <stack.hpp>
-	#include <vector.hpp>
-#endif
-
 #include <stdlib.h>
+#include <ctime>
+#include <typeinfo>
+
+#ifdef FT_MODE
+	#include "../vector/vector.hpp"
+	#include "../stack/stack.hpp"
+	#include "../map/map.hpp"
+	#include "../utils/pair.hpp"
+	#include "../utils/make_pair.hpp"
+#else
+	#include <vector>
+	#include <stack>
+	#include <map>
+	namespace ft = std;
+#endif
 
 #define MAX_RAM 4294967296
 #define BUFFER_SIZE 4096
@@ -45,6 +48,13 @@ public:
 };
 
 int main(int argc, char** argv) {
+#ifdef FT_MODE
+	std::cout << "ft_mode" << std::endl;
+#else
+	std::cout << "std_mode" << std::endl;
+#endif
+
+	clock_t start = clock(), end;
 	if (argc != 2)
 	{
 		std::cerr << "Usage: ./test seed" << std::endl;
@@ -59,7 +69,7 @@ int main(int argc, char** argv) {
 	ft::vector<int> vector_int;
 	ft::stack<int> stack_int;
 	ft::vector<Buffer> vector_buffer;
-	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
+	ft::stack<Buffer, ft::vector<Buffer> > stack_deq_buffer;
 	ft::map<int, int> map_int;
 
 	for (int i = 0; i < COUNT; i++)
@@ -88,9 +98,12 @@ int main(int argc, char** argv) {
 		//NORMAL ! :P
 	}
 	
+	std::cout << "count: " << COUNT << std::endl;
+
 	for (int i = 0; i < COUNT; ++i)
 	{
-		map_int.insert(ft::make_pair(rand(), rand()));
+		ft::pair<int, int> p = ft::make_pair(rand(), rand());
+		map_int.insert(p);
 	}
 
 	int sum = 0;
@@ -100,17 +113,25 @@ int main(int argc, char** argv) {
 		sum += map_int[access];
 	}
 	std::cout << "should be constant with the same seed: " << sum << std::endl;
-
 	{
+		std::cout << "size: " << map_int.size() << std::endl;
 		ft::map<int, int> copy = map_int;
+		std::cout << "size: " << copy.size() << std::endl;
 	}
 	MutantStack<char> iterable_stack;
-	for (char letter = 'a'; letter <= 'z'; letter++)
+	for (char letter = 'a'; letter <= 'z'; letter++) {
 		iterable_stack.push(letter);
+		std::cout << letter << std::endl;
+	}
+		
 	for (MutantStack<char>::iterator it = iterable_stack.begin(); it != iterable_stack.end(); it++)
 	{
 		std::cout << *it;
 	}
 	std::cout << std::endl;
+	
+	end = clock();
+	double result = (double)(end-start) / CLOCKS_PER_SEC;
+	std::cout << "time diff: " << result << std::endl;
 	return (0);
 }
