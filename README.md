@@ -2,7 +2,7 @@
 42Seoul
 
 ### rank00
-- Libft
+- [Libft](https://github.com/cofls980/42Seoul/tree/main/Libft)
 
 ### rank01
 - Born2beroot
